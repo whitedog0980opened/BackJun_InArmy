@@ -36,4 +36,15 @@ public class C1 {
         System.out.println(Integer.toString(a * blist[2]));
         System.out.println(Integer.toString(a * b));
     }
+
+    public void n11382() {
+        Scanner scanner = new Scanner(System.in);
+        String numsStr = scanner.nextLine();
+        int[] nums = new int[3];
+        String[] numsStrArray = numsStr.split(" ");
+        for (int i = 0; i < 3; i++) {
+            nums[i] = Integer.parseInt(numsStrArray[i]);
+        }
+        System.out.printf(Integer.toString(nums[1] + nums[2] + nums[3]));
+    }
 }
