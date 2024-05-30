@@ -47,4 +47,12 @@ public class C1 {
         }
         System.out.printf(Integer.toString(nums[1] + nums[2] + nums[3]));
     }
+
+    public void  n10171() {
+        System.out.printf("""
+            \\    /\\
+             )  ( ')
+            (  /  )
+             \\(__)|""");
+    }
 }
