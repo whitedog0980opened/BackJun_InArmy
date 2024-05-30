@@ -55,4 +55,29 @@ public class C1 {
             (  /  )
              \\(__)|""");
     }
+
+    public void n10172() {
+        System.out.printf("""
+            |\\_/|
+            |q p|   /}
+            ( 0 )""\"\\
+            |"^"`    |
+            ||_/=\\\\__|""");
+    }
+
+    public void n1330() {
+        String result;
+        Scanner sc = new Scanner(System.in);
+        String inputStr = sc.nextLine();
+        String[] inputStrs = inputStr.split(" ");
+        int[] nums = new int[2];
+        nums[0] = Integer.parseInt(inputStrs[0]);
+        nums[1] = Integer.parseInt(inputStrs[1]);
+        if (nums[0] > nums[1]) {result = ">";}
+        else if (nums[0] < nums[1]) {result = "<";}
+        else {result = "==";}
+        System.out.printf(result);
+    }
+
+
 }
