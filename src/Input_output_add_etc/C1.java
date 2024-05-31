@@ -109,4 +109,20 @@ public class C1 {
         if (x < 0 && y < 0) {System.out.printf("3");}
         if (x > 0 && y < 0) {System.out.printf("4");}
     }
+
+    public void n2884() {
+        Scanner sc = new Scanner(System.in);
+        String[] strs = sc.nextLine().split(" ");
+        int hour = Integer.parseInt(strs[0]);
+        int minate = Integer.parseInt(strs[1]);
+        minate -= 45;
+        if (minate < 0) {
+            minate += 60;
+            hour -= 1;
+        }
+        if (hour < 1) {
+            hour += 24;
+        }
+        System.out.printf(Integer.toString(hour) + " " + Integer.toString(minate));
+    }
 }

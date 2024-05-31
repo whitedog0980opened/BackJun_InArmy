@@ -5,11 +5,17 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int x = Integer.parseInt(sc.nextLine());
-        int y = Integer.parseInt(sc.nextLine());
-        if (x > 0 && y > 0) {System.out.printf("1");}
-        if (x < 0 && y > 0) {System.out.printf("2");}
-        if (x < 0 && y < 0) {System.out.printf("3");}
-        if (x > 0 && y < 0) {System.out.printf("4");}
+        String[] strs = sc.nextLine().split(" ");
+        int hour = Integer.parseInt(strs[0]);
+        int minate = Integer.parseInt(strs[1]);
+        minate -= 45;
+        if (minate < 0) {
+            minate += 60;
+            hour -= 1;
+        }
+        if (hour < 0) {
+            hour += 24;
+        }
+        System.out.printf(Integer.toString(hour) + " " + Integer.toString(minate));
     }
 }
