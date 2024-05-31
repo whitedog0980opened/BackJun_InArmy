@@ -5,10 +5,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        int x = Integer.parseInt(sc.nextLine());
         int y = Integer.parseInt(sc.nextLine());
-        if ((!(y % 100 == 0) || (y % 400 == 0)) && (y % 4 == 0)) {
-            System.out.printf("1");
-        }
-        else System.out.printf("0");
+        if (x > 0 && y > 0) {System.out.printf("1");}
+        if (x < 0 && y > 0) {System.out.printf("2");}
+        if (x < 0 && y < 0) {System.out.printf("3");}
+        if (x > 0 && y < 0) {System.out.printf("4");}
     }
 }
