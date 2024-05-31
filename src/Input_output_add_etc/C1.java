@@ -90,4 +90,13 @@ public class C1 {
         else {result = "F";}
         System.out.printf(result);
     }
+
+    public void n2753() {
+        Scanner sc = new Scanner(System.in);
+        int y = Integer.parseInt(sc.nextLine());
+        if ((!(y % 100 == 0) || (y % 400 == 0)) && (y % 4 == 0)) {
+            System.out.printf("1");
+        }
+        else System.out.printf("0");
+    }
 }
