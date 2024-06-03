@@ -4,12 +4,21 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String temp;
         Scanner sc = new Scanner(System.in);
-        int multy = Integer.parseInt(sc.nextLine());
-        for (int i = 0; i < 9; i++) {
-            temp = String.format("%d * %d = %d", multy, i + 1, multy * (i + 1));
-            System.out.println(temp);
+        int num1, num2;
+        String[] numsStr;
+
+        int tries = Integer.parseInt(sc.nextLine());
+        int result[] = new int[tries];
+
+        for (int i = 0; i < tries; i++) {
+            numsStr = sc.nextLine().split(" ");
+            num1 = Integer.parseInt(numsStr[0]);
+            num2 = Integer.parseInt(numsStr[1]);
+            result[i] = num1 + num2;
+        }
+        for (int i = 0; i < tries; i++) {
+            System.out.println(Integer.toString(result[i]));
         }
     }
 }
