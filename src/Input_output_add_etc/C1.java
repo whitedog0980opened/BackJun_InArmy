@@ -171,4 +171,14 @@ public class C1 {
              System.out.printf(Integer.toString((dice1 > dice2) ? ((dice1 > dice3) ? dice1 * 100 : dice3 * 100) : (dice2 > dice3) ? dice2 * 100 : dice3 * 100));
          }
      }
+
+     public void n2739() {
+         String temp;
+         Scanner sc = new Scanner(System.in);
+         int multy = Integer.parseInt(sc.nextLine());
+         for (int i = 0; i < 9; i++) {
+             temp = String.format("%d * %d = %d", multy, i + 1, multy * (i + 1));
+             System.out.println(temp);
+         }
+     }
 }
