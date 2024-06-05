@@ -1,10 +1,11 @@
-import Input_output_add_etc.C1;
+package Input_output_add_etc;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
+public class Sliver {
+    public void n1002() {
         Scanner sc = new Scanner(System.in);
         int tries = Integer.parseInt(sc.nextLine());
         HashMap<Integer, ArrayList<Double>> datas = new HashMap<Integer, ArrayList<Double>>(tries);
@@ -42,4 +43,5 @@ public class Main {
             }
         }
     }
+
 }
