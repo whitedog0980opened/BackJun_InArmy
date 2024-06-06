@@ -1,6 +1,7 @@
 package Input_output_add_etc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -84,4 +85,102 @@ public class Sliver {
             System.out.printf(Integer.toString(P[i]) + " ");
         }
     }
+
+//    public void n1080Fail() {
+//        Scanner sc = new Scanner(System.in);
+//        String[] input1 = sc.nextLine().split(" ");
+//        int n = Integer.parseInt(input1[0]);
+//        int m = Integer.parseInt(input1[1]);
+//
+//        int[] listInputs = new int[n * m];
+//        int[] listQED = new int[n * m];
+//
+//        for (int i = 0; i < n; i++) {
+//            String[] temp = sc.nextLine().split("");
+//            for (int j = 0; j < temp.length; j++) {
+//                listInputs[j] = Integer.parseInt(temp[j]);
+//            }
+//        }
+//        for (int i = 0; i < n; i++) {
+//            String[] temp = sc.nextLine().split("");
+//            for (int j = 0; j < temp.length; j++) {
+//                listQED[j] = Integer.parseInt(temp[j]);
+//            }
+//        }
+//
+//        int maxTry = (int)Math.pow(2, (n - 2) * (m - 2));
+//        int findCase = maxTry + 1;
+//        for(int i = 1; i < maxTry; i++) {
+//            String BinaryI = Integer.toBinaryString(i);
+//            int changeNum = 0;
+//            int[] listCheck = new int[n * m];
+//            listCheck = listInputs.clone();
+//            for (int j = 0; j < BinaryI.length(); j++) { // j = index of BinaryI
+//                int jToFilpableArrayInput = j + (int)(j / 7) * 2;
+//                boolean flipableSpot =  Character.getNumericValue(BinaryI.charAt(j)) == 1;
+//                if (flipableSpot) {
+//                    flip(listCheck, jToFilpableArrayInput, m);
+//                    changeNum++;
+//                }
+//            }
+//            if (Arrays.equals(listCheck, listQED)) {
+//                if(findCase < changeNum) {findCase = changeNum;}
+//            }
+//        }
+//        if (findCase == maxTry + 1) {System.out.printf("-1");}
+//        else {System.out.println(Integer.toString(findCase));}
+//
+//    }
+//    public static void flip(int[] array, int x, int m) {
+//        for (int i = 0; i < 3; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                array[x + i + j * m] = array[x + i + j * m] == 1 ? 0 : 1;
+//            }
+//        }
+//    }
+
+    public void n1080() {
+        Scanner sc = new Scanner(System.in);
+        String[] input1 = sc.nextLine().split(" ");
+        int n = Integer.parseInt(input1[0]);
+        int m = Integer.parseInt(input1[1]);
+
+        int[][] listInputs = new int[n][m];
+        int[][] listQED = new int[n][m];
+
+        for (int i = 0; i < n; i++) {
+            String[] temp = sc.nextLine().split("");
+            for (int j = 0; j < m; j++) {
+                listInputs[i][j] = Integer.parseInt(temp[j]);
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            String[] temp = sc.nextLine().split("");
+            for (int j = 0; j < m; j++) {
+                listQED[i][j] = Integer.parseInt(temp[j]);
+            }
+        }
+        int changeNum = 0;
+        for(int i = 0; i < n - 2; i++) {
+            for (int j = 0; j < m - 2; j++) {
+                if (listInputs[i][j] != listQED[i][j]) {
+                    flip(listInputs, i, j);
+                    changeNum++;
+                }
+            }
+        }
+        if (!Arrays.deepEquals(listInputs, listQED)) {System.out.printf("-1");}
+        else {System.out.println(Integer.toString(changeNum));}
+    }
+    public static void flip(int[][] array, int x, int y) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                array[x + i][y + j] = array[x + i][y + j] == 1 ? 0 : 1;
+            }
+        }
+    }
+
+
+
+
 }

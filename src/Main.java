@@ -1,49 +1,49 @@
 import Input_output_add_etc.C1;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int inputs = Integer.parseInt(sc.nextLine());
-        String AStr[] = sc.nextLine().split(" ");
-        //convert to int
-        int A[] = new int[inputs];
-        for (int i = 0; i < inputs; i++) {
-            A[i] = Integer.parseInt(AStr[i]);
-        }
-        int[] A2 = A.clone();
-        int min = 0;
-        int j = 0;
-        int Q[] = new int[inputs];
-        int B[] = new int[inputs];
-        for (int i = 0; i < inputs; i++) {
-            min = 1001;
-            for (j = 0; j < inputs; j++) {
-                if (min > A[j]) {
-                    min = A[j];
-                    Q[i] = j;
-                }
-            }
-            B[i] = A[Q[i]];
-            A[Q[i]] = 1001;
-        }
+        String[] input1 = sc.nextLine().split(" ");
+        int n = Integer.parseInt(input1[0]);
+        int m = Integer.parseInt(input1[1]);
 
-        int P[] = new int[inputs];
-        for (int i = 0; i < inputs; i++) {
-            for (j = 0; j < inputs; j++) {
-                if (A2[i] == B[j]) {
-                    P[i] = j;
-                    B[j] = -1;
-                    break;
+        int[][] listInputs = new int[n][m];
+        int[][] listQED = new int[n][m];
+
+        for (int i = 0; i < n; i++) {
+            String[] temp = sc.nextLine().split("");
+            for (int j = 0; j < m; j++) {
+                listInputs[i][j] = Integer.parseInt(temp[j]);
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            String[] temp = sc.nextLine().split("");
+            for (int j = 0; j < m; j++) {
+                listQED[i][j] = Integer.parseInt(temp[j]);
+            }
+        }
+        int changeNum = 0;
+        for(int i = 0; i < n - 2; i++) {
+            for (int j = 0; j < m - 2; j++) {
+                if (listInputs[i][j] != listQED[i][j]) {
+                    flip(listInputs, i, j);
+                    changeNum++;
                 }
             }
         }
-        for (int i = 0; i < inputs; i++) {
-            System.out.printf(Integer.toString(P[i]) + " ");
-        }
+        if (!Arrays.deepEquals(listInputs, listQED)) {System.out.printf("-1");}
+        else {System.out.println(Integer.toString(changeNum));}
 
+    }
+    public static void flip(int[][] array, int x, int y) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                array[x + i][y + j] = array[x + i][y + j] == 1 ? 0 : 1;
+            }
+        }
     }
 }
 
