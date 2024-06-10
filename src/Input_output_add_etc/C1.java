@@ -237,4 +237,20 @@ public class C1 {
         System.out.println(Integer.toString(max));
         System.out.println(Integer.toString(num));
     }
+
+    public void n2675() {
+        Scanner sc = new Scanner(System.in);
+        int tries = Integer.parseInt(sc.nextLine());
+        for (int i = 0; i < tries; i++) {
+            String[] inputs = sc.nextLine().split(" ", 2);
+            int repeats = Integer.parseInt(inputs[0]);
+            String str = inputs[1];
+            for (int j = 0; j < str.length(); j++){
+                for(int k = 0; k < repeats; k++) {
+                    System.out.print(str.charAt(j));
+                }
+            }
+            System.out.println();
+        }
+    }
 }
