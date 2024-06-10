@@ -206,4 +206,34 @@ public class Sliver {
         }
         return stack.isEmpty();
     }
+
+    public static void n10828() {
+        Scanner sc = new Scanner(System.in);
+        int tries = Integer.parseInt(sc.nextLine());
+
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < tries; i++) {
+            String commend = sc.nextLine();
+            if (commend.contains("push")) {
+                int x = Integer.parseInt(commend.split(" ")[1]);
+                stack.push(x);
+            } else if (commend.contains("pop")) {
+                System.out.printf(Integer.toString(stack.pop()));
+            } else if (commend.contains("size")) {
+                System.out.printf(Integer.toString(stack.size()));
+            } else if (commend.contains("empty")) {
+                int isEmpty = stack.isEmpty() ? 1 : 0;
+                System.out.printf(Integer.toString(isEmpty));
+            } else if (commend.contains("top")) {
+                try {
+                    System.out.printf(Integer.toString(stack.peek()));
+                }catch (EmptyStackException e) {
+                    System.out.printf("-1");
+                }
+            }
+        }
+    }
+
+
 }
