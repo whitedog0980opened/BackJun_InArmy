@@ -200,4 +200,15 @@ public class C1 {
              System.out.println(Integer.toString(result[i]));
          }
      }
+
+     public void n1152() {
+         Scanner sc = new Scanner(System.in);
+         String str = sc.nextLine();
+         str = str.trim(); //
+
+         int len = str.split(" ").length;
+         if (str.equals("")){len = 0;};
+
+         System.out.printf(Integer.toString(len));
+     }
 }
