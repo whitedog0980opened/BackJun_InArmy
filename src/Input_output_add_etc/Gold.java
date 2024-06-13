@@ -1,6 +1,6 @@
 package Input_output_add_etc;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Gold {
     static void n14502() {
@@ -127,6 +127,60 @@ public class Gold {
     }
     //n14502
     //
-    //
+    //n1005 (first)
+    static void n1005_first() {
+        // Receive Test Case Num
+        Scanner sc = new Scanner(System.in);
+        int testCase = Integer.parseInt(sc.nextLine());
 
+        for (int i = 0; i < testCase; i++) {
+            String[] nums = sc.nextLine().split(" ");
+            buildTimeCalculator(Integer.parseInt(nums[0]), Integer.parseInt(nums[1]), sc);
+        }
+    }
+
+    public static void buildTimeCalculator(int buildsNum, int sequencesNum, Scanner sc) {
+        // Receive required times for build
+        String[] requireTimeStrs = sc.nextLine().split(" ");
+        int[] requireTimes = new int[buildsNum + 1]; // +1 Because Number of Building is start counting from 1
+        for (int i = 0; i < buildsNum; i++) {
+            requireTimes[i + 1] = Integer.parseInt(requireTimeStrs[i]);
+        }
+        // Initialize graph and in-degree array
+        List<Integer>[] graph = new ArrayList[buildsNum + 1];
+        for (int i = 1; i <= buildsNum; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        int[] inDegree = new int[buildsNum + 1];
+        // Receive sequence of buildings
+        for (int i = 0; i < sequencesNum; i++) {
+            String[] temp = sc.nextLine().split(" ");
+            int X = Integer.parseInt(temp[0]);
+            int Y = Integer.parseInt(temp[1]);
+            graph[X].add(Y);
+            inDegree[Y]++;
+        }
+        // Receive target building
+        int targetBuild = Integer.parseInt(sc.nextLine());
+        // Perform topological sort
+        Queue<Integer> queue = new LinkedList<>();
+        int[] buildTimes = new int[buildsNum + 1];
+        for (int i = 1; i <= buildsNum; i++) {
+            buildTimes[i] = requireTimes[i];
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int next : graph[current]) {
+                buildTimes[next] = Math.max(buildTimes[next], buildTimes[current] + requireTimes[next]);
+                if (--inDegree[next] == 0) {
+                    queue.add(next);
+                }
+            }
+        }
+        // Output the result for the target building
+        System.out.println(buildTimes[targetBuild]);
+    }
 }
