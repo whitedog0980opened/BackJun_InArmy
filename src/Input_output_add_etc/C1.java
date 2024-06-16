@@ -293,4 +293,19 @@ public class C1 {
 
         System.out.printf("%d %d", min, max);
     }
+
+    public void n2439() {
+        Scanner sc = new Scanner(System.in);
+        int tries = Integer.parseInt(sc.nextLine());
+
+        for (int i = 0; i < tries; i++) {
+            for (int j = 0; j < tries - i - 1; j++) {
+                System.out.printf(" ");
+            }
+            for (int j = 0; j < i + 1; j++) {
+                System.out.printf("*");
+            }
+            System.out.println("");
+        }
+    }
 }
