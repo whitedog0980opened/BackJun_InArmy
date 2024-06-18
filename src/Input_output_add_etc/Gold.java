@@ -172,7 +172,7 @@ public class Gold {
     }
 
     public static int findMaxTime(int current, ArrayList<ArrayList<Integer>> adjList, int[] requireTimes, int[] dp, boolean[] visited) {
-        if (dp[current] != -1) {
+        if (dp[current] != -1) { //check empty
             return dp[current];
         }
         if (adjList.get(current).isEmpty()) {
