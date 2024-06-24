@@ -7,15 +7,13 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
-            String input;
-            try {
-                input = sc.nextLine();
-            } catch (NoSuchElementException e) {
-                break;
-            }
+            String input = sc.nextLine();
             String[] i = input.split(" ");
             int x = Integer.parseInt(i[0]);
             int y = Integer.parseInt(i[1]);
+
+            if (x == 0 && y == 0) {break;}
+
             System.out.println(Integer.toString(x + y));
         }
         sc.close();

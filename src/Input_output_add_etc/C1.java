@@ -383,7 +383,7 @@ public class C1 {
         }
     }
 
-    public void n10952() {
+    public void n10951() {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
@@ -396,6 +396,22 @@ public class C1 {
             String[] i = input.split(" ");
             int x = Integer.parseInt(i[0]);
             int y = Integer.parseInt(i[1]);
+            System.out.println(Integer.toString(x + y));
+        }
+        sc.close();
+    }
+
+    public void n10952() {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            String input = sc.nextLine();
+            String[] i = input.split(" ");
+            int x = Integer.parseInt(i[0]);
+            int y = Integer.parseInt(i[1]);
+
+            if (x == 0 && y == 0) {break;}
+
             System.out.println(Integer.toString(x + y));
         }
         sc.close();
