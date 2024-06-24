@@ -272,13 +272,5 @@ public class Sliver {
         bf.close();
     }
 
-    public void n2741() {
-        Scanner sc = new Scanner(System.in);
-        int tries = Integer.parseInt(sc.nextLine());
-        for (int i = 0; i < tries; i++) {
-            System.out.println(Integer.toString(i + 1));
-        }
-    }
-
 
 }
