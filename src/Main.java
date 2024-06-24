@@ -1,55 +1,36 @@
-import java.util.*;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int a = Integer.parseInt(sc.nextLine());
-        int b = Integer.parseInt(sc.nextLine());
-        int c = Integer.parseInt(sc.nextLine());
-        long num = a * b * c;
-        String numStr = Long.toString(num);
-        int[] count = new int[10];
-        for (String i : numStr.split("")) {
-            if (i.equals("0")) {
-                count[0]++;
-            }
-            if (i.equals("1")) {
-                count[1]++;
-            }
-            if (i.equals("2")) {
-                count[2]++;
-            }
-            if (i.equals("3")) {
-                count[3]++;
-            }
-            if (i.equals("4")) {
-                count[4]++;
-            }
-            if (i.equals("5")) {
-                count[5]++;
-            }
-            if (i.equals("6")) {
-                count[6]++;
-            }
-            if (i.equals("7")) {
-                count[7]++;
-            }
-            if (i.equals("8")) {
-                count[8]++;
-            }
-            if (i.equals("9")) {
-                count[9]++;
-            }
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int tries = Integer.parseInt(bf.readLine());
+
+        // Precompute the counts of 0s and 1s for all Fibonacci numbers up to 40
+        int maxN = 40;
+        int[] zeroCount = new int[maxN + 1];
+        int[] oneCount = new int[maxN + 1];
+
+        // Initial conditions
+        zeroCount[0] = 1; // Fibonacci(0) has one 0
+        oneCount[0] = 0;  // Fibonacci(0) has zero 1s
+        zeroCount[1] = 0; // Fibonacci(1) has zero 0s
+        oneCount[1] = 1;  // Fibonacci(1) has one 1
+
+        // Fill in the counts using the known relationships
+        for (int i = 2; i <= maxN; i++) {
+            zeroCount[i] = zeroCount[i - 1] + zeroCount[i - 2];
+            oneCount[i] = oneCount[i - 1] + oneCount[i - 2];
         }
-        System.out.println(Integer.toString(count[0]));
-        System.out.println(Integer.toString(count[1]));
-        System.out.println(Integer.toString(count[2]));
-        System.out.println(Integer.toString(count[3]));
-        System.out.println(Integer.toString(count[4]));
-        System.out.println(Integer.toString(count[5]));
-        System.out.println(Integer.toString(count[6]));
-        System.out.println(Integer.toString(count[7]));
-        System.out.println(Integer.toString(count[8]));
-        System.out.println(Integer.toString(count[9]));
+
+        for (int i = 0; i < tries; i++) {
+            int attempt = Integer.parseInt(bf.readLine());
+            bw.write(zeroCount[attempt] + " " + oneCount[attempt] + "\n");
+        }
+
+        bw.flush();
+        bw.close();
+        bf.close();
+
     }
 }
