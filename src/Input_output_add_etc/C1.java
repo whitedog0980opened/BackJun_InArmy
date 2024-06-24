@@ -416,4 +416,10 @@ public class C1 {
         }
         sc.close();
     }
+
+    public void n11654() {
+        Scanner sc = new Scanner(System.in);
+        char input =sc.nextLine().charAt(0);
+        System.out.printf(Integer.toString((int) input));
+    }
 }
