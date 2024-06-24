@@ -240,7 +240,7 @@ public class Sliver {
         }
     }
 
-    public static void n1003() throws IOException  {
+    public static void n1003() throws IOException {
         BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int tries = Integer.parseInt(bf.readLine());

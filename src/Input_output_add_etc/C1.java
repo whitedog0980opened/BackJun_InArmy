@@ -1,5 +1,6 @@
 package Input_output_add_etc;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class C1 {
@@ -380,5 +381,23 @@ public class C1 {
         } else  {
             System.out.printf("mixed");
         }
+    }
+
+    public void n10952() {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            String input;
+            try {
+                input = sc.nextLine();
+            } catch (NoSuchElementException e) {
+                break;
+            }
+            String[] i = input.split(" ");
+            int x = Integer.parseInt(i[0]);
+            int y = Integer.parseInt(i[1]);
+            System.out.println(Integer.toString(x + y));
+        }
+        sc.close();
     }
 }
