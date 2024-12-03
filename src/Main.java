@@ -7,18 +7,31 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int lineNum = Integer.parseInt(br.readLine()); //first input - total line nums
-        Set<Integer> inputTree = new TreeSet<>();
-        for(int i = 0; i < lineNum; i++) {
-            inputTree.add(Integer.parseInt(br.readLine()));
+        //recieve inputs info
+        String[] inputInfo = br.readLine().split(" "); //first input - total line nums
+        int cardNum = Integer.parseInt(inputInfo[0]);
+        int maxNum = Integer.parseInt(inputInfo[1]);
+
+        //recieve cards
+        String[] cardListStr = br.readLine().split(" ");
+        int cardListInt[] = new int[cardNum];
+        for (int i = 0; i < cardNum; i++) {
+            cardListInt[i] = Integer.parseInt(cardListStr[i]);
         }
 
-
-
-        for (int i : inputTree) {
-            bw.write(Integer.toString(i));
-            bw.newLine();
+        int biggest = 0;
+        for (int i = 0; i < cardNum - 2; i++) {
+            for (int j = i + 1; j < cardNum - 1; j++) {
+                for (int k = j + 1; k < cardNum; k++) {
+                    int currMax = cardListInt[i] + cardListInt[j] + cardListInt[k];
+                    if (currMax <= maxNum && currMax > biggest) {
+                        biggest = currMax;
+                    }
+                }
+            }
         }
+
+        bw.write(Integer.toString(biggest));
         bw.close();
     }
 }
