@@ -7,31 +7,21 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        //recieve inputs info
-        String[] inputInfo = br.readLine().split(" "); //first input - total line nums
-        int cardNum = Integer.parseInt(inputInfo[0]);
-        int maxNum = Integer.parseInt(inputInfo[1]);
+        while (true) {
+           String[] inputNumStr = br.readLine().split(" ");
+           int[] inputNum =     {Integer.parseInt(inputNumStr[0]),  // convert to int
+                                Integer.parseInt(inputNumStr[1]),
+                                Integer.parseInt(inputNumStr[2])};
 
-        //recieve cards
-        String[] cardListStr = br.readLine().split(" ");
-        int cardListInt[] = new int[cardNum];
-        for (int i = 0; i < cardNum; i++) {
-            cardListInt[i] = Integer.parseInt(cardListStr[i]);
+           Arrays.sort(inputNum);
+           if (inputNum[0] == 0 || inputNum[1] == 0 || inputNum[2] == 0) break;
+           if ( Math.pow(inputNum[0], 2) + Math.pow(inputNum[1], 2) == Math.pow(inputNum[2], 2)) {
+               bw.write("right");
+           } else {
+               bw.write("wrong");
+           }
+           bw.newLine();
         }
-
-        int biggest = 0;
-        for (int i = 0; i < cardNum - 2; i++) {
-            for (int j = i + 1; j < cardNum - 1; j++) {
-                for (int k = j + 1; k < cardNum; k++) {
-                    int currMax = cardListInt[i] + cardListInt[j] + cardListInt[k];
-                    if (currMax <= maxNum && currMax > biggest) {
-                        biggest = currMax;
-                    }
-                }
-            }
-        }
-
-        bw.write(Integer.toString(biggest));
         bw.close();
     }
 }
