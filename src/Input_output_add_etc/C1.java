@@ -1,7 +1,7 @@
-package Input_output_add_etc;
-
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -51,22 +51,23 @@ public class C1 {
         System.out.printf(Integer.toString(nums[1] + nums[2] + nums[3]));
     }
 
-    public void  n10171() {
-        System.out.printf("""
-            \\    /\\
-             )  ( ')
-            (  /  )
-             \\(__)|""");
-    }
+    // 자바 15이하에서 사용 불가하여 주석처리해둠
+    // public void  n10171() {
+    //     System.out.printf("""
+    //         \\    /\\
+    //          )  ( ')
+    //         (  /  )
+    //          \\(__)|""");
+    // }
 
-    public void n10172() {
-        System.out.printf("""
-            |\\_/|
-            |q p|   /}
-            ( 0 )""\"\\
-            |"^"`    |
-            ||_/=\\\\__|""");
-    }
+    // public void n10172() {
+    //     System.out.printf("""
+    //         |\\_/|
+    //         |q p|   /}
+    //         ( 0 )""\"\\
+    //         |"^"`    |
+    //         ||_/=\\\\__|""");
+    // }
 
     public void n1330() {
         String result;
@@ -295,6 +296,7 @@ public class C1 {
         }
 
         System.out.printf("%d %d", min, max);
+        sc.close();
     }
 
     public void n2439() {
@@ -310,6 +312,7 @@ public class C1 {
             }
             System.out.println("");
         }
+        sc.close();
     }
 
     public void n2577() {
@@ -476,6 +479,33 @@ public class C1 {
             }
             bw.newLine();
         }
+        bw.close();
+    }
+    
+    public void n10874() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int StudentNum = Integer.parseInt(br.readLine());
+        List<Integer> retester = new ArrayList<>();
+
+        A : for (int i = 0; i < StudentNum; i++) {
+            String[] strScores = br.readLine().split(" ");
+            for (int j = 0; j < 10; j++) {
+                int correctAnswer = (j) % 5 + 1;
+                int score = Integer.parseInt(strScores[j]);
+                if (score != correctAnswer) {
+                    continue A;
+                }
+            }
+            retester.add(i + 1);
+            
+        }
+
+        for (int i : retester) {
+            bw.write(i + "\n");
+        }
+        bw.flush();
         bw.close();
     }
 

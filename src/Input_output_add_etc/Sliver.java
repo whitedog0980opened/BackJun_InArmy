@@ -1,4 +1,3 @@
-package Input_output_add_etc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -7,21 +7,26 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        while (true) {
-           String[] inputNumStr = br.readLine().split(" ");
-           int[] inputNum =     {Integer.parseInt(inputNumStr[0]),  // convert to int
-                                Integer.parseInt(inputNumStr[1]),
-                                Integer.parseInt(inputNumStr[2])};
+        int StudentNum = Integer.parseInt(br.readLine());
+        List<Integer> retester = new ArrayList<>();
 
-           Arrays.sort(inputNum);
-           if (inputNum[0] == 0 || inputNum[1] == 0 || inputNum[2] == 0) break;
-           if ( Math.pow(inputNum[0], 2) + Math.pow(inputNum[1], 2) == Math.pow(inputNum[2], 2)) {
-               bw.write("right");
-           } else {
-               bw.write("wrong");
-           }
-           bw.newLine();
+        A : for (int i = 0; i < StudentNum; i++) {
+            String[] strScores = br.readLine().split(" ");
+            for (int j = 0; j < 10; j++) {
+                int correctAnswer = (j) % 5 + 1;
+                int score = Integer.parseInt(strScores[j]);
+                if (score != correctAnswer) {
+                    continue A;
+                }
+            }
+            retester.add(i + 1);
+            
         }
+
+        for (int i : retester) {
+            bw.write(i + "\n");
+        }
+        bw.flush();
         bw.close();
     }
 }
