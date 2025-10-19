@@ -31,6 +31,7 @@ public class Main {
         if (operators.get(0).equals("")) {
             operators.remove(0);
         }
+
         operators.add("+"); //dummy operator for last number
 
 
@@ -38,6 +39,7 @@ public class Main {
         boolean isCovered = false;
         if (operators.size() == nums.size() && operators.get(0) == "-") {
             isCovered = true;
+            operators.remove(0);
         }
 
         int curruntResult = 0;
