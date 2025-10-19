@@ -3,47 +3,58 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        //member class
-        class Member {
-            int age;
-            String name;
-            Member(int age, String name) {
-                this.age = age;
-                this.name = name;
-            }
-        }
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        // get first line input = member num
-        int memberNum = Integer.parseInt(br.readLine());
+        //get all input String
+        String firstInput = br.readLine();
 
-        //unsorted member list
-        List<Member> memberList = new ArrayList<>();
-        for (int i = 0; i < memberNum; i++) {
-            //get memmber info
-            String[] memberInput = br.readLine().split(" ");
-            int age = Integer.parseInt(memberInput[0]);
-            String name = memberInput[1];
-
-            //create member object
-            Member member = new Member(age, name);
-            memberList.add(member);
+        //parse numbers and operators
+        List<Integer> nums = new ArrayList<>();
+        List<String> operators = new ArrayList<>();
+        String[] numsStr = firstInput.split("[-]|[+]");
+        String[] opsStr = firstInput.split("[0-9]+");
+        if (numsStr[0] == "") { //exception for first negative number
+            numsStr[0] = "666666"; //dummy number
         }
 
-        //sort member list by age
-        Collections.sort(memberList, (m1, m2) -> {
-            if (m1.age == m2.age) return 0;
-            else if (m1.age > m2.age) return 1;
-            else return -1;
-        });
-
-        //output
-        for (int i = 0; i < memberNum; i++) {
-            Member member = memberList.get(i);
-            bw.write(member.age + " " + member.name + "\n");
+        for (String s : numsStr) {
+            nums.add(Integer.parseInt(s));
         }
+        for (String s : opsStr) {
+            operators.add(s);
+        }
+
+        if (nums.get(0) == 666666) {
+            nums.remove(0);
+        }
+        if (operators.get(0).equals("")) {
+            operators.remove(0);
+        }
+        operators.add("+"); //dummy operator for last number
+
+
+        //괄호 안에 있는지 여부
+        boolean isCovered = false;
+        if (operators.size() == nums.size() && operators.get(0) == "-") {
+            isCovered = true;
+        }
+
+        int curruntResult = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (isCovered) {
+                curruntResult -= nums.get(i);
+                if (operators.get(i).equals("-")) isCovered = false;
+            } else {
+                curruntResult += nums.get(i);
+                if (operators.get(i).equals("-")) isCovered = true;
+            }
+        }
+
+        bw.write(String.valueOf(curruntResult));
+
+
+   
 
         bw.flush();
         bw.close();
