@@ -6,47 +6,34 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String line = br.readLine();
-        if (line == null || line.trim().isEmpty()) {
-            bw.write("0");
-            bw.flush();
-            bw.close();
-            return;
-        }
-        line = line.trim();
+        //inputs
+        int N = Integer.parseInt(br.readLine());
+        String[] cardNumStr = br.readLine().split(" ");
+        int M = Integer.parseInt(br.readLine());
+        String[] checkNumStr = br.readLine().split(" ");
 
-        List<Integer> nums = new ArrayList<>();
-        List<Character> ops = new ArrayList<>();
-        StringBuilder cur = new StringBuilder();
-
-        // Parse the input line into nums and ops
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (c == '+' || c == '-') {
-                nums.add(Integer.parseInt(cur.toString()));
-                cur.setLength(0);
-                ops.add(c);
-            } else {
-                cur.append(c);
-            }
-        }
-        // Add the last number
-        if (cur.length() > 0) nums.add(Integer.parseInt(cur.toString()));
-
-        int result = nums.isEmpty() ? 0 : nums.get(0);
-        boolean minusSeen = false;
-        for (int i = 0; i < ops.size() && i + 1 < nums.size(); i++) {
-            char op = ops.get(i);
-            int next = nums.get(i + 1);
-            if (!minusSeen) {
-                if (op == '+') result += next;
-                else { minusSeen = true; result -= next; }
-            } else {
-                result -= next;
+        HashMap<Integer, Integer> cardMap = new HashMap<>(); 
+        List<Integer> resultList = new LinkedList<>();
+        for (int i = 0; i < N; i++) {
+            int cardNum = Integer.parseInt(cardNumStr[i]);
+            boolean isNew = !cardMap.containsKey(cardNum);
+            if (isNew) {
+                cardMap.put(cardNum, 1);
+            } else { // 중복시 value 1 증가
+                cardMap.put(cardNum, cardMap.get(cardNum) + 1);
             }
         }
 
-        bw.write(String.valueOf(result));
+        for (int i = 0; i < M; i++) {
+            int checkNum = Integer.parseInt(checkNumStr[i]);
+            if (cardMap.containsKey(checkNum)) resultList.add(cardMap.get(checkNum));
+            else resultList.add(0); 
+        }
+
+        for (int i : resultList) {
+            bw.write(i + " ");
+        }
+
         bw.flush();
         bw.close();
     }
