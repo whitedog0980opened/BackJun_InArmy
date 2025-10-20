@@ -6,32 +6,41 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        //inputs
-        int N = Integer.parseInt(br.readLine());
-        String[] cardNumStr = br.readLine().split(" ");
-        int M = Integer.parseInt(br.readLine());
-        String[] checkNumStr = br.readLine().split(" ");
+        int inputNum = Integer.parseInt(br.readLine());
+        Queue<Integer> queue = new LinkedList<>();
+        int last = -1; // 마지막 push된 값 저장용 변수
 
-        HashMap<Integer, Integer> cardMap = new HashMap<>(); 
-        List<Integer> resultList = new LinkedList<>();
-        for (int i = 0; i < N; i++) {
-            int cardNum = Integer.parseInt(cardNumStr[i]);
-            boolean isNew = !cardMap.containsKey(cardNum);
-            if (isNew) {
-                cardMap.put(cardNum, 1);
-            } else { // 중복시 value 1 증가
-                cardMap.put(cardNum, cardMap.get(cardNum) + 1);
+        for (int i = 0; i < inputNum; i++) {
+            String command = br.readLine();
+
+            if (command.startsWith("push")) {
+                int x = Integer.parseInt(command.split(" ")[1]);
+                queue.offer(x);
+                last = x; // 마지막 값 갱신
             }
-        }
-
-        for (int i = 0; i < M; i++) {
-            int checkNum = Integer.parseInt(checkNumStr[i]);
-            if (cardMap.containsKey(checkNum)) resultList.add(cardMap.get(checkNum));
-            else resultList.add(0); 
-        }
-
-        for (int i : resultList) {
-            bw.write(i + " ");
+            else if (command.equals("pop")) {
+                int result = queue.isEmpty() ? -1 : queue.poll();
+                bw.write(String.valueOf(result));
+                bw.newLine();
+            }
+            else if (command.equals("size")) {
+                bw.write(String.valueOf(queue.size()));
+                bw.newLine();
+            }
+            else if (command.equals("empty")) {
+                bw.write(queue.isEmpty() ? "1" : "0");
+                bw.newLine();
+            }
+            else if (command.equals("front")) {
+                int result = queue.isEmpty() ? -1 : queue.peek();
+                bw.write(String.valueOf(result));
+                bw.newLine();
+            }
+            else if (command.equals("back")) {
+                int result = queue.isEmpty() ? -1 : last;
+                bw.write(String.valueOf(result));
+                bw.newLine();
+            }
         }
 
         bw.flush();
