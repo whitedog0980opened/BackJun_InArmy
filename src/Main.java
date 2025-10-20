@@ -3,44 +3,41 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        class Factor {
+            public int x;
+            public int y;
+            Factor (int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int inputNum = Integer.parseInt(br.readLine());
-        Queue<Integer> queue = new LinkedList<>();
-        int last = -1; // 마지막 push된 값 저장용 변수
 
+        List<Factor> factors = new ArrayList<>();
         for (int i = 0; i < inputNum; i++) {
-            String command = br.readLine();
+            String[] inputs = br.readLine().split(" ");
+            Factor factor = new Factor(Integer.parseInt(inputs[0]), Integer.parseInt(inputs[1]));
+            factors.add(factor);
+        }
 
-            if (command.startsWith("push")) {
-                int x = Integer.parseInt(command.split(" ")[1]);
-                queue.offer(x);
-                last = x; // 마지막 값 갱신
+        Collections.sort(factors, (x, y) -> {
+            if (x.x < y.x) return -1;
+            else if (x.x == y.x) {
+                if (x.y < y.y) return -1;
+                else if (x.y == y.y) return 0;
+                else return 1;
+            } else {
+                return 1;
             }
-            else if (command.equals("pop")) {
-                int result = queue.isEmpty() ? -1 : queue.poll();
-                bw.write(String.valueOf(result));
-                bw.newLine();
-            }
-            else if (command.equals("size")) {
-                bw.write(String.valueOf(queue.size()));
-                bw.newLine();
-            }
-            else if (command.equals("empty")) {
-                bw.write(queue.isEmpty() ? "1" : "0");
-                bw.newLine();
-            }
-            else if (command.equals("front")) {
-                int result = queue.isEmpty() ? -1 : queue.peek();
-                bw.write(String.valueOf(result));
-                bw.newLine();
-            }
-            else if (command.equals("back")) {
-                int result = queue.isEmpty() ? -1 : last;
-                bw.write(String.valueOf(result));
-                bw.newLine();
-            }
+        });
+
+        for (Factor factor : factors) {
+            bw.write(factor.x + " " + factor.y + "\n");
         }
 
         bw.flush();
