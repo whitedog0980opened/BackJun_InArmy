@@ -6,61 +6,48 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        //get all input String
-        String firstInput = br.readLine();
+        String line = br.readLine();
+        if (line == null || line.trim().isEmpty()) {
+            bw.write("0");
+            bw.flush();
+            bw.close();
+            return;
+        }
+        line = line.trim();
 
-        //parse numbers and operators
         List<Integer> nums = new ArrayList<>();
-        List<String> operators = new ArrayList<>();
-        String[] numsStr = firstInput.split("[-]|[+]");
-        String[] opsStr = firstInput.split("[0-9]+");
-        if (numsStr[0] == "") { //exception for first negative number
-            numsStr[0] = "666666"; //dummy number
-        }
+        List<Character> ops = new ArrayList<>();
+        StringBuilder cur = new StringBuilder();
 
-        for (String s : numsStr) {
-            nums.add(Integer.parseInt(s));
-        }
-        for (String s : opsStr) {
-            operators.add(s);
-        }
-
-        if (nums.get(0) == 666666) {
-            nums.remove(0);
-        }
-        if (operators.get(0).equals("")) {
-            operators.remove(0);
-        }
-
-        operators.add("+"); //dummy operator for last number
-
-
-        //괄호 안에 있는지 여부
-        boolean isCovered = false;
-        if (operators.size() == nums.size() && operators.get(0) == "-") {
-            isCovered = true;
-            operators.remove(0);
-        }
-
-        int curruntResult = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            if (isCovered) {
-                curruntResult -= nums.get(i);
-                if (operators.get(i).equals("-")) isCovered = false;
+        // Parse the input line into nums and ops
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == '+' || c == '-') {
+                nums.add(Integer.parseInt(cur.toString()));
+                cur.setLength(0);
+                ops.add(c);
             } else {
-                curruntResult += nums.get(i);
-                if (operators.get(i).equals("-")) isCovered = true;
+                cur.append(c);
+            }
+        }
+        // Add the last number
+        if (cur.length() > 0) nums.add(Integer.parseInt(cur.toString()));
+
+        int result = nums.isEmpty() ? 0 : nums.get(0);
+        boolean minusSeen = false;
+        for (int i = 0; i < ops.size() && i + 1 < nums.size(); i++) {
+            char op = ops.get(i);
+            int next = nums.get(i + 1);
+            if (!minusSeen) {
+                if (op == '+') result += next;
+                else { minusSeen = true; result -= next; }
+            } else {
+                result -= next;
             }
         }
 
-        bw.write(String.valueOf(curruntResult));
-
-
-   
-
+        bw.write(String.valueOf(result));
         bw.flush();
         bw.close();
     }
-
-
 }
