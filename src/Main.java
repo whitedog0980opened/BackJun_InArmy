@@ -6,42 +6,30 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] inputs = br.readLine().split(" ");
-        int n = Integer.parseInt(inputs[0]);
-        int k = Integer.parseInt(inputs[1]);
+        int peopleNum = Integer.parseInt(br.readLine());
+        String[] sizesStr = br.readLine().split(" "); 
+        int[] sizes = new int[6];
+        for (int i = 0; i < 6; i++) {
+            sizes[i] = Integer.parseInt(sizesStr[i]);
+        } 
+        String[] boundsStr = br.readLine().split(" ");
+        int tShirtBound = Integer.parseInt(boundsStr[0]);
+        int penBound    = Integer.parseInt(boundsStr[1]);
 
-        //순열 생성
-        List<Integer> permutation = new LinkedList<>();
-
-        List<Integer> answerPmt = new LinkedList<>(); //요세푸스 순열
-        for (int i = 0; i < n; i++) {
-            permutation.add(i + 1);
+        int toBuyTshirtBount = 0;
+        for (int i : sizes) {
+            if (i == 0) continue;
+            int currentNeedBound = i / tShirtBound;
+            if (i % tShirtBound != 0) currentNeedBound++;
+            toBuyTshirtBount += currentNeedBound;
         }
 
-        //요세푸스 문제에 맞추어 출력
-        Iterator<Integer> pmtIterater = permutation.iterator();
-        while (true) {
-            if (permutation.isEmpty()) break;
-            for (int i = 0; i < k; i++) {
-                if (!pmtIterater.hasNext()) { //반복이 끝났을 겨우
-                    pmtIterater = permutation.iterator(); //새로운 반복자 적용
-                }
-                if (i + 1 == k) {
-                    answerPmt.add(pmtIterater.next());
-                    pmtIterater.remove();
-                    continue;
-                }
-                pmtIterater.next();
-            }
-        }
+        int toBuyPenBound = peopleNum / penBound;
+        int toBuyPen = peopleNum % penBound;
 
-        // 출력 인덱스
-        bw.write("<");
-        for (int i = 0; i < n - 1; i++) {
-            bw.write(String.valueOf(answerPmt.get(i)) + ", ");
-        }
-        bw.write(String.valueOf(answerPmt.get(n - 1)) + ">");
-
+        bw.write(String.valueOf(toBuyTshirtBount));
+        bw.newLine();
+        bw.write(String.valueOf(toBuyPenBound) + " " + String.valueOf(toBuyPen));
 
         bw.flush();
         bw.close();
