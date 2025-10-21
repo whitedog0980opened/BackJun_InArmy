@@ -6,30 +6,26 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int peopleNum = Integer.parseInt(br.readLine());
-        String[] sizesStr = br.readLine().split(" "); 
-        int[] sizes = new int[6];
-        for (int i = 0; i < 6; i++) {
-            sizes[i] = Integer.parseInt(sizesStr[i]);
-        } 
-        String[] boundsStr = br.readLine().split(" ");
-        int tShirtBound = Integer.parseInt(boundsStr[0]);
-        int penBound    = Integer.parseInt(boundsStr[1]);
+        String inputNumStr = br.readLine();
+        int inputNum = Integer.parseInt(inputNumStr);
+        int minTryNum =  inputNum - (inputNumStr.length() * 9);
+        if (minTryNum < 0) minTryNum = 0;
 
-        int toBuyTshirtBount = 0;
-        for (int i : sizes) {
-            if (i == 0) continue;
-            int currentNeedBound = i / tShirtBound;
-            if (i % tShirtBound != 0) currentNeedBound++;
-            toBuyTshirtBount += currentNeedBound;
+
+        for (int i = minTryNum ; i < inputNum; i++) {
+            int tryNum = i;
+            String tryNumStr = String.valueOf(tryNum);
+            for (String j : tryNumStr.split("")) { //  9 9 9 5 9 . 99959 99964 99973 99982 99987 99996
+                tryNum += Integer.parseInt(j);
+            }
+            if (tryNum == inputNum) {
+                bw.write(tryNumStr);
+                break;
+            }
+            if (i == inputNum - 1) {
+                bw.write("0");
+            }
         }
-
-        int toBuyPenBound = peopleNum / penBound;
-        int toBuyPen = peopleNum % penBound;
-
-        bw.write(String.valueOf(toBuyTshirtBount));
-        bw.newLine();
-        bw.write(String.valueOf(toBuyPenBound) + " " + String.valueOf(toBuyPen));
 
         bw.flush();
         bw.close();
