@@ -6,28 +6,27 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String inputNumStr = br.readLine();
-        int inputNum = Integer.parseInt(inputNumStr);
-        int minTryNum =  inputNum - (inputNumStr.length() * 9);
-        if (minTryNum < 0) minTryNum = 0;
+        int x = Integer.parseInt(br.readLine());
 
-
-        for (int i = minTryNum ; i < inputNum; i++) {
-            int tryNum = i;
-            String tryNumStr = String.valueOf(tryNum);
-            for (String j : tryNumStr.split("")) { //  9 9 9 5 9 . 99959 99964 99973 99982 99987 99996
-                tryNum += Integer.parseInt(j);
+        int[] dp = new int[x + 1]; // dp = minumun steps to reach i
+        dp[1] = 0;
+        for (int i = 2; i <= x; i++) {
+            // dp[i - 1]가 minimumTry로부터 1을 뺀 결과라면
+            int minimumTry = dp[i - 1] + 1; 
+            // dp[i / 3]가 minimumTry로부터 3을 나눈 결과라면
+            if (i % 3 == 0) {
+                minimumTry = Math.min(minimumTry, dp[i / 3] + 1);
             }
-            if (tryNum == inputNum) {
-                bw.write(tryNumStr);
-                break;
+            // dp[i / 2]가 minimumTry로부터 2를 나눈 결과라면
+            if (i % 2 == 0) {
+                minimumTry = Math.min(minimumTry, dp[i / 2] + 1);
             }
-            if (i == inputNum - 1) {
-                bw.write("0");
-            }
+            dp[i] = minimumTry;
         }
 
+        bw.write(String.valueOf(dp[x]));
         bw.flush();
         bw.close();
     }
+
 }
