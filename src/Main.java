@@ -6,27 +6,74 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int x = Integer.parseInt(br.readLine());
+        int testCaseNum = Integer.parseInt(br.readLine());
 
-        int[] dp = new int[x + 1]; // dp = minumun steps to reach i
-        dp[1] = 0;
-        for (int i = 2; i <= x; i++) {
-            // dp[i - 1]가 minimumTry로부터 1을 뺀 결과라면
-            int minimumTry = dp[i - 1] + 1; 
-            // dp[i / 3]가 minimumTry로부터 3을 나눈 결과라면
-            if (i % 3 == 0) {
-                minimumTry = Math.min(minimumTry, dp[i / 3] + 1);
+        for (int i = 0; i < testCaseNum; i++) {
+            String[] strInputs = br.readLine().split(" ");
+            int n = Integer.parseInt(strInputs[0]);
+            int m = Integer.parseInt(strInputs[1]);
+            int numOfCabbage = Integer.parseInt(strInputs[2]);
+            int cattapliler = 0;
+            boolean[][] cabbageMap = new boolean[m + 1][n + 1];
+            //init cabbageMap
+            for (int j = 0; j < numOfCabbage; j++) {
+                String[] cabbageLocation = br.readLine().split(" ");
+                int clM = Integer.parseInt(cabbageLocation[1]);
+                int clN = Integer.parseInt(cabbageLocation[0]);
+
+                cabbageMap[clM][clN] = true;
             }
-            // dp[i / 2]가 minimumTry로부터 2를 나눈 결과라면
-            if (i % 2 == 0) {
-                minimumTry = Math.min(minimumTry, dp[i / 2] + 1);
+
+            //counting catta
+            for (int k = 0; k < n; k++) {
+                if (cabbageMap[0][k] == true) {
+                    cattapliler++;
+                    deleteAdjacentFirstLine(0, k, cabbageMap);
+                }
             }
-            dp[i] = minimumTry;
+            for (int j = 1; j < m; j++) { //otherLines
+                for (int k = 0; k < n; k++) {
+                    if (cabbageMap[j][k] == true) {
+                        cattapliler++;
+                        deleteAdjacent(j, k, cabbageMap);
+                    }
+                }
+            }
+            bw.write(Integer.toString(cattapliler));
+            if (i + 1 != testCaseNum) bw.newLine();
         }
 
-        bw.write(String.valueOf(dp[x]));
+
         bw.flush();
         bw.close();
+    }
+
+    public static void deleteAdjacent(int m,int n, boolean[][] cabbageMap) {
+        cabbageMap[m][n] = false;
+        if (cabbageMap[m + 1][n] == true) {
+            deleteAdjacent(m + 1, n, cabbageMap);
+        }
+        if (cabbageMap[m][n + 1] == true) {
+            deleteAdjacent(m, n + 1, cabbageMap);
+        }
+        if (cabbageMap[m - 1][n] == true) {
+            if (m - 1 == 0) {
+                deleteAdjacentFirstLine(0, n, cabbageMap);
+            } else {
+                deleteAdjacent(m - 1, n, cabbageMap);
+            }
+        }
+    }
+
+
+    public static void deleteAdjacentFirstLine(int m,int n, boolean[][] cabbageMap) {
+        cabbageMap[m][n] = false;
+        if (cabbageMap[m + 1][n] == true) {
+            deleteAdjacent(m + 1, n, cabbageMap);
+        }
+        if (cabbageMap[m][n + 1] == true) {
+            deleteAdjacentFirstLine(m, n + 1, cabbageMap);
+        }
     }
 
 }

@@ -572,6 +572,56 @@ public class Sliver {
         bw.flush();
         bw.close();
     }
+
+    public static void n1012() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine());
+
+        // 네 방향 이동
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
+
+        while (T-- > 0) {
+            String[] s = br.readLine().split(" ");
+            int M = Integer.parseInt(s[0]); // 가로 길이
+            int N = Integer.parseInt(s[1]); // 세로 길이
+            int K = Integer.parseInt(s[2]); // 배추 개수
+
+            boolean[][] map = new boolean[N][M];
+
+            // 배추 위치 입력
+            for (int i = 0; i < K; i++) {
+                String[] loc = br.readLine().split(" ");
+                int x = Integer.parseInt(loc[0]);
+                int y = Integer.parseInt(loc[1]);
+                map[y][x] = true;
+            }
+
+            int count = 0;
+            for (int y = 0; y < N; y++) {
+                for (int x = 0; x < M; x++) {
+                    if (map[y][x]) {
+                        count++;
+                        dfs1012(y, x, map, dx, dy, N, M);
+                    }
+                }
+            }
+
+            System.out.println(count);
+        }
+    }
+    static void dfs1012(int y, int x, boolean[][] map, int[] dx, int[] dy, int N, int M) {
+        map[y][x] = false;
+
+        for (int i = 0; i < 4; i++) {
+            int ny = y + dy[i];
+            int nx = x + dx[i];
+
+            if (ny >= 0 && ny < N && nx >= 0 && nx < M && map[ny][nx]) {
+                dfs1012(ny, nx, map, dx, dy, N, M);
+            }
+        }
+    }
 }
 
 
