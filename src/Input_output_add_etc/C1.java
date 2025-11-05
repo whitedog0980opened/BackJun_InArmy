@@ -603,4 +603,22 @@ public class C1 {
         bw.close();
     }
 
+    static void n2869() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String[] strInputs = br.readLine().split(" ");
+        int climeByDay = Integer.parseInt(strInputs[0]);
+        int slipByDay = Integer.parseInt(strInputs[1]);
+        int stickLength = Integer.parseInt(strInputs[2]);
+        stickLength -= climeByDay;
+
+        int days = stickLength / (climeByDay - slipByDay) + 1;
+        if (stickLength % (climeByDay - slipByDay) != 0) days++;
+
+        bw.write(String.valueOf(days));
+
+        bw.flush();
+        bw.close();
+    }
 }
