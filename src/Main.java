@@ -6,24 +6,50 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int totalInputNum = Integer.parseInt(br.readLine());
+        String[] inputStrs = br.readLine().split(" ");
+        int nodeNum = Integer.parseInt(inputStrs[0]);
+        int lineNum = Integer.parseInt(inputStrs[1]);
+        int startNode = Integer.parseInt(inputStrs[2]);
 
-        int[] arr = new int[totalInputNum];
-        for (int i = 0; i < totalInputNum; i++) {
-            int inputNum = Integer.parseInt(br.readLine());
-            arr[i] =  inputNum;
+        //input lines
+        int[][] lines = new int[lineNum][2];
+        for (int i = 0; i < lineNum; i++) {
+            String[] lineInputs = br.readLine().split(" ");
+            int[] line = {Integer.parseInt(lineInputs[0]), Integer.parseInt(lineInputs[1])};
+            lines[i] = line;
         }
-
-        Arrays.sort(arr);
+        // create graph
+        LinkedList<Integer>[] graphs = new LinkedList[nodeNum + 1];
+        for (int i = 0; i < nodeNum + 1; i++) {
+            graphs[i] = new LinkedList<>();
+        }
+        for (int[] line : lines) {
+            graphs[line[0]].add(line[1]);
+            graphs[line[1]].add(line[0]);
+        }
+        for (LinkedList<Integer> graph : graphs) {
+            Collections.sort(graph);
+        }
         
-        boolean isFirst = true;
-        for (int i : arr) {
-            if (isFirst) isFirst = false;
-            else bw.newLine();
-            bw.write(Integer.toString(i));
-        }
+
+        List<Integer> visited = new ArrayList<>();
+
+        dfs(graphs, startNode, visited, bw);
 
         bw.flush();
         bw.close();
+    }
+
+    static void dfs(LinkedList<Integer>[] graphs, int crrNode, List<Integer> visited, BufferedWriter bw) throws IOException {
+        if (visited.contains(crrNode)) {
+            return;
+        } else {
+            visited.add(crrNode);
+            bw.write(Integer.toString(crrNode));
+        }
+        for (int i = 0; i < graphs[crrNode].size(); i++) {
+            int nextNode = graphs[crrNode].get(i);
+            dfs(graphs, nextNode, visited, bw);
+        }
     }
 }
