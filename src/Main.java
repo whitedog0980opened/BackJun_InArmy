@@ -8,22 +8,20 @@ public class Main {
 
         int totalInputNum = Integer.parseInt(br.readLine());
 
-        Stack<Integer> stack = new Stack<>();
+        int[] arr = new int[totalInputNum];
         for (int i = 0; i < totalInputNum; i++) {
-            int input = Integer.parseInt(br.readLine());
-            if (input == 0) {
-                stack.pop();
-            } else {
-                stack.push(input);
-            }
+            int inputNum = Integer.parseInt(br.readLine());
+            arr[i] =  inputNum;
         }
 
-        int sum = 0;
-        while (!stack.empty()) {
-            sum += stack.pop();
-        }
-        bw.write(Integer.toString(sum));
+        Arrays.sort(arr);
         
+        boolean isFirst = true;
+        for (int i : arr) {
+            if (isFirst) isFirst = false;
+            else bw.newLine();
+            bw.write(Integer.toString(i));
+        }
 
         bw.flush();
         bw.close();
