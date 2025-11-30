@@ -34,22 +34,49 @@ public class Main {
 
         List<Integer> visited = new ArrayList<>();
 
-        dfs(graphs, startNode, visited, bw);
+        boolean isFirst = true;
+        dfs(graphs, startNode, visited, bw, isFirst);
+        bw.newLine();
+
+        //init again
+        isFirst = true;
+        visited = new ArrayList<>();
+
+        Queue<Integer> queue = new LinkedList<Integer>();
+        queue.add(startNode);
+
+        visited.add(startNode);
+        bw.write(Integer.toString(startNode));
+        while (!queue.isEmpty()) {
+            int crrNode = queue.poll();
+
+            for (int i = 0; i < graphs[crrNode].size(); i++) {
+                int newNode = graphs[crrNode].get(i);
+                if (visited.contains(newNode)) continue;
+                else visited.add(newNode);
+                queue.add(newNode);
+                bw.write(" " + Integer.toString(newNode));
+            }
+        }
 
         bw.flush();
         bw.close();
     }
 
-    static void dfs(LinkedList<Integer>[] graphs, int crrNode, List<Integer> visited, BufferedWriter bw) throws IOException {
+    static void dfs(LinkedList<Integer>[] graphs, int crrNode, List<Integer> visited, BufferedWriter bw, boolean isFirst) throws IOException {
         if (visited.contains(crrNode)) {
             return;
         } else {
             visited.add(crrNode);
-            bw.write(Integer.toString(crrNode));
+            if (isFirst) {
+                bw.write(Integer.toString(crrNode));
+                isFirst = false;
+            }
+            else bw.write(" " + Integer.toString(crrNode));
         }
         for (int i = 0; i < graphs[crrNode].size(); i++) {
             int nextNode = graphs[crrNode].get(i);
-            dfs(graphs, nextNode, visited, bw);
+            dfs(graphs, nextNode, visited, bw, isFirst);
         }
     }
 }
