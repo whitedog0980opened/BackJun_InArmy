@@ -13,10 +13,7 @@ public class Main {
         
         String[] fishbowlStrInputs = br.readLine().split(" ");
         int[][] fishbowlMap = new int[fishbowlNum][fishbowlNum]; //[y][x]좌표
-        //Empty place is MIN_VALUE
-        for (int[] i : fishbowlMap) {
-            Arrays.fill(i, 0);
-        }
+
         //place first fishbowl
         for (int i = 0; i < fishbowlNum; i++) {
             int fishTemp = Integer.parseInt(fishbowlStrInputs[i]);
@@ -48,7 +45,7 @@ public class Main {
             fishbowlMap = toFlatForm(fishbowlMap, fishbowlNum);
             foldForm(fishbowlMap, fishbowlNum);
             moveFishes(fishbowlMap, fishbowlNum);
-            foldForm(fishbowlMap, fishbowlNum);
+            fishbowlMap = toFlatForm(fishbowlMap, fishbowlNum);
             tryCount++;
         }
 
@@ -86,7 +83,8 @@ public class Main {
         for (int i : fishbowlMap[0]) {
             nonStackedFloor.add(i);
         }
-        nonStackedFloor.remove(); // first one is rolled
+        nonStackedFloor.removeLast();  // last is 0
+        nonStackedFloor.removeFirst(); // 1st is rolled
         //roll box
         int[][] rollingBox = new int[bowlNum][bowlNum];
         rollingBox[0][0] = fishbowlMap[0][0];
@@ -117,7 +115,8 @@ public class Main {
             }
         }
 
-        for (int i = 0; i < nonStackedFloor.size(); i++) {
+        int leftFloorSize = nonStackedFloor.size();
+        for (int i = 0; i < leftFloorSize; i++) {
             rollingBox[0][boxSizeX + i] = nonStackedFloor.removeFirst();
         }
         return rollingBox;
@@ -125,14 +124,14 @@ public class Main {
 
     static void moveFishes(int[][] fishbowlMap, int bowlNum) {
         int[][] addFishNumMap = new int[bowlNum][bowlNum];
-        int[] dx = {0, 0, 1, -1};
-        int[] dy = {1, -1, 0, 0};
+        int[] dx = {1, 0};
+        int[] dy = {0, 1};
 
         for (int i = 0; i < bowlNum; i++) {
             for (int j = 0; j < bowlNum; j++) {
                 if (fishbowlMap[j][i] == 0) continue;
 
-                for (int k = 0; k < 4; k++) {
+                for (int k = 0; k < 2; k++) {
                     int di = i + dx[k];
                     int dj = j + dy[k];
                     if (di >= 0 && dj >= 0 && di < bowlNum && dj < bowlNum && fishbowlMap[dj][di] != 0) {
@@ -184,17 +183,17 @@ public class Main {
         int halfBowlNum = bowlNum/2;
         int quatBowlNum = bowlNum/4;
         for (int i = 0; i < halfBowlNum; i++) {
-            fishbowlMap[1][i] = fishbowlMap[0][halfBowlNum - i];
-            fishbowlMap[0][halfBowlNum - i] = fishbowlMap[0][bowlNum - i - 1];
+            fishbowlMap[1][i] = fishbowlMap[0][halfBowlNum - i - 1];
+            fishbowlMap[0][halfBowlNum - i - 1] = fishbowlMap[0][bowlNum - i - 1];
             fishbowlMap[0][bowlNum - i - 1] = 0;
         }
         for (int i = 0; i < quatBowlNum; i++) {
-            fishbowlMap[2][i] = fishbowlMap[1][quatBowlNum - i];
-            fishbowlMap[1][quatBowlNum - i] = fishbowlMap[1][halfBowlNum - i];
-            fishbowlMap[1][halfBowlNum - i] = 0;
-            fishbowlMap[3][i] = fishbowlMap[0][quatBowlNum - i];
-            fishbowlMap[0][quatBowlNum - i] = fishbowlMap[0][halfBowlNum - i];
-            fishbowlMap[0][halfBowlNum - i] = 0;
+            fishbowlMap[2][i] = fishbowlMap[1][quatBowlNum - i - 1];
+            fishbowlMap[1][quatBowlNum - i - 1] = fishbowlMap[1][halfBowlNum - i - 1];
+            fishbowlMap[1][halfBowlNum - i - 1] = 0;
+            fishbowlMap[3][i] = fishbowlMap[0][quatBowlNum - i - 1];
+            fishbowlMap[0][quatBowlNum - i - 1] = fishbowlMap[0][halfBowlNum - i - 1];
+            fishbowlMap[0][halfBowlNum - i - 1] = 0;
         }
     }
 }
