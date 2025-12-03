@@ -6,29 +6,24 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String brokenISBN = br.readLine();
-        int brokenWeight = 0;
+        int inpurNum = Integer.parseInt(br.readLine());
+        String str = br.readLine();
+        int mod = 1234567891;
         int sum = 0;
-        for (int i = 0; i < 13; i++) {
-            char crr = brokenISBN.charAt(i);
-            int weight = 3 - ((i + 1)%2) * 2;
-            if (crr == '*') {
-                brokenWeight = weight;
+
+        for (int i = 0; i < inpurNum; i++) {
+            char crrCH = str.charAt(i);
+            int hashNum = (int)crrCH - 96;
+            long temp = 1;
+            for (int j = 0; j < i; j++) {
+                temp *= 31;
             }
-            else {
-                sum += Character.getNumericValue(crr) * weight;
-            }
+            temp %= mod;
+            sum += hashNum * temp;
         }
 
-        int keyRest = sum % 10;
-        for (int i = 0; i < 10; i++) {
-            int total = sum + i * brokenWeight;
-            if (total % 10 == 0) {
-                bw.write(Integer.toString(i));
-                break;
-            }
+        bw.write(Integer.toString(sum));
         
-        }
 
         bw.flush();
         bw.close();
