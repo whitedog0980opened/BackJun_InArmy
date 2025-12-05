@@ -6,23 +6,42 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int inpurNum = Integer.parseInt(br.readLine());
-        String str = br.readLine();
-        int mod = 1234567891;
-        int sum = 0;
+        String[] inputs = br.readLine().split(" ");
+        int pokeNum = Integer.parseInt(inputs[0]);
+        int queNum = Integer.parseInt(inputs[1]);
 
-        for (int i = 0; i < inpurNum; i++) {
-            char crrCH = str.charAt(i);
-            int hashNum = (int)crrCH - 96;
-            long temp = 1;
-            for (int j = 0; j < i; j++) {
-                temp *= 31;
-            }
-            temp %= mod;
-            sum += hashNum * temp;
+        LinkedHashMap<Integer, String> collects = new LinkedHashMap<>();
+        LinkedHashMap<String, Integer> collects2 = new LinkedHashMap<>();
+        for (int i = 1; i < pokeNum + 1; i++) {
+            String name = br.readLine();
+            collects.put(i, name);
+            collects2.put(name, i);
         }
 
-        bw.write(Integer.toString(sum));
+        boolean isFirst = true;
+        for (int i = 0; i < queNum; i++) {
+            String question = br.readLine();
+            if (question.matches(".*[0-9].*")) {
+                int temp = Integer.parseInt(question);
+                if (isFirst) {
+                    bw.write(collects.get(temp));
+                    isFirst = false;
+                } else {
+                    bw.newLine();
+                    bw.write(collects.get(temp));
+                }
+            } else {
+                if (isFirst) {
+                    bw.write(Integer.toString(collects2.get(question)));
+                    isFirst = false;
+                } else {
+                    bw.newLine();
+                    bw.write(Integer.toString(collects2.get(question)));
+                }
+            }
+        }
+
+
         
 
         bw.flush();
