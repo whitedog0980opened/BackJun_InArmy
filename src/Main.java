@@ -6,43 +6,30 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] inputs = br.readLine().split(" ");
-        int pokeNum = Integer.parseInt(inputs[0]);
-        int queNum = Integer.parseInt(inputs[1]);
+        String input1 = br.readLine();
+        String input2 = br.readLine();
+        String input3 = br.readLine();
+        int answer = 0;
 
-        LinkedHashMap<Integer, String> collects = new LinkedHashMap<>();
-        LinkedHashMap<String, Integer> collects2 = new LinkedHashMap<>();
-        for (int i = 1; i < pokeNum + 1; i++) {
-            String name = br.readLine();
-            collects.put(i, name);
-            collects2.put(name, i);
+        if (input1.matches(".*[0-9].*")) {
+            answer = Integer.parseInt(input1) + 3;
+        } else if (input2.matches(".*[0-9].*")) {
+            answer = Integer.parseInt(input2) + 2;
+        } else {
+            answer = Integer.parseInt(input3) + 1;
         }
 
-        boolean isFirst = true;
-        for (int i = 0; i < queNum; i++) {
-            String question = br.readLine();
-            if (question.matches(".*[0-9].*")) {
-                int temp = Integer.parseInt(question);
-                if (isFirst) {
-                    bw.write(collects.get(temp));
-                    isFirst = false;
-                } else {
-                    bw.newLine();
-                    bw.write(collects.get(temp));
-                }
+        if (answer % 3 == 0) {
+            if (answer % 5 == 0) {
+                bw.write("FizzBuzz");
             } else {
-                if (isFirst) {
-                    bw.write(Integer.toString(collects2.get(question)));
-                    isFirst = false;
-                } else {
-                    bw.newLine();
-                    bw.write(Integer.toString(collects2.get(question)));
-                }
+                bw.write("Fizz");
             }
+        } else if (answer % 5 == 0) {
+            bw.write("Buzz");
+        } else {
+            bw.write(Integer.toString(answer));
         }
-
-
-        
 
         bw.flush();
         bw.close();
