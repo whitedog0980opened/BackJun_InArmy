@@ -7,40 +7,44 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         String[] inputs = br.readLine().split(" ");
-        int n = Integer.parseInt(inputs[0]);
-        int row = Integer.parseInt(inputs[1]);
-        int col = Integer.parseInt(inputs[2]);
+        int N = Integer.parseInt(inputs[0]);
+        int K = Integer.parseInt(inputs[1]);
 
-        int startNum = 0;
-        int endNum = (1 << (2 * n)) - 1; // (2^n)^2 - 1
-        int totalCellNum = endNum + 1;
-
-        int diviedBy = 1 << (n - 1);
-        int rDivied = row / diviedBy;
-        int rRest = row % diviedBy;
-        int cDivied = col / diviedBy;
-        int cRest = col % diviedBy;
-
-        while (true) {
-            startNum += rDivied * (totalCellNum / 2);
-            startNum += cDivied * (totalCellNum / 4);
-            totalCellNum /= 4;
-            endNum = startNum + totalCellNum - 1;
-
-            diviedBy /= 2;
-            if (diviedBy == 0) break;
-            rDivied = rRest / diviedBy;
-            rRest %= diviedBy;
-            cDivied = cRest / diviedBy;
-            cRest %= diviedBy;
+        if (K < N) {
+            bw.write(Integer.toString(N - K));
+            bw.flush();
+            bw.close();
+            return;
         }
 
-        bw.write(Integer.toString(endNum));
+        Set<Integer> visited = new HashSet<>();
 
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{N, 0});
+        visited.add(N);
 
+        while (!queue.isEmpty()) {
+            int crr[] = queue.poll();
+            int crrN = crr[0];
+            int crrDepth = crr[1];
+
+            if (crrN == K) {
+                bw.write(Integer.toString(crrDepth));
+                bw.flush();
+                bw.close();
+                return;
+            }
+
+            int[] next = {crrN + 1, crrN - 1, crrN * 2};
+            for (int nextN : next) {
+                if (nextN >= 0 && nextN <= 100000 && !visited.contains(nextN)){
+                    visited.add(nextN);
+                    queue.add(new int[]{nextN, crrDepth + 1});
+                }
+            }
+        }
         bw.flush();
         bw.close();
     }
-
 }
 
