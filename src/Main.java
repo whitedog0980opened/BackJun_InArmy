@@ -6,45 +6,43 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] inputs = br.readLine().split(" ");
-        int N = Integer.parseInt(inputs[0]);
-        int K = Integer.parseInt(inputs[1]);
+        int meetingNum = Integer.parseInt(br.readLine());
 
-        if (K < N) {
-            bw.write(Integer.toString(N - K));
-            bw.flush();
-            bw.close();
-            return;
+        int[][] meetings = new int[meetingNum][2];
+        for (int i = 0; i < meetingNum; i++) {
+            String[] inputs = br.readLine().split(" ");
+            int startTime = Integer.parseInt(inputs[0]);
+            int endTime = Integer.parseInt(inputs[1]);
+
+            meetings[i][0] = startTime;
+            meetings[i][1] = endTime;
         }
 
-        Set<Integer> visited = new HashSet<>();
-
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{N, 0});
-        visited.add(N);
-
-        while (!queue.isEmpty()) {
-            int crr[] = queue.poll();
-            int crrN = crr[0];
-            int crrDepth = crr[1];
-
-            if (crrN == K) {
-                bw.write(Integer.toString(crrDepth));
-                bw.flush();
-                bw.close();
-                return;
+        Arrays.sort(meetings, (n1, n2) -> {
+            if (n1[1] == n2[1]) {
+                return Integer.compare(n1[0], n2[0]);
             }
+            return Integer.compare(n1[1], n2[1]);
+        });
 
-            int[] next = {crrN + 1, crrN - 1, crrN * 2};
-            for (int nextN : next) {
-                if (nextN >= 0 && nextN <= 100000 && !visited.contains(nextN)){
-                    visited.add(nextN);
-                    queue.add(new int[]{nextN, crrDepth + 1});
-                }
+
+
+        int leastStartTime = 0;
+        int ableMeetingNum = 0;
+        for (int i = 0; i < meetingNum; i++) {
+            int start = meetings[i][0];
+            int end = meetings[i][1];
+
+            // 이전에 선택한 회의와 겹치지 않으면 선택
+            if (start >= leastStartTime) {
+                ableMeetingNum++;
+                leastStartTime = end;
             }
         }
+
+        bw.write(Integer.toString(ableMeetingNum));
+        
         bw.flush();
         bw.close();
     }
 }
-
