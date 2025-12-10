@@ -1149,6 +1149,37 @@ public class Sliver {
         bw.flush();
         bw.close();
     }
+    static void n1764() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String[] inputs = br.readLine().split(" ");
+        int N = Integer.parseInt(inputs[0]);
+        int M = Integer.parseInt(inputs[1]);
+
+        HashSet<String> unHeard = new HashSet<>();
+        TreeSet<String> unHeardLooked = new TreeSet<>();
+
+        for (int i = 0; i < N; i++) {
+            unHeard.add(br.readLine());
+        }
+        for (int i = 0; i < M; i++) {
+            String unLooked = br.readLine();
+            if (unHeard.contains(unLooked)) {
+                unHeardLooked.add(unLooked);
+            }
+
+        }
+        bw.write(Integer.toString(unHeardLooked.size()));
+        for (String i : unHeardLooked) {
+            bw.newLine();
+            bw.write(i);
+        }
+
+        
+        bw.flush();
+        bw.close();
+    }
 }
 
 
