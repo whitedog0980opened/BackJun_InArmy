@@ -8,69 +8,59 @@ public class Main {
 
         //get inputs
         String[] inputs = br.readLine().split(" ");
-        int xNum = Integer.parseInt(inputs[0]);
-        int yNum = Integer.parseInt(inputs[1]);
-        int zNum = Integer.parseInt(inputs[2]);
+        int rowNum = Integer.parseInt(inputs[0]);
+        int colNum = Integer.parseInt(inputs[1]);
+        int targerY = rowNum -1;
+        int targetX = colNum -1;
+        boolean[][] map = new boolean[rowNum][colNum];
 
-        int[][][] tomatoMap = new int[xNum][yNum][zNum];
+        for (int i = 0; i < rowNum; i++) {
+            String[] rowInputs = br.readLine().split("");
+
+            for (int j = 0; j < colNum; j++) {
+                boolean isRoad = Integer.parseInt(rowInputs[j]) == 1;
+                if (isRoad) map[i][j] = true;
+            }
+        }
+
+        //BFS
         Queue<int[]> queue = new LinkedList<>();
-        HashSet<int[]> visitedNode = new HashSet<>();
+        int[] startPoint = {0, 0, 0}; //x ,y ,depth
+        queue.add(startPoint);
+        HashSet<int[]> visited = new HashSet<>();
+        visited.add(startPoint);
 
-        for (int i = 0; i < yNum * zNum; i++) {
-            String[] inputRow = br.readLine().split(" ");
-            for (int j = 0; j < xNum; j++) {
-                int tempY = i % yNum;
-                int tempZ = i / yNum;
-                int crrTomato = Integer.parseInt(inputRow[j]);
-                tomatoMap[j][tempY][tempZ] = crrTomato; // init tomato map
-                if (crrTomato == 1) { //add ripe tomato (1)
-                    int[] tomatoCoord = {j, tempY, tempZ, 0};
-                    queue.add(tomatoCoord);
-                    visitedNode.add(tomatoCoord);
+        int[] dx = {1, -1, 0 ,0};
+        int[] dy = {0, 0, 1, -1};
+        int maxDepth = 0;
+
+        first: while (!queue.isEmpty()) {
+            int[] crrPoint = queue.poll();
+
+            for (int i = 0; i < 4; i++) {
+                int[] nextPoint = {crrPoint[0] + dx[i], crrPoint[1] + dy[i], crrPoint[2] + 1};
+                if (nextPoint[1] < 0 || nextPoint[1] >= rowNum ||
+                    nextPoint[0] < 0 || nextPoint[0] >= colNum ) {
+                    continue;
+                }
+                boolean isVisited = visited.stream().anyMatch(arr -> arr[0] == nextPoint[0] && arr[1] == nextPoint[1]);
+                if (isVisited) continue;
+
+                int[] target = {targetX, targerY};
+                int[] nextXY = {nextPoint[0], nextPoint[1]};
+                if(Arrays.equals(nextXY, target)) {
+                    maxDepth = nextPoint[2];
+                    break first;
+                }
+
+                if(map[nextPoint[1]][nextPoint[0]]) {
+                    queue.add(nextPoint);
+                    visited.add(nextPoint);
                 }
             }
         }
 
-        int depth = 0;
-        int[] dx = {1, -1, 0, 0, 0, 0};
-        int[] dy = {0, 0, 1, -1, 0, 0};
-        int[] dz = {0, 0, 0, 0, 1, -1};
-
-        
-
-        while (!queue.isEmpty()) {
-            int[] crrRipeTomato = queue.poll();
-
-            for (int i = 0; i < 6; i++) {
-                int[] nextXYZ = {crrRipeTomato[0] + dx[i], crrRipeTomato[1] + dy[i], crrRipeTomato[2] + dz[i]};
-                boolean borderCheck = nextXYZ[0] > -1 && nextXYZ[1] > -1 && nextXYZ[2] > -1
-                                    && nextXYZ[0] < xNum && nextXYZ[1] < yNum && nextXYZ[2] < zNum;
-                if (borderCheck) {
-                    boolean visitCheck = visitedNode.stream().allMatch((arr -> Arrays.equals(arr, nextXYZ)));
-                    boolean isUnriped = tomatoMap[nextXYZ[0]][nextXYZ[1]][nextXYZ[2]] == 0;
-                    if (!visitCheck && isUnriped) {
-                        tomatoMap[nextXYZ[0]][nextXYZ[1]][nextXYZ[2]] = 1;
-                        depth = crrRipeTomato[3] + 1;
-                        int[] temp = {nextXYZ[0], nextXYZ[1], nextXYZ[2], depth};
-                        queue.add(temp);
-                    }
-                }
-            }
-        }
-
-        boolean hasZero = Arrays.stream(tomatoMap)
-                                .flatMap(Arrays::stream)
-                                .flatMapToInt(Arrays::stream)
-                                .anyMatch(x -> x == 0);
-
-        if (hasZero) {
-            bw.write(Integer.toString(-1));
-            bw.flush();
-            bw.close();
-            return;
-        }
-
-        bw.write(Integer.toString(depth));
+        bw.write(Integer.toString(maxDepth + 1));
         
         bw.flush();
         bw.close();
