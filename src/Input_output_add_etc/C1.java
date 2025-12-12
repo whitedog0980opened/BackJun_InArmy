@@ -737,4 +737,37 @@ public class C1 {
         bw.flush();
         bw.close();
     }
+    static int for24416fibo1 = 0;
+    static void n24416() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        //get inputs
+        int fiboMax = Integer.parseInt(br.readLine());
+
+        int[] fiboArray = new int[fiboMax];
+        int fibo2 = 0;
+        fiboArray[0] = 1;
+        fiboArray[1] = 1;
+        for (int i = 2; i < fiboMax; i++) {
+            fiboArray[i] = fiboArray[i - 1] + fiboArray[i - 2];
+            fibo2++;
+        }
+
+        fibo24416(fiboMax);
+
+        bw.write(Integer.toString(for24416fibo1 + 1) + " " + Integer.toString(fibo2));
+
+        bw.flush();
+        bw.close();
+    }
+    static int fibo24416(int crr) {
+        if (crr == 1 || crr == 2) {
+            return 1;
+        } 
+        else {
+            for24416fibo1++;
+            return (fibo24416(crr - 1) + fibo24416(crr - 2));
+        }
+    }
 }
