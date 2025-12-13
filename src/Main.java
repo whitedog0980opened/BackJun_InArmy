@@ -9,32 +9,47 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         //get inputs
-        int fiboMax = Integer.parseInt(br.readLine());
-
-        int[] fiboArray = new int[fiboMax];
-        int fibo2 = 0;
-        fiboArray[0] = 1;
-        fiboArray[1] = 1;
-        for (int i = 2; i < fiboMax; i++) {
-            fiboArray[i] = fiboArray[i - 1] + fiboArray[i - 2];
-            fibo2++;
+        int computerNum = Integer.parseInt(br.readLine());
+        int graphNum = Integer.parseInt(br.readLine());
+        LinkedList<Integer>[] graphs = new LinkedList[computerNum + 1];
+        for (int i = 1; i < computerNum + 1; i++) { //init LinkedList Array
+            graphs[i] = new LinkedList<Integer>();
         }
 
-        fibo(fiboMax);
+        for (int i = 1; i < graphNum + 1; i++) {
+            String[] inputs = br.readLine().split(" ");
+            int from = Integer.parseInt(inputs[0]);
+            int to = Integer.parseInt(inputs[1]);
+            graphs[from].add(to);
+            graphs[to].add(from);
+        }
 
-        bw.write(Integer.toString(fibo1 + 1) + " " + Integer.toString(fibo2));
+        boolean[] visited = new boolean[computerNum + 1];
+        visited[1] = true;
+        
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(1);
 
+        int infected = 0;
+        while (!queue.isEmpty()) {
+            int crrPC = queue.poll();
+            for (int to : graphs[crrPC]) {
+                if (visited[to]) continue;
+                else {
+                    queue.add(to);
+                    visited[to] = true;
+                    infected++;
+                }
+            }
+        }
+
+        bw.write(Integer.toString(infected));
+
+
+        
         bw.flush();
         bw.close();
     }
-    static int fibo(int crr) {
-        if (crr == 1 || crr == 2) {
-            return 1;
-        } 
-        else {
-            fibo1++;
-            return (fibo(crr - 1) + fibo(crr - 2));
-        }
-    }
+
 
 }
