@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 //https://testcase.ac/problems/1764
 //https://www.acmicpc.net/step/16
+//want to solve list : 1043
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
