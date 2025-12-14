@@ -9,60 +9,76 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         //get inputs
-        int N = Integer.parseInt(br.readLine());
-        boolean[][] map = new boolean[N][N];
-        boolean[][] visited = new boolean[N][N];
-        int houseNum = 0;
-        ArrayList<Integer> houseSizes = new ArrayList<>();
+        String[] firstInput = br.readLine().split(" ");
+        int PeopleNum = Integer.parseInt(firstInput[0]);
+        int partyNum = Integer.parseInt(firstInput[1]);
 
-        for (int i = 0; i < N; i++) {
-            String[] inputLine = br.readLine().split("");
-            for (int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(inputLine[j]) == 1 ? true : false; // map[y][x] 
+        String[] secendInput = br.readLine().split(" ");
+        int knownPeopleNum = Integer.parseInt(secendInput[0]);
+        HashSet<Integer> knownPeople = new HashSet<>();
+        for (int i = 0; i < knownPeopleNum; i++) {
+            knownPeople.add(Integer.parseInt(secendInput[i + 1]));
+        }
+        //init
+        LinkedList<Integer>[] graphs = new LinkedList[PeopleNum + 1];
+        for (int i = 0; i < PeopleNum + 1; i++) {
+            graphs[i] = new LinkedList<>();
+        }
+        LinkedList<Integer>[] parties = new LinkedList[partyNum]; 
+        for (int i = 0; i < partyNum; i++) {
+            parties[i] = new LinkedList<>();
+        }
+        for (int i = 0; i < partyNum; i++) {
+            //inputs
+            String[] partyInput = br.readLine().split(" ");
+            //fill parties
+            for (int j = 0; j < partyInput.length; j++) {
+                parties[i].add(Integer.parseInt(partyInput[j]));
+            }
+            //fill graphs
+            int partyPeople = parties[i].get(0);
+            if (partyPeople == 0) continue; //if empty party
+            int host = Integer.parseInt(partyInput[1]);
+            for (int j = 2; j < partyPeople + 1; j++) {
+                int to = parties[i].get(j);
+                graphs[host].add(to);
+                graphs[to].add(host);
             }
         }
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                int result = findHouse(j, i, map, N, visited);
-                if (result >= 1) {
-                    houseNum++;
-                    houseSizes.add(result);
+        Queue<Integer> queue = new LinkedList<>();
+        HashSet<Integer> visited = new HashSet<>();
+        for (int i : knownPeople) {
+            queue.add(i);
+            visited.add(i);
+        }
+
+        while (!queue.isEmpty()) {
+            int crrPerson = queue.poll();
+            for (int i = 0; i < graphs[crrPerson].size(); i++) {
+                int nextPerson = graphs[crrPerson].get(i);
+                if (visited.contains(nextPerson)) continue;
+                else {
+                    visited.add(nextPerson);
+                    knownPeople.add(nextPerson);
+                    queue.add(nextPerson);
                 }
-
             }
         }
-        Collections.sort(houseSizes);
-        bw.write(Integer.toString(houseNum));
-        for (int i = 0; i < houseSizes.size(); i++) {
-            bw.newLine();
-            bw.write(Integer.toString(houseSizes.get(i)));
+
+        int ableParty = 0;
+        for (int i = 0; i < partyNum; i++) {
+            boolean able = true;
+            for (int j = 1; j < parties[i].size(); j++) {
+                int crrPerson = parties[i].get(j);
+                if (knownPeople.contains(crrPerson)) able = false;
+            }
+            if (able) ableParty++;
         }
 
+        bw.write(Integer.toString(ableParty));
 
         bw.flush();
         bw.close();
     }
-    static int findHouse(int crrX, int crrY, boolean[][] map, int N, boolean[][] visited) {
-        if (!map[crrY][crrX] || visited[crrY][crrX]) {
-            return 0;
-        }
-        int result = 1;
-        visited[crrY][crrX] = true;
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-        for (int i = 0; i < 4; i++) {
-            int nextX = crrX + dx[i];
-            int nextY = crrY + dy[i];
-            boolean borderCheck = nextX >= 0 && nextX < N && nextY >= 0 && nextY < N;
-            if (borderCheck && map[nextY][nextX] && !visited[nextY][nextX]) {
-                result += findHouse(nextX, nextY, map, N, visited);
-            } else {
-                continue;
-            }
-        }
-        return result;
-    }
-
-
 }
