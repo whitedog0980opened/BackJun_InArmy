@@ -15,7 +15,7 @@ public class Main {
         ArrayList<Integer> houseSizes = new ArrayList<>();
 
         for (int i = 0; i < N; i++) {
-            String[] inputLine = br.readLine().split(" ");
+            String[] inputLine = br.readLine().split("");
             for (int j = 0; j < N; j++) {
                 map[i][j] = Integer.parseInt(inputLine[j]) == 1 ? true : false; // map[y][x] 
             }
@@ -24,7 +24,7 @@ public class Main {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 int result = findHouse(j, i, map, N, visited);
-                if (result > 1) {
+                if (result >= 1) {
                     houseNum++;
                     houseSizes.add(result);
                 }
@@ -34,6 +34,7 @@ public class Main {
         Collections.sort(houseSizes);
         bw.write(Integer.toString(houseNum));
         for (int i = 0; i < houseSizes.size(); i++) {
+            bw.newLine();
             bw.write(Integer.toString(houseSizes.get(i)));
         }
 
@@ -42,9 +43,9 @@ public class Main {
         bw.close();
     }
     static int findHouse(int crrX, int crrY, boolean[][] map, int N, boolean[][] visited) {
-        if (!map[crrY][crrX]) return 0;  //if 0
-        if (visited[crrY][crrX]) return 0;// if visited
-
+        if (!map[crrY][crrX] || visited[crrY][crrX]) {
+            return 0;
+        }
         int result = 1;
         visited[crrY][crrX] = true;
         int[] dx = {-1, 1, 0, 0};
@@ -53,8 +54,10 @@ public class Main {
             int nextX = crrX + dx[i];
             int nextY = crrY + dy[i];
             boolean borderCheck = nextX >= 0 && nextX < N && nextY >= 0 && nextY < N;
-            if (borderCheck) {
-                result += findHouse(nextX, nextY, map, nextY, visited);
+            if (borderCheck && map[nextY][nextX] && !visited[nextY][nextX]) {
+                result += findHouse(nextX, nextY, map, N, visited);
+            } else {
+                continue;
             }
         }
         return result;
