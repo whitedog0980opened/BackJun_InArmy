@@ -10,74 +10,34 @@ public class Main {
 
         //get inputs
         String[] firstInput = br.readLine().split(" ");
-        int PeopleNum = Integer.parseInt(firstInput[0]);
-        int partyNum = Integer.parseInt(firstInput[1]);
+        int treeNum = Integer.parseInt(firstInput[0]);
+        long needQuantity = Integer.parseInt(firstInput[1]);
+        String[] treesInput = br.readLine().split(" ");
+        int[] trees = new int[treeNum];
+        int longestTree = 0;
+        for (int i = 0; i < treeNum; i++) {
+            trees[i] = Integer.parseInt(treesInput[i]);
+            if (longestTree < trees[i]) longestTree = trees[i];
+        }
 
-        String[] secendInput = br.readLine().split(" ");
-        int knownPeopleNum = Integer.parseInt(secendInput[0]);
-        HashSet<Integer> knownPeople = new HashSet<>();
-        for (int i = 0; i < knownPeopleNum; i++) {
-            knownPeople.add(Integer.parseInt(secendInput[i + 1]));
-        }
-        //init
-        LinkedList<Integer>[] graphs = new LinkedList[PeopleNum + 1];
-        for (int i = 0; i < PeopleNum + 1; i++) {
-            graphs[i] = new LinkedList<>();
-        }
-        LinkedList<Integer>[] parties = new LinkedList[partyNum]; 
-        for (int i = 0; i < partyNum; i++) {
-            parties[i] = new LinkedList<>();
-        }
-        for (int i = 0; i < partyNum; i++) {
-            //inputs
-            String[] partyInput = br.readLine().split(" ");
-            //fill parties
-            for (int j = 0; j < partyInput.length; j++) {
-                parties[i].add(Integer.parseInt(partyInput[j]));
+        long start = 0;
+        long end = longestTree;
+        long result= 0;
+        while (start <= end) {
+            long mid = start + (end - start) / 2;
+            long collected = 0;
+            for (int tree : trees) { //counting tree collected
+                if (tree > mid) collected += tree - mid;
             }
-            //fill graphs
-            int partyPeople = parties[i].get(0);
-            if (partyPeople == 0) continue; //if empty party
-            int host = Integer.parseInt(partyInput[1]);
-            for (int j = 2; j < partyPeople + 1; j++) {
-                int to = parties[i].get(j);
-                graphs[host].add(to);
-                graphs[to].add(host);
+            long crrOverCollected = collected - needQuantity;
+            if (collected >= needQuantity) {
+                result = mid;
+                start = mid + 1;
+            } else {
+                end = mid - 1;
             }
         }
-
-        Queue<Integer> queue = new LinkedList<>();
-        HashSet<Integer> visited = new HashSet<>();
-        for (int i : knownPeople) {
-            queue.add(i);
-            visited.add(i);
-        }
-
-        while (!queue.isEmpty()) {
-            int crrPerson = queue.poll();
-            for (int i = 0; i < graphs[crrPerson].size(); i++) {
-                int nextPerson = graphs[crrPerson].get(i);
-                if (visited.contains(nextPerson)) continue;
-                else {
-                    visited.add(nextPerson);
-                    knownPeople.add(nextPerson);
-                    queue.add(nextPerson);
-                }
-            }
-        }
-
-        int ableParty = 0;
-        for (int i = 0; i < partyNum; i++) {
-            boolean able = true;
-            for (int j = 1; j < parties[i].size(); j++) {
-                int crrPerson = parties[i].get(j);
-                if (knownPeople.contains(crrPerson)) able = false;
-            }
-            if (able) ableParty++;
-        }
-
-        bw.write(Integer.toString(ableParty));
-
+        bw.write(Long.toString(result));
         bw.flush();
         bw.close();
     }
