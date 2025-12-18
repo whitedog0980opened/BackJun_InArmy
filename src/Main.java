@@ -8,28 +8,27 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int[] cases = new int[12];
-        cases[1] = 1;
-        cases[2] = 2;
-        cases[3] = 4;
-        //get inputs
-        int testCase = Integer.parseInt(br.readLine());
-        int max = 0;
-        int[] testCases = new int[testCase];
-        for (int i = 0; i < testCase; i++) {
-            int crr = Integer.parseInt(br.readLine());
-            testCases[i] = crr;
-            if (max < crr) max = crr;
+        String[] firstInput = br.readLine().split(" ");
+        int numslength = Integer.parseInt(firstInput[0]);
+        int tries = Integer.parseInt(firstInput[1]);
+
+        String[] numsInput = br.readLine().split(" ");
+        int[] nums = new int[numslength + 1];
+        int[] numsDP = new int[numslength + 1];
+        for (int i = 1; i < numslength + 1; i++) {
+            nums[i] = Integer.parseInt(numsInput[i - 1]);
+            numsDP[i] = numsDP[i - 1] + nums[i];
         }
 
-        for (int i = 4; i < max + 1; i++) {
-            cases[i] = cases[i - 1] + cases[i - 2] + cases[i - 3];
-        }
+        for (int i = 0; i < tries; i++) {
+            String[] inputArea = br.readLine().split(" ");
+            int from = Integer.parseInt(inputArea[0]);
+            int to = Integer.parseInt(inputArea[1]);
+            int sum1 = numsDP[to];
+            int sum2 = numsDP[from - 1];
 
-        bw.write(Integer.toString(cases[testCases[0]]));
-        for (int i = 1; i < testCase; i++) {
+            bw.write(Integer.toString(sum1 - sum2));
             bw.newLine();
-            bw.write(Integer.toString(cases[testCases[i]]));
         }
 
         bw.flush();
