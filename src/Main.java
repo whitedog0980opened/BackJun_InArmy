@@ -36,11 +36,14 @@ public class Main {
                     }
                 }
                 else {
-                    int[] newArray = IntStream.range(0, array.length)
-                          .map(k -> array[array.length - 1 - k])
-                          .toArray();
-
-                    System.arraycopy(newArray, 0, array, 0, array.length);
+                    int len = array.length;
+                    int[] newArray = new int[len];
+    
+                    for (int k = 0; k < len; k++) {
+                        newArray[k] = array[len - 1 - k];
+                    }
+    
+                    System.arraycopy(newArray, 0, array, 0, len);
                 }
             }
             arrayLength = array.length;
