@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 //https://testcase.ac/problems/1764
 //https://www.acmicpc.net/step/16
 //want to solve list : 1043
@@ -8,42 +9,60 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int tries = Integer.parseInt(br.readLine());
-        HashSet set = new HashSet<>();
-        for (int i = 0; i < tries; i++) {
-            String[] command = br.readLine().split(" ");
-            if (command.length == 1) {
-                if (command[0].equals("all")) {
-                    for (int j = 1; j <= 20; j++) {
-                        set.add(j);
+        int testCase = Integer.parseInt(br.readLine());
+        firstLoop : for (int i = 0; i < testCase; i++) {
+            boolean isFliped = false;
+            String commends = br.readLine().replace("RR", "");
+            int arrayLength = Integer.parseInt(br.readLine());
+            String[] arrayString = br.readLine().replaceAll("[\\[\\]]", "").split(",");
+
+            int[] array = new int[arrayLength];
+            for (int j = 0; j < arrayLength; j++) { //get array
+                array[j] = Integer.parseInt(arrayString[j]);
+            }
+            for (int j = 0; j < commends.length(); j++) { //handle commend
+                char crrCommend = commends.charAt(j);
+                if (crrCommend == 'D') {
+                    if (array.length >= 1) {
+                        int[] newArray = new int[array.length - 1];
+                        for (int k = 1; k < array.length; k++) {
+                            newArray[k - 1] = array[k];
+                        }
+                        array = newArray;
                     }
-                    continue;
-                } else {
-                    set.removeAll(set);
-                    continue;
+                    else {
+                        bw.write("error\n");
+                        continue firstLoop;
+                    }
+                }
+                else {
+                    int[] newArray = IntStream.range(0, array.length)
+                          .map(k -> array[array.length - 1 - k])
+                          .toArray();
+
+                    System.arraycopy(newArray, 0, array, 0, array.length);
                 }
             }
-            int num = Integer.parseInt(command[1]);
-            if (command[0].equals("add")) {
-                set.add(num);
+            arrayLength = array.length;
+            if (arrayLength == 1) {
+                bw.write("[" + array[0] + "]\n");
                 continue;
             }
-            else if (command[0].equals("remove")) {
-                set.remove(num);
-                continue;
+            for (int j = 0; j < arrayLength; j++) {
+                if (j == arrayLength -1) {
+                    bw.write(array[j] + "]\n");
+                }
+                else if (j == 0) {
+                    bw.write("[" + array[j] + ",");
+                }
+                else {
+                    bw.write(array[j] + ",");
+                }
             }
-            else if (command[0].equals("toggle")) {
-                boolean toggle = set.contains(num);
-                if (toggle) set.remove(num);
-                else set.add(num);
-                continue;
-            }
-            else if (command[0].equals("check")) {
-                boolean isContain = set.contains(num);
-                if (isContain) bw.write("1\n");
-                else bw.write("0\n");
-            }
+
+
         }
+        
 
         bw.flush();
         bw.close();
