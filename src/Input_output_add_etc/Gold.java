@@ -615,4 +615,145 @@ public class Gold {
         bw.flush();
         bw.close();
     }
+    static void n5430NeedToReview() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder(); // 출력을 한 번에 모으기 위함
+
+        int T = Integer.parseInt(br.readLine());
+
+        while (T-- > 0) {
+            String command = br.readLine();
+            int n = Integer.parseInt(br.readLine());
+            String input = br.readLine();
+
+            // Deque에 숫자 담기 (양방향 삭제 가능)
+            Deque<Integer> deque = new LinkedList<>();
+            // 대괄호 제외하고 숫자만 분리
+            StringTokenizer st = new StringTokenizer(input.substring(1, input.length() - 1), ",");
+            while (st.hasMoreTokens()) {
+                deque.add(Integer.parseInt(st.nextToken()));
+            }
+
+            boolean isReversed = false;
+            boolean isError = false;
+
+            for (char cmd : command.toCharArray()) {
+                if (cmd == 'R') {
+                    isReversed = !isReversed; // 방향만 전환
+                } else { // 'D' 인 경우
+                    if (deque.isEmpty()) {
+                        isError = true;
+                        break;
+                    }
+                    // 방향에 따라 앞 혹은 뒤에서 제거
+                    if (isReversed) {
+                        deque.removeLast();
+                    } else {
+                        deque.removeFirst();
+                    }
+                }
+            }
+
+            if (isError) {
+                sb.append("error\n");
+            } else {
+                makeResultString(sb, deque, isReversed);
+            }
+        }
+        System.out.print(sb);
+    }
+
+    private static void makeResultString(StringBuilder sb, Deque<Integer> deque, boolean isReversed) {
+        sb.append("[");
+        while (!deque.isEmpty()) {
+            sb.append(isReversed ? deque.removeLast() : deque.removeFirst());
+            if (!deque.isEmpty()) {
+                sb.append(",");
+            }
+        }
+        sb.append("]\n");
+    }
+    static void n5430Wrong() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int testCase = Integer.parseInt(br.readLine());
+        firstLoop : for (int i = 0; i < testCase; i++) {
+            boolean isFliped = false;
+            int[] deletingIndex = {0, 0};
+            String commends = br.readLine().replace("RR", "");
+            int arrayLength = Integer.parseInt(br.readLine());
+            String[] arrayString = br.readLine().replaceAll("[\\[\\]]", "").split(",");
+
+            int[] array = new int[arrayLength];
+            for (int j = 0; j < arrayLength; j++) { //get array
+                array[j] = Integer.parseInt(arrayString[j]);
+            }
+            for (int j = 0; j < commends.length(); j++) { //handle commend
+                char crrCommend = commends.charAt(j);
+                if (crrCommend == 'D') {
+                    int aliveNumCounter = 0;
+                    for (int k : array) {
+                        if (k != -1) aliveNumCounter++;
+                    }
+
+                    if (aliveNumCounter >= 1) {
+                        if (!isFliped) {
+                            array[deletingIndex[0]++] = -1;
+                        } else {
+                            array[array.length - deletingIndex[1] - 1] = -1;
+                            deletingIndex[1]++;
+                        }
+
+                        // int[] newArray = new int[array.length - 1];
+                        // for (int k = 1; k < array.length; k++) {
+                        //     newArray[k - 1] = array[k];
+                        // }
+                        // array = newArray;
+                    }
+                    else {
+                        bw.write("error\n");
+                        continue firstLoop;
+                    }
+                }
+                else {
+                    int len = array.length;
+                    int[] newArray = new int[len];
+    
+                    for (int k = 0; k < len; k++) {
+                        newArray[k] = array[len - 1 - k];
+                    }
+    
+                    System.arraycopy(newArray, 0, array, 0, len);
+                    isFliped = !isFliped;
+                }
+            }
+            arrayLength = array.length;
+            int[] temp = new int[array.length];
+            int k = 0;
+            for (int j = 0; j < array.length; j++) {
+                if (array[j] != 0) {
+                    temp[k++] = array[j];
+                }
+            } 
+
+            if (arrayLength == 1) {
+                bw.write("[" + temp[0] + "]\n");
+                continue;
+            }
+            for (int j = 0; j < k; j++) {
+                if (j == k - 1) {
+                    bw.write(temp[j] + "]\n");
+                }
+                else if (j == 0) {
+                    bw.write("[" + temp[j] + ",");
+                }
+                else {
+                    bw.write(temp[j] + ",");
+                }
+            }
+        }
+        bw.flush();
+        bw.close();
+    }
 }
