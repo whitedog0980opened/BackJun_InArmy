@@ -10,41 +10,44 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
-        int M = Integer.parseInt(br.readLine());
-        String str = br.readLine();
-        String str2 = str.replace("IO", "1") + "O";
+        int testCase = Integer.parseInt(br.readLine());
 
-        ArrayList<Integer> foundRepeatPattern = new ArrayList<>();
-        boolean[] is1 = {false};
-        int[] counter = {0};
-        str2.chars().forEach(i -> {
-            if (is1[0]) {
-                if (i == 'I') { // I
-                    foundRepeatPattern.add(counter[0]);
-                    counter[0] = 0;
-                    is1[0] = false;
-                } else if (i == 'O') { // 0
-                    foundRepeatPattern.add(counter[0] - 1);
-                    counter[0] = 0;
-                    is1[0] = false;
-                } else {
-                    counter[0]++;
+        while (0 < testCase--) {
+            int inputCase = Integer.parseInt(br.readLine());
+            TreeMap<Integer, Integer> doublePreQueue = new TreeMap<>();
+
+            for (int i = 0; i < inputCase; i++) {
+                String[] inputStr = br.readLine().split(" ");
+                char commend = inputStr[0].charAt(0);
+                int value = Integer.parseInt(inputStr[1]);
+                boolean smallist = false;
+
+                // add entry
+                if (commend == 'I') {
+                    doublePreQueue.merge(value, 1, (x1, x2) -> {return x1 + x2;});
+                    continue;
+                } // delete entry
+                else if (value == -1) {
+                    smallist = true;
                 }
                 
-            } else if(i == '1') { // 1
-                counter[0]++;
-                is1[0] = true;
+                if (doublePreQueue.isEmpty()) continue; // if empty
+                int key = smallist ? doublePreQueue.firstKey() : doublePreQueue.lastKey();
+                int queueValue = doublePreQueue.get(key);
+                if (queueValue > 1) doublePreQueue.put(key, queueValue - 1);
+                else doublePreQueue.remove(key);
             }
-        });
 
-        int result = 0;
-        for (int i : foundRepeatPattern) {
-            int cul = i - N + 1;
-            if (cul > 0) result += cul;
+            if (doublePreQueue.isEmpty()) {
+                bw.write("EMPTY\n");
+            }
+            else {
+                String lastNum = Integer.toString(doublePreQueue.lastKey());
+                String firstNum = Integer.toString(doublePreQueue.firstKey());
+                bw.write(lastNum + " " + firstNum + "\n");
+            }
         }
-
-        bw.write(Integer.toString(result));
+        
         bw.flush();
         bw.close();
     }
