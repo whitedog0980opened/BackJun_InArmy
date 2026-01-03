@@ -5,6 +5,13 @@ import java.util.stream.IntStream;
 //https://www.acmicpc.net/step/16
 //want to solve list : 1043
 //need to review = 5430 ! deque
+
+//문제점들
+//visit 확인은 그냥 int배열로 해도 됨 굳이 객체 오버라이드 쓸 필요 없음
+//역시 숫자는 1개의 int로 관리하는게 더 효율적임
+//객체에 굳이 String 을 들고 다닐 필요가 없음 계산이 부하 많이 듦
+// 그냥 2차원 배열로 (DSLR * 인덱스) 관리하는게 어떰
+// 클래스를 없애고, 그냥 위의 배열에 숫자를 저장하고, 좌표를 queue에 넣으면 될듯
 public class Main {
     static class Num {
         //field
