@@ -12,84 +12,76 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int testCase = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
-        while (0 < testCase--) {
-            //init
-            String[] inputs = br.readLine().split(" ");
-            int num = Integer.parseInt(inputs[0]); 
-            int targetNum = Integer.parseInt(inputs[1]);;
-
-            //[0] = D, [1] = S, [2] = L, [3] = R
-
-            Queue<String[]> objectNum = new LinkedList<>();
-            // int[] startPoint = {0, 0, 0, 0, num};
-            //it seems to able to Optimization to change this type to new Class 
-            //new Class has field StringBulider and int
-            String[] startPoint = {"", Integer.toString(num)};
-            objectNum.add(startPoint);
-
-            HashSet<Integer> visited = new HashSet<>();
-            visited.add(num);
-            int result = 0;
-
-            //BFS
-            while (!objectNum.isEmpty()) {
-                String[] crrArr = objectNum.poll();
-                int crrNum = Integer.parseInt(crrArr[1]);
-
-                //answer check
-                if (crrNum == targetNum) {
-                    bw.write(crrArr[0]);
-                    bw.newLine();
-                    break;
-                }
-
-                //add to queue
-                //D
-                int nextNum = crrNum * 2 % 10000;
-                if (!visited.contains(nextNum)) {
-                    String[] nextArr = {crrArr[0] + "D", Integer.toString(nextNum)};
-                    visited.add(nextNum);
-                    objectNum.add(nextArr);
-                }
-                //S
-                nextNum = crrNum - 1;
-                if (nextNum < 0) nextNum = 9999;
-                if (!visited.contains(nextNum)) {
-                    String[] nextArr = {crrArr[0] + "S", Integer.toString(nextNum)};
-                    visited.add(nextNum);
-                    objectNum.add(nextArr);
-                }
-                //L
-                int n1 = crrNum % 10;
-                int n2 = crrNum % 100 / 10;
-                int n3 = crrNum % 1000 / 100;
-                int n4 = crrNum / 1000;
-                int temp = n4;
-                n4 = n3; n3 = n2; n2 = n1; n1 = temp;
-                nextNum = n1 + n2 * 10 + n3 * 100 + n4 * 1000;
-                if (!visited.contains(nextNum)) {
-                    String[] nextArr = {crrArr[0] + "L", Integer.toString(nextNum)};;
-                    visited.add(nextNum);
-                    objectNum.add(nextArr);
-                }
-                //R
-                n1 = crrNum % 10;
-                n2 = crrNum % 100 / 10;
-                n3 = crrNum % 1000 / 100;
-                n4 = crrNum / 1000;
-                temp = n4;
-                n4 = n1; n1 = n2; n2 = n3; n3 = temp; 
-                nextNum = n1 + n2 * 10 + n3 * 100 + n4 * 1000;
-                if (!visited.contains(nextNum)) {
-                    String[] nextArr = {crrArr[0] + "R", Integer.toString(nextNum)};;
-                    visited.add(nextNum);
-                    objectNum.add(nextArr);
-                }
+        //G = 1, R = 2, B = 5
+        int[][] map = new int[N][N];
+        int[][] map2 = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            String[] inputLine = br.readLine().split("");
+            for (int j = 0; j < N; j++) {
+                map[i][j] = inputLine[j].equals("G") ? 1 : inputLine[j].equals("R") ? 2 : 3;
+                map2[i][j] = inputLine[j].equals("B") ? 1 : 2;
             }
         }
+
+        int RGBresult = 0;
+        int GBresult = 0;
+
+        boolean[][] visitedRGB = new boolean[N][N];
+        boolean[][] visitedGB = new boolean[N][N];
+
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
+
+        LinkedList<int[]> linkedList = new LinkedList<>();
         
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                int[] crrTemp = {i, j};
+                linkedList.add(crrTemp);
+                if (visitedRGB[i][j]) RGBresult--;
+                if (visitedGB[i][j]) GBresult--;
+                visitedRGB[i][j] = true;
+                visitedGB[i][j] = true;
+                
+                //RGB
+                while (!linkedList.isEmpty()) {
+                    int[] crrXY = linkedList.poll();
+                    for (int k = 0; k < 4; k++) {
+                        int[] nextXY = {crrXY[0] + dx[k], crrXY[1] + dy[k]};
+                        boolean borderCheck = nextXY[0] >= 0 && nextXY[0] < N && nextXY[1] >= 0 && nextXY[1] < N ? true : false;
+                        if (!borderCheck) continue;
+                        if (!visitedRGB[nextXY[0]][nextXY[1]] && 
+                            map[crrXY[0]][crrXY[1]] == map[nextXY[0]][nextXY[1]]) {
+                            linkedList.add(nextXY);
+                            visitedRGB[nextXY[0]][nextXY[1]] = true;
+                            continue;
+                        }
+                    }
+                }
+                RGBresult++;
+                //GB
+                linkedList.add(crrTemp);
+                while (!linkedList.isEmpty()) {
+                    int[] crrXY = linkedList.poll();
+                    for (int k = 0; k < 4; k++) {
+                        int[] nextXY = {crrXY[0] + dx[k], crrXY[1] + dy[k]};
+                        boolean borderCheck = nextXY[0] >= 0 && nextXY[0] < N && 
+                                              nextXY[1] >= 0 && nextXY[1] < N ? true : false;
+                        if (!borderCheck) continue;
+                        if (!visitedGB[nextXY[0]][nextXY[1]] && 
+                            map2[crrXY[0]][crrXY[1]] == map2[nextXY[0]][nextXY[1]]) {
+                            linkedList.add(nextXY);
+                            visitedGB[nextXY[0]][nextXY[1]] = true;
+                        }
+                    }
+                }
+                GBresult++;
+            }
+        }
+
+        bw.write(Integer.toString(RGBresult) + " " + Integer.toString(GBresult));
         bw.flush();
         bw.close();
     }
