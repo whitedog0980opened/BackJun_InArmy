@@ -1667,6 +1667,47 @@ public class Sliver {
         bw.flush();
         bw.close();
     }
+    static void n9375() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int testCase = Integer.parseInt(br.readLine());
+
+        while (0 < testCase--) {
+            int clothesNum = Integer.parseInt(br.readLine());
+
+            String[] sort = new String[clothesNum];
+            int[] ea = new int[clothesNum];
+
+            for (int i = 0; i < clothesNum; i++) {
+                String[] inputs = br.readLine().split(" ");
+
+                for (int j = 0; j < clothesNum; j++) {
+                    if (sort[j] == null) {
+                        sort[j] = inputs[1];
+                        ea[j]++;
+                        break;
+                    }
+                    if (sort[j].equals(inputs[1])) {
+                        ea[j]++;
+                        break;
+                    }
+                }
+            }
+
+            int result = 1;
+            for (int i = 0; i < clothesNum; i++) {
+                result *= ea[i] + 1;
+            }
+            result--;
+            bw.write(Integer.toString(result) + "\n");
+            
+            
+        }
+        
+        bw.flush();
+        bw.close();
+    }
 }
 
 
