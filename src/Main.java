@@ -6,90 +6,7 @@ import java.util.stream.IntStream;
 //want to solve list : 1043
 //need to review = 5430 ! deque
 
-//문제점들
-//visit 확인은 그냥 int배열로 해도 됨 굳이 객체 오버라이드 쓸 필요 없음
-//역시 숫자는 1개의 int로 관리하는게 더 효율적임
-//객체에 굳이 String 을 들고 다닐 필요가 없음 계산이 부하 많이 듦
-// 그냥 2차원 배열로 (DSLR * 인덱스) 관리하는게 어떰
-// 클래스를 없애고, 그냥 위의 배열에 숫자를 저장하고, 좌표를 queue에 넣으면 될듯
 public class Main {
-    static class Num {
-        //field
-        int n1; int n2; int n3; int n4;
-        int depth;
-        String commendList;
-        //constructor
-        Num(int n1, int n2, int n3, int n4, int depth, String commendList)  {
-            this.n1 = n1;
-            this.n2 = n2;
-            this.n3 = n3;
-            this.n4 = n4;
-            this.commendList = commendList;
-        }
-
-        //method
-        public void right() {
-            commendList += "R";
-            int temp = n4;
-            n4 = n1; n1 = n2; n2 = n3; n3 = temp; 
-        }
-        public void left() {
-            commendList += "L";
-            int temp = n4;
-            n4 = n3; n3 = n2; n2 = n1; n1 = temp;
-        }
-        //double value
-        public void mult2() {
-            commendList += "D";
-            int temp = 0;
-            temp = n1 * 2;
-            n1 = temp % 10;
-            temp = n2 * 2 + temp / 10;
-            n2 = temp % 10;
-            temp = n3 * 2 + temp / 10;
-            n3 = temp % 10;
-            n4 = (n4 * 2) % 10 + temp / 10;
-        }
-        // just -1, if value is 0000 -> 9999
-        public void minus() {
-            commendList += "S";
-            if (n1 == 0) {
-                n1 = 9;
-                if (n2 == 0) {
-                    n2 = 9;
-                    if (n3 == 0) {
-                        n3 = 9;
-                        if (n4 == 0) {
-                            n4 = 9;
-                            return;
-                        }
-                        n4 -= 1;
-                        return;
-                    }
-                    n3 -= 1;
-                    return;
-                }
-                n2 -= 1;
-                return;
-            }
-            n1 -= 1;
-        }
-        public boolean compare(int t1, int t2, int t3, int t4) {
-            if (n1 == t1 && n2 == t2 && n3 == t3 && n4 == t4) return true;
-            return false;
-        }
-        
-        @Override
-        public int hashCode() {
-            return n1 + n2 * 10 + n3 * 100 + n4 * 1000;
-        }
-        @Override
-        public boolean equals(Object obj) {
-            Num num = (Num) obj;
-            boolean result = this.n1 == num.n1 && this.n2 == num.n2 && this.n3 == num.n3 && this.n4 == num.n4 ? true : false;
-            return result;
-        } 
-    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -101,57 +18,74 @@ public class Main {
             //init
             String[] inputs = br.readLine().split(" ");
             int num = Integer.parseInt(inputs[0]); 
-            int targetNum = Integer.parseInt(inputs[1]);
-            
-            int n1 = num % 10;
-            int n2 = num % 100 / 10;
-            int n3 = num % 1000 / 100;
-            int n4 = num / 1000;
+            int targetNum = Integer.parseInt(inputs[1]);;
 
-            int t1 = targetNum % 10;
-            int t2 = targetNum % 100 /10;
-            int t3 = targetNum % 1000 / 100;
-            int t4 = targetNum / 1000;
+            //[0] = D, [1] = S, [2] = L, [3] = R
 
-            Queue<Num> objectNum = new LinkedList<>();
-            Num startObject = new Num(n1, n2, n3, n4, 0, "");
-            objectNum.add(startObject);
+            Queue<String[]> objectNum = new LinkedList<>();
+            // int[] startPoint = {0, 0, 0, 0, num};
+            //it seems to able to Optimization to change this type to new Class 
+            //new Class has field StringBulider and int
+            String[] startPoint = {"", Integer.toString(num)};
+            objectNum.add(startPoint);
 
-            HashMap<Num, Integer> visited = new HashMap<>();
+            HashSet<Integer> visited = new HashSet<>();
+            visited.add(num);
             int result = 0;
 
             //BFS
             while (!objectNum.isEmpty()) {
-                Num crrOj = objectNum.poll();
+                String[] crrArr = objectNum.poll();
+                int crrNum = Integer.parseInt(crrArr[1]);
 
                 //answer check
-                if (crrOj.compare(t1, t2, t3, t4)) {
-                    result = crrOj.depth;
-                    bw.write(crrOj.commendList);
+                if (crrNum == targetNum) {
+                    bw.write(crrArr[0]);
                     bw.newLine();
                     break;
                 }
 
-                //init temps
-                Num[] tempNums = new Num[4];
-                for(int i = 0; i < 4; i++) {
-                    tempNums[i] = new Num(crrOj.n1, crrOj.n2, crrOj.n3, crrOj.n4, crrOj.depth + 1, crrOj.commendList); 
-                }
-                tempNums[0].minus();
-                tempNums[1].mult2();
-                tempNums[2].left();
-                tempNums[3].right();
-
                 //add to queue
-                for (int i = 0; i < 4; i++) {
-                    Num crrTempNums = tempNums[i];
-                    //check isVisited
-                    if (visited.containsKey(crrTempNums)) {
-                        continue;
-                    }
-                    visited.put(crrTempNums, crrTempNums.depth);
-
-                    objectNum.add(crrTempNums);
+                //D
+                int nextNum = crrNum * 2 % 10000;
+                if (!visited.contains(nextNum)) {
+                    String[] nextArr = {crrArr[0] + "D", Integer.toString(nextNum)};
+                    visited.add(nextNum);
+                    objectNum.add(nextArr);
+                }
+                //S
+                nextNum = crrNum - 1;
+                if (nextNum < 0) nextNum = 9999;
+                if (!visited.contains(nextNum)) {
+                    String[] nextArr = {crrArr[0] + "S", Integer.toString(nextNum)};
+                    visited.add(nextNum);
+                    objectNum.add(nextArr);
+                }
+                //L
+                int n1 = crrNum % 10;
+                int n2 = crrNum % 100 / 10;
+                int n3 = crrNum % 1000 / 100;
+                int n4 = crrNum / 1000;
+                int temp = n4;
+                n4 = n3; n3 = n2; n2 = n1; n1 = temp;
+                nextNum = n1 + n2 * 10 + n3 * 100 + n4 * 1000;
+                if (!visited.contains(nextNum)) {
+                    String[] nextArr = {crrArr[0] + "L", Integer.toString(nextNum)};;
+                    visited.add(nextNum);
+                    objectNum.add(nextArr);
+                }
+                //R
+                n1 = crrNum % 10;
+                n2 = crrNum % 100 / 10;
+                n3 = crrNum % 1000 / 100;
+                n4 = crrNum / 1000;
+                temp = n4;
+                n4 = n1; n1 = n2; n2 = n3; n3 = temp; 
+                nextNum = n1 + n2 * 10 + n3 * 100 + n4 * 1000;
+                if (!visited.contains(nextNum)) {
+                    String[] nextArr = {crrArr[0] + "R", Integer.toString(nextNum)};;
+                    visited.add(nextNum);
+                    objectNum.add(nextArr);
                 }
             }
         }
