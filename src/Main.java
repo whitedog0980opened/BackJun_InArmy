@@ -13,76 +13,23 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
+        int testCase = Integer.parseInt(br.readLine());
 
-        //G = 1, R = 2, B = 5
-        int[][] map = new int[N][N];
-        int[][] map2 = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            String[] inputLine = br.readLine().split("");
-            for (int j = 0; j < N; j++) {
-                map[i][j] = inputLine[j].equals("G") ? 1 : inputLine[j].equals("R") ? 2 : 3;
-                map2[i][j] = inputLine[j].equals("B") ? 1 : 2;
+        while (testCase-- > 0) {
+            int N = Integer.parseInt(br.readLine());
+
+            long[] array = new long[N + 8];
+            array[0] = 1; array[1] = 1; array[2] = 1; array[3] = 2;
+            array[4] = 2; array[5] = 3; array[6] = 4; array[7] = 5;
+            //4 5 6
+            for (int i = 8; i < N; i++) {
+                array[i] = array[i - 1] + array[i - 5]; 
             }
+
+            bw.write(Long.toString(array[N - 1]) + "\n");
+
         }
 
-        int RGBresult = 0;
-        int GBresult = 0;
-
-        boolean[][] visitedRGB = new boolean[N][N];
-        boolean[][] visitedGB = new boolean[N][N];
-
-        int[] dx = {1, -1, 0, 0};
-        int[] dy = {0, 0, 1, -1};
-
-        LinkedList<int[]> linkedList = new LinkedList<>();
-        
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                int[] crrTemp = {i, j};
-                linkedList.add(crrTemp);
-                if (visitedRGB[i][j]) RGBresult--;
-                if (visitedGB[i][j]) GBresult--;
-                visitedRGB[i][j] = true;
-                visitedGB[i][j] = true;
-                
-                //RGB
-                while (!linkedList.isEmpty()) {
-                    int[] crrXY = linkedList.poll();
-                    for (int k = 0; k < 4; k++) {
-                        int[] nextXY = {crrXY[0] + dx[k], crrXY[1] + dy[k]};
-                        boolean borderCheck = nextXY[0] >= 0 && nextXY[0] < N && nextXY[1] >= 0 && nextXY[1] < N ? true : false;
-                        if (!borderCheck) continue;
-                        if (!visitedRGB[nextXY[0]][nextXY[1]] && 
-                            map[crrXY[0]][crrXY[1]] == map[nextXY[0]][nextXY[1]]) {
-                            linkedList.add(nextXY);
-                            visitedRGB[nextXY[0]][nextXY[1]] = true;
-                            continue;
-                        }
-                    }
-                }
-                RGBresult++;
-                //GB
-                linkedList.add(crrTemp);
-                while (!linkedList.isEmpty()) {
-                    int[] crrXY = linkedList.poll();
-                    for (int k = 0; k < 4; k++) {
-                        int[] nextXY = {crrXY[0] + dx[k], crrXY[1] + dy[k]};
-                        boolean borderCheck = nextXY[0] >= 0 && nextXY[0] < N && 
-                                              nextXY[1] >= 0 && nextXY[1] < N ? true : false;
-                        if (!borderCheck) continue;
-                        if (!visitedGB[nextXY[0]][nextXY[1]] && 
-                            map2[crrXY[0]][crrXY[1]] == map2[nextXY[0]][nextXY[1]]) {
-                            linkedList.add(nextXY);
-                            visitedGB[nextXY[0]][nextXY[1]] = true;
-                        }
-                    }
-                }
-                GBresult++;
-            }
-        }
-
-        bw.write(Integer.toString(RGBresult) + " " + Integer.toString(GBresult));
         bw.flush();
         bw.close();
     }
