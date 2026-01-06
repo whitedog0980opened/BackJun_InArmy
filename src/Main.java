@@ -13,22 +13,25 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int testCase = Integer.parseInt(br.readLine());
+        String[] inputs = br.readLine().split(" ");
+        int coinNum = Integer.parseInt(inputs[0]);
+        int target = Integer.parseInt(inputs[1]);
+        int[] coins = new int[coinNum];
 
-        while (testCase-- > 0) {
-            int N = Integer.parseInt(br.readLine());
-
-            long[] array = new long[N + 8];
-            array[0] = 1; array[1] = 1; array[2] = 1; array[3] = 2;
-            array[4] = 2; array[5] = 3; array[6] = 4; array[7] = 5;
-            //4 5 6
-            for (int i = 8; i < N; i++) {
-                array[i] = array[i - 1] + array[i - 5]; 
-            }
-
-            bw.write(Long.toString(array[N - 1]) + "\n");
-
+        for (int i = 0; i < coinNum; i++) {
+            coins[i] = Integer.parseInt(br.readLine());
         }
+
+        int current = 0;
+        int needCoin = 0;
+        for (int i = coinNum - 1; i >= 0; i--) {
+            while (coins[i] <= target - current) {
+                current += coins[i];
+                needCoin++;
+            }
+        }
+
+        bw.write(Integer.toString(needCoin));
 
         bw.flush();
         bw.close();
