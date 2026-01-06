@@ -13,26 +13,27 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] inputs = br.readLine().split(" ");
-        int coinNum = Integer.parseInt(inputs[0]);
-        int target = Integer.parseInt(inputs[1]);
-        int[] coins = new int[coinNum];
-
-        for (int i = 0; i < coinNum; i++) {
-            coins[i] = Integer.parseInt(br.readLine());
-        }
-
-        int current = 0;
-        int needCoin = 0;
-        for (int i = coinNum - 1; i >= 0; i--) {
-            while (coins[i] <= target - current) {
-                current += coins[i];
-                needCoin++;
+        int houseNum = Integer.parseInt(br.readLine());
+        //r = 0, g = 1, b = 2
+        int[][] houseColorCost = new int[houseNum][3];
+        //sums of pattern
+        
+        for (int i = 0; i < houseNum; i++) {
+            String[] costs = br.readLine().split(" ");
+            for (int j = 0; j < 3; j++) {
+                houseColorCost[i][j] = Integer.parseInt(costs[j]);
             }
         }
 
-        bw.write(Integer.toString(needCoin));
+        for (int i = 1; i < houseNum; i++) {
+            for (int j = 0; j < 3; j++) {
+                houseColorCost[i][j] += Math.min(houseColorCost[i - 1][(j + 1) % 3], houseColorCost[i - 1][(j + 2) % 3]);
+            }
+        }
 
+        int result = Math.min(Math.min(houseColorCost[houseNum - 1][0], houseColorCost[houseNum - 1][1]), houseColorCost[houseNum - 1][2]);
+
+        bw.write(Integer.toString(result));
         bw.flush();
         bw.close();
     }
