@@ -36,9 +36,9 @@ public class Main {
             for (int j = 1; j < nodeNum + 1; j++) {
                 if (map[i][j] == 0) continue; //empty 
 
+                int fromNum = map[i][j];
                 //this loop for find toNum and add new connection
                 for (int k = 1; k < nodeNum + 1; k++) {
-                    int fromNum = map[i][j];
                     int toNum = map[fromNum][k];
                     if (toNum == 0 || k == i) continue; //empty or fromNum and toNum endPoint is same 
                     if (newConnection[k] == 0 || (newConnection[k] > toNum + fromNum)) {
