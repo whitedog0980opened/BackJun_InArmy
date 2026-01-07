@@ -47,6 +47,10 @@ public class Main {
                 }
             }
         }
+        bw.write("stopPoint");
+        //42 인덱스 범위 초가 주의
+        //아마 맵 내부의 숫자는 거리를 뜻하는데, 이게 fromNum으로 착각해서 생김
+        //즉 첫번째 루프는 fromNum이 2가 아니라 2가 1.3 인덱스에 있으니까 from은 3이 됨
 
 
         bw.flush();
