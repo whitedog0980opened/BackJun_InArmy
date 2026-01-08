@@ -27,8 +27,8 @@ public class Temp {
         // init map
         for (int i = 0; i < nodeNum; i++) {
             String[] inputs = br.readLine().split(" ");
-            int crr = 0;
             int crrNode = Integer.parseInt(inputs[0]);
+            int crr = 0;
             while (true) {
                 int nextNode = Integer.parseInt(inputs[++crr]);
                 if (nextNode == -1) break;
@@ -42,17 +42,17 @@ public class Temp {
             //this loop for find fromNum
             int[] newConnection = new int[nodeNum + 1];
             for (int j = 1; j < nodeNum + 1; j++) {
-                if (map[i][j] == 0) continue; //empty 
+                int length = map[i][j];
+                if (length == 0) continue; //empty 
 
-                int fromNum = map[i][j];
                 //this loop for find toNum and add new connection
                 for (int k = 1; k < nodeNum + 1; k++) {
-                    int toNum = map[fromNum][k];
-                    if (toNum == 0 || k == i) continue; //empty or fromNum and toNum endPoint is same 
-                    if (newConnection[k] == 0 || (newConnection[k] > toNum + fromNum)) {
-                        newConnection[k] = toNum + fromNum;
+                    if (map[j][k] == 0 || k == i) continue; //empty or fromNum and toNum endPoint is same 
+                    if (newConnection[k] == 0 || (newConnection[k] > map[j][k] + map[i][j])) {
+                        newConnection[k] = map[j][k] + map[i][j];
                     }
                 }
+                boolean hasblank = false;
             }
         }
         bw.write("stopPoint");
