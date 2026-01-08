@@ -1,5 +1,12 @@
 //This class saves temp resorce or stocks
 
+// public class Main {
+//     public static void main(String[] args) throws IOException {
+
+//     }
+// }
+
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -52,6 +59,17 @@ public class Temp {
         //즉 첫번째 루프는 fromNum이 2가 아니라 2가 1.3 인덱스에 있으니까 from은 3이 됨
 
 
+        bw.flush();
+        bw.close();
+    }
+    static void n27866() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String text = br.readLine();
+        int index = Integer.parseInt(br.readLine());
+
+        bw.write(Character.toString(text.charAt(index - 1)));
         bw.flush();
         bw.close();
     }
