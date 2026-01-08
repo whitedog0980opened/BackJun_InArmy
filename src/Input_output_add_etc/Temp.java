@@ -12,6 +12,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Temp {
     public void n1167_inProgress() throws IOException {
@@ -70,6 +72,69 @@ public class Temp {
         int index = Integer.parseInt(br.readLine());
 
         bw.write(Character.toString(text.charAt(index - 1)));
+        bw.flush();
+        bw.close();
+    }
+    static void n11724() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String[] infos = br.readLine().split(" ");
+        int nodeNum = Integer.parseInt(infos[0]);
+        int graphNum = Integer.parseInt(infos[1]);
+
+        LinkedList<Integer>[] graphs = new LinkedList[nodeNum + 1];
+        //init graphs
+        for (int i = 1; i < nodeNum + 1; i++) {
+            graphs[i] = new LinkedList<Integer>();
+        }
+        //take buffer and fill graphs
+        for (int i = 0; i < graphNum; i++) {
+            String[] inputs = br.readLine().split(" ");
+            int from = Integer.parseInt(inputs[0]);
+            int to = Integer.parseInt(inputs[1]);
+            //no deraction
+            graphs[from].add(to);
+            graphs[to].add(from);
+        }
+
+        //find connections
+        boolean[] visited = new boolean[nodeNum + 1];
+        int colony = 0; //means independent group num
+        for (int i = 1; i < nodeNum + 1; i++) {
+            //check visited
+            if (visited[i]) continue;
+
+            visited[i] = true;
+            colony++;
+
+            // if node is independent
+            if (graphs[i].isEmpty()) continue;
+
+            //start of BFS
+            Queue<Integer> queue = new LinkedList<>();
+
+            int graphSize = graphs[i].size();
+            for (int j = 0; j < graphSize; j++) {
+                int next = graphs[i].poll();
+                visited[next] = true;
+                queue.add(next);
+            }
+
+            while (!queue.isEmpty()) {
+                int crr = queue.poll();
+                if (graphs[crr].isEmpty()) continue;
+                int crrGraphSize = graphs[crr].size();
+                for (int j = 0; j < crrGraphSize; j++) {
+                    int next2 = graphs[crr].poll();
+                    if (visited[next2]) continue;
+                    visited[next2] = true;
+                    queue.add(next2);
+                }
+            }
+        }
+
+        bw.write(Integer.toString(colony));
         bw.flush();
         bw.close();
     }
