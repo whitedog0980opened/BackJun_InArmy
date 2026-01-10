@@ -64,17 +64,6 @@ public class Temp {
         bw.flush();
         bw.close();
     }
-    static void n27866() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        String text = br.readLine();
-        int index = Integer.parseInt(br.readLine());
-
-        bw.write(Character.toString(text.charAt(index - 1)));
-        bw.flush();
-        bw.close();
-    }
     static void n11724() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
