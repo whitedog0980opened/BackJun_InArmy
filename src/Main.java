@@ -15,9 +15,11 @@ public class Main {
         int nodeNum = Integer.parseInt(br.readLine());
         int maxLenght = 0;
 
-        //from = first index, to = sec index
-        int[][] map = new int[nodeNum + 1][nodeNum + 1]; 
-        // init map
+        ArrayList<int[]>[] adj = new ArrayList[nodeNum + 1];
+        for (int i = 1; i < nodeNum + 1; i++) {
+            adj[i] = new ArrayList<>();
+        }
+
         for (int i = 0; i < nodeNum; i++) {
             String[] inputs = br.readLine().split(" ");
             int crrNode = Integer.parseInt(inputs[0]);
@@ -26,47 +28,46 @@ public class Main {
                 int nextNode = Integer.parseInt(inputs[++crr]);
                 if (nextNode == -1) break;
                 int length = Integer.parseInt(inputs[++crr]);
-                map[crrNode][nextNode] = length;
-                //check maxLenght
-                maxLenght = Math.max(maxLenght, length);
+                adj[crrNode].add(new int[]{nextNode, length});
             }
         }
 
-        // i = crrNode
-        boolean isNewDepth = true;
-        while (isNewDepth) {
-            isNewDepth = false;
-            int[][] newConnection = new int[nodeNum + 1][nodeNum + 1];
-            for (int i = 1; i < nodeNum + 1; i++) {
-            //this loop for find fromNum
-                
-                for (int j = 1; j < nodeNum + 1; j++) {
-                    int length = map[i][j];
-                    if (length == 0) continue; //empty 
 
-                    //this loop for find toNum and add new connection
-                    for (int k = 1; k < nodeNum + 1; k++) {
-                        int connectedNum = map[j][k] + map[i][j];
-                        if (map[j][k] == 0 || k == i) continue; //empty or fromNum and toNum endPoint is same 
-                        if ((newConnection[i][k] == 0 || (newConnection[i][k] > connectedNum)) && (map[i][k] > connectedNum || map[i][k] == 0)) {
-                            newConnection[i][k] = connectedNum;
-                        }
-                    }
-                }
-            }   
-            //apply newConnection
-            for (int i = 1; i <nodeNum + 1; i++ ) {
-                for (int j = 1; j < nodeNum + 1; j++) {
-                    if (newConnection[i][j] != 0) {
-                        isNewDepth = true;
-                        map[i][j] = newConnection[i][j];
-                        maxLenght = Math.max(maxLenght, newConnection[i][j]);
-                    }
-                }
-            }
-        }
-        bw.write(Integer.toString(maxLenght));
+        int[] firstPoint = bfs_1167(1, nodeNum, adj);
+        int[] secPoint = bfs_1167(firstPoint[0], nodeNum, adj)    ;
+        
+        bw.write(Integer.toString(secPoint[1]));
         bw.flush();
         bw.close();
+    }
+
+    static int[] bfs_1167(int start, int n, ArrayList<int[]>[] adj) {
+        boolean[] visited = new boolean[n + 1];
+        Queue<int[]> queue = new LinkedList<>();
+
+        int[] startArr = {start, 0}; // startnode, lenght
+        visited[start] = true;
+        queue.add(startArr);
+
+        int crrMaxLenght = 0;
+        int crrFartherNode = start;
+
+        while (!queue.isEmpty()) {
+            int[] crr = queue.poll();
+
+            if (crr[1] > crrMaxLenght) {
+                crrMaxLenght = crr[1];
+                crrFartherNode = crr[0];
+            }
+
+            for (int[] nextNode : adj[crr[0]]) {
+                if (visited[nextNode[0]]) {
+                    continue;
+                }
+                visited[nextNode[0]] = true;
+                queue.add(new int[]{nextNode[0], crr[1] + nextNode[1]});
+            }
+        }
+        return new int[]{crrFartherNode, crrMaxLenght};
     }
 }
