@@ -64,66 +64,68 @@ public class Temp {
         bw.flush();
         bw.close();
     }
-    static void n11724() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static void n14940() throws IOException {
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] infos = br.readLine().split(" ");
-        int nodeNum = Integer.parseInt(infos[0]);
-        int graphNum = Integer.parseInt(infos[1]);
+        String[] inputs = br.readLine().split(" ");
+        int N = Integer.parseInt(inputs[0]);
+        int M = Integer.parseInt(inputs[1]);
 
-        LinkedList<Integer>[] graphs = new LinkedList[nodeNum + 1];
-        //init graphs
-        for (int i = 1; i < nodeNum + 1; i++) {
-            graphs[i] = new LinkedList<Integer>();
-        }
-        //take buffer and fill graphs
-        for (int i = 0; i < graphNum; i++) {
-            String[] inputs = br.readLine().split(" ");
-            int from = Integer.parseInt(inputs[0]);
-            int to = Integer.parseInt(inputs[1]);
-            //no deraction
-            graphs[from].add(to);
-            graphs[to].add(from);
-        }
+        boolean[][] mapCanGo = new boolean[N][M];
+        int[][] wayToTarget = new int[N][M];
+        int[] target = new int[2];
 
-        //find connections
-        boolean[] visited = new boolean[nodeNum + 1];
-        int colony = 0; //means independent group num
-        for (int i = 1; i < nodeNum + 1; i++) {
-            //check visited
-            if (visited[i]) continue;
-
-            visited[i] = true;
-            colony++;
-
-            // if node is independent
-            if (graphs[i].isEmpty()) continue;
-
-            //start of BFS
-            Queue<Integer> queue = new LinkedList<>();
-
-            int graphSize = graphs[i].size();
-            for (int j = 0; j < graphSize; j++) {
-                int next = graphs[i].poll();
-                visited[next] = true;
-                queue.add(next);
+        for (int i = 0; i < N; i++) {
+            String[] inputLine = br.readLine().split(" ");
+            for (int j = 0; j < M; j++) {
+                int crr = Integer.parseInt(inputLine[j]);
+                if (crr == 1) {
+                    mapCanGo[i][j] = true;
+                    wayToTarget[i][j] = -1;
+                }
+                else if (crr == 2) {
+                    mapCanGo[i][j] = true;
+                    target = new int[]{i, j};
+                }
             }
+        }
+        // index2 = reach to target
+        int[] startPoint = {target[0], target[1], 0};
+        wayToTarget[startPoint[0]][startPoint[1]] = 0;
+        mapCanGo[startPoint[0]][startPoint[1]] = false;
 
-            while (!queue.isEmpty()) {
-                int crr = queue.poll();
-                if (graphs[crr].isEmpty()) continue;
-                int crrGraphSize = graphs[crr].size();
-                for (int j = 0; j < crrGraphSize; j++) {
-                    int next2 = graphs[crr].poll();
-                    if (visited[next2]) continue;
-                    visited[next2] = true;
-                    queue.add(next2);
+        int dx[] = {0, 0, 1, -1};
+        int dy[] = {1, -1, 0, 0};
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(startPoint);
+
+        while (!queue.isEmpty()) {
+            int[] crr = queue.poll();
+
+            for (int i = 0; i < 4; i++) {
+                int[] next = {crr[0] + dx[i], crr[1] + dy[i], crr[2] + 1};
+                boolean borderCheck = next[0] >= 0 && next[0] < N &&
+                                    next[1] >= 0 && next[1] < M;
+                if (borderCheck && mapCanGo[next[0]][next[1]]) {
+                    wayToTarget[next[0]][next[1]] = next[2];
+                    mapCanGo[next[0]][next[1]] = false;
+                    queue.add(next);
                 }
             }
         }
 
-        bw.write(Integer.toString(colony));
+        for (int i = 0; i < N; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < M; j++) {
+                if (j != 0) sb.append(" ");
+                sb.append(Integer.toString(wayToTarget[i][j]));
+            }
+            bw.write(sb.toString());
+            bw.newLine();
+        }
+        
         bw.flush();
         bw.close();
     }
