@@ -1,3 +1,4 @@
+package etc;
 //This class saves temp resorce or stocks
 
 // public class Main {
@@ -38,22 +39,27 @@ public class Temp {
         }
 
         // i = crrNode
-        for (int i = 1; i < nodeNum + 1; i++) {
+        boolean isNewDepth = true;
+        while (isNewDepth) {
+            isNewDepth = false;
+            int[][] newConnection = new int[nodeNum + 1][nodeNum + 1];
+            for (int i = 1; i < nodeNum + 1; i++) {
             //this loop for find fromNum
-            int[] newConnection = new int[nodeNum + 1];
-            for (int j = 1; j < nodeNum + 1; j++) {
-                int length = map[i][j];
-                if (length == 0) continue; //empty 
+                
+                for (int j = 1; j < nodeNum + 1; j++) {
+                    int length = map[i][j];
+                    if (length == 0) continue; //empty 
 
-                //this loop for find toNum and add new connection
-                for (int k = 1; k < nodeNum + 1; k++) {
-                    if (map[j][k] == 0 || k == i) continue; //empty or fromNum and toNum endPoint is same 
-                    if (newConnection[k] == 0 || (newConnection[k] > map[j][k] + map[i][j])) {
-                        newConnection[k] = map[j][k] + map[i][j];
+                    //this loop for find toNum and add new connection
+                    for (int k = 1; k < nodeNum + 1; k++) {
+                        if (map[j][k] == 0 || k == i) continue; //empty or fromNum and toNum endPoint is same 
+                        if (newConnection[i][k] == 0 || (newConnection[i][k] > map[j][k] + map[i][j])) {
+                            newConnection[i][k] = map[j][k] + map[i][j];
+                            isNewDepth = true;
+                        }
                     }
                 }
-                boolean hasblank = false;
-            }
+            }   
         }
         bw.write("stopPoint");
         //42 인덱스 범위 초가 주의
