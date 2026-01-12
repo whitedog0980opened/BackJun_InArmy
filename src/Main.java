@@ -12,62 +12,65 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int nodeNum = Integer.parseInt(br.readLine());
-        int maxLenght = 0;
+        String[] inputs = br.readLine().split(" ");
+        int N = Integer.parseInt(inputs[0]);
+        int M = Integer.parseInt(inputs[1]);
 
-        ArrayList<int[]>[] adj = new ArrayList[nodeNum + 1];
-        for (int i = 1; i < nodeNum + 1; i++) {
-            adj[i] = new ArrayList<>();
-        }
+        boolean[][] mapCanGo = new boolean[N][M];
+        int[][] wayToTarget = new int[N][M];
+        int[] target = new int[2];
 
-        for (int i = 0; i < nodeNum; i++) {
-            String[] inputs = br.readLine().split(" ");
-            int crrNode = Integer.parseInt(inputs[0]);
-            int crr = 0;
-            while (true) {
-                int nextNode = Integer.parseInt(inputs[++crr]);
-                if (nextNode == -1) break;
-                int length = Integer.parseInt(inputs[++crr]);
-                adj[crrNode].add(new int[]{nextNode, length});
+        for (int i = 0; i < N; i++) {
+            String[] inputLine = br.readLine().split(" ");
+            for (int j = 0; j < M; j++) {
+                int crr = Integer.parseInt(inputLine[j]);
+                if (crr == 1) {
+                    mapCanGo[i][j] = true;
+                    wayToTarget[i][j] = -1;
+                }
+                else if (crr == 2) {
+                    mapCanGo[i][j] = true;
+                    target = new int[]{i, j};
+                }
             }
         }
+        // index2 = reach to target
+        int[] startPoint = {target[0], target[1], 0};
+        wayToTarget[startPoint[0]][startPoint[1]] = 0;
+        mapCanGo[startPoint[0]][startPoint[1]] = false;
 
+        int dx[] = {0, 0, 1, -1};
+        int dy[] = {1, -1, 0, 0};
 
-        int[] firstPoint = bfs_1167(1, nodeNum, adj);
-        int[] secPoint = bfs_1167(firstPoint[0], nodeNum, adj)    ;
-        
-        bw.write(Integer.toString(secPoint[1]));
-        bw.flush();
-        bw.close();
-    }
-
-    static int[] bfs_1167(int start, int n, ArrayList<int[]>[] adj) {
-        boolean[] visited = new boolean[n + 1];
         Queue<int[]> queue = new LinkedList<>();
-
-        int[] startArr = {start, 0}; // startnode, lenght
-        visited[start] = true;
-        queue.add(startArr);
-
-        int crrMaxLenght = 0;
-        int crrFartherNode = start;
+        queue.add(startPoint);
 
         while (!queue.isEmpty()) {
             int[] crr = queue.poll();
 
-            if (crr[1] > crrMaxLenght) {
-                crrMaxLenght = crr[1];
-                crrFartherNode = crr[0];
-            }
-
-            for (int[] nextNode : adj[crr[0]]) {
-                if (visited[nextNode[0]]) {
-                    continue;
+            for (int i = 0; i < 4; i++) {
+                int[] next = {crr[0] + dx[i], crr[1] + dy[i], crr[2] + 1};
+                boolean borderCheck = next[0] >= 0 && next[0] < N &&
+                                    next[1] >= 0 && next[1] < M;
+                if (borderCheck && mapCanGo[next[0]][next[1]]) {
+                    wayToTarget[next[0]][next[1]] = next[2];
+                    mapCanGo[next[0]][next[1]] = false;
+                    queue.add(next);
                 }
-                visited[nextNode[0]] = true;
-                queue.add(new int[]{nextNode[0], crr[1] + nextNode[1]});
             }
         }
-        return new int[]{crrFartherNode, crrMaxLenght};
+
+        for (int i = 0; i < N; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < M; j++) {
+                if (j != 0) sb.append(" ");
+                sb.append(Integer.toString(wayToTarget[i][j]));
+            }
+            bw.write(sb.toString());
+            bw.newLine();
+        }
+        
+        bw.flush();
+        bw.close();
     }
 }
