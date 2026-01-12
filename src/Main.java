@@ -7,39 +7,73 @@ import java.util.stream.IntStream;
 //want to study : hashTable
 //need to review = 5430 ! deque
 
+
+// Dijkstra <- 이거 이용하라는데 공부 필요할듯.
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int nums = Integer.parseInt(br.readLine());
-        //this array is key of Hashmap
-        int[] inputNums = new int[nums]; // original input data
-
-        TreeSet<Integer> treeSet = new TreeSet<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
-    
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < nums; i++) {
-            int x = Integer.parseInt(st.nextToken());
-            treeSet.add(x);
-            inputNums[i] = x;
+        int nodeNum = Integer.parseInt(st.nextToken());
+        int wayNum = Integer.parseInt(st.nextToken());
+        int partyNode = Integer.parseInt(st.nextToken());
+
+        //int[] -> index 0 = targetNode & index 1 = time to spend
+        LinkedList<int[]>[] ways = new LinkedList[nodeNum + 1];
+        for (int i = 1; i < nodeNum + 1; i++) {
+            ways[i] = new LinkedList<int[]>();
         }
 
-        int treeSizeSave = treeSet.size();
-        for (int i = 0; i < treeSizeSave; i++) {
-            map.put(treeSet.pollFirst(), i);
+        for (int i = 0; i < wayNum; i++) {
+            st = new StringTokenizer(br.readLine());
+            int fromNode = Integer.parseInt(st.nextToken());
+            int toNode = Integer.parseInt(st.nextToken());
+            int useTime = Integer.parseInt(st.nextToken());
+
+            ways[fromNode].add(new int[]{toNode, useTime});
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < nums; i++) {
-            int index = map.get(inputNums[i]);
-            sb.append(index + " ");
+        int longestTime = 0;
+
+        for (int i = 1; i < nodeNum + 1; i++) {
+            int result = bfs_1238(i, partyNode, nodeNum, ways) + bfs_1238(partyNode, i, nodeNum, ways);
+            longestTime = Math.max(result, longestTime);
         }
-        String result = sb.toString().trim();
-        bw.write(result);
+        bw.write(Integer.toString(longestTime));
+
          
         bw.flush();
         bw.close();
+    }
+    static int bfs_1238(int start, int targetNode, int nodeNum, LinkedList<int[]>[] ways) {
+        boolean[] visited = new boolean[nodeNum + 1];
+        int shortestTimeRecord = Integer.MAX_VALUE;
+
+        Queue<int[]> queue = new LinkedList<>();
+        int[] startNode = {start, 0}; // 0 = spentTime
+        queue.add(startNode);
+        visited[start] = true;
+
+        while (!queue.isEmpty()) {
+            int[] crrNode = queue.poll();
+
+            if (crrNode[0] == targetNode) {
+                if (crrNode[1] < shortestTimeRecord) shortestTimeRecord = crrNode[1];
+                continue;
+            }
+
+
+            for (int[] i : ways[crrNode[0]]) {
+                //check visited
+                if (visited[i[0]]) continue;
+                //time over (already fount shorter way)
+                if (shortestTimeRecord < crrNode[1] + i[1]) continue;
+
+                int[] nextNode = {i[0], crrNode[1] + i[1]};
+                queue.add(nextNode);
+            }
+        }
+        return shortestTimeRecord;
     }
 }
