@@ -20,9 +20,11 @@ public class Main {
         int partyNode = Integer.parseInt(st.nextToken());
 
         //int[] -> index 0 = targetNode & index 1 = time to spend
-        LinkedList<int[]>[] ways = new LinkedList[nodeNum + 1];
+        ArrayList<int[]>[] ways = new ArrayList[nodeNum + 1];
+        ArrayList<int[]>[] reservedWays = new ArrayList[nodeNum + 1];
         for (int i = 1; i < nodeNum + 1; i++) {
-            ways[i] = new LinkedList<int[]>();
+            ways[i] = new ArrayList<int[]>();
+            reservedWays[i] = new ArrayList<int[]>();
         }
 
         for (int i = 0; i < wayNum; i++) {
@@ -32,48 +34,48 @@ public class Main {
             int useTime = Integer.parseInt(st.nextToken());
 
             ways[fromNode].add(new int[]{toNode, useTime});
+            reservedWays[toNode].add(new int[]{fromNode, useTime});
         }
 
         int longestTime = 0;
 
+        int[] wayToParty = bfs_1238(partyNode, nodeNum, ways);
+        int[] wayToHome = bfs_1238(partyNode, nodeNum, reservedWays);
         for (int i = 1; i < nodeNum + 1; i++) {
-            int result = bfs_1238(i, partyNode, nodeNum, ways) + bfs_1238(partyNode, i, nodeNum, ways);
-            longestTime = Math.max(result, longestTime);
+            int totalTime = wayToParty[i] + wayToHome[i];
+            if (totalTime > longestTime) longestTime = totalTime;
         }
+
         bw.write(Integer.toString(longestTime));
 
          
         bw.flush();
         bw.close();
     }
-    static int bfs_1238(int start, int targetNode, int nodeNum, LinkedList<int[]>[] ways) {
-        boolean[] visited = new boolean[nodeNum + 1];
-        int shortestTimeRecord = Integer.MAX_VALUE;
-
-        Queue<int[]> queue = new LinkedList<>();
-        int[] startNode = {start, 0}; // 0 = spentTime
+    static int[] bfs_1238(int targetNode, int nodeNum, ArrayList<int[]>[] ways) {
+        int[] disk = new int[nodeNum + 1];
+        Arrays.fill(disk, Integer.MAX_VALUE);
+        disk[targetNode] = 0;
+        
+        PriorityQueue<int[]> queue = new PriorityQueue<>((n1, n2)-> Integer.compare(n1[1], n2[1]));
+        int[] startNode = {targetNode, 0};
         queue.add(startNode);
-        visited[start] = true;
-
+        
+        
         while (!queue.isEmpty()) {
             int[] crrNode = queue.poll();
-
-            if (crrNode[0] == targetNode) {
-                if (crrNode[1] < shortestTimeRecord) shortestTimeRecord = crrNode[1];
-                continue;
-            }
-
+            
+            if (crrNode[1] > disk[crrNode[0]]) continue;
 
             for (int[] i : ways[crrNode[0]]) {
-                //check visited
-                if (visited[i[0]]) continue;
-                //time over (already fount shorter way)
-                if (shortestTimeRecord < crrNode[1] + i[1]) continue;
-
-                int[] nextNode = {i[0], crrNode[1] + i[1]};
+                //check this way is shotter then disk
+                int nextTime = i[1] + crrNode[1];
+                if (disk[i[0]] <= nextTime) continue;
+                int[] nextNode = {i[0], nextTime};
+                disk[nextNode[0]] = nextTime;
                 queue.add(nextNode);
             }
         }
-        return shortestTimeRecord;
+        return disk;
     }
 }
