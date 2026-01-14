@@ -1,5 +1,4 @@
-import sys
-
+### 1793
 while True:
     n = sys.stdin.readline().strip();
     if not n:
@@ -17,4 +16,4 @@ while True:
         arr.append(next_val)
     sys.stdout.write(str(arr[n]) + "\n")
     sys.stdout.flush()
-    
+###
