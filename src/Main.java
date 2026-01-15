@@ -9,6 +9,16 @@ import java.util.stream.IntStream;
 
 
 // Dijkstra <- 이거 이용하라는데 공부 필요할듯.
+1 3 6
+0 256 0
+512 0
+512 87
+1 3 18
+0 256 0
+512 0
+512 91
+// 리펙토링 필요
+//n = 1. m = 1 일때 51에서 인덱스 -1 오류 발생
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +37,7 @@ public class Main {
             }
         } 
 
-        int targetIndex = (int) Math.round((n - 1) * 2.0 / 3.0);
+        int targetIndex = (int) Math.round((n * m - 1) * 2.0 / 3.0);
         if (targetIndex > 256) targetIndex = 256;
         int needBlocks = 0;
         int spentTime = 0;
@@ -36,35 +46,50 @@ public class Main {
 
         //cut over targerIndex
         for (int i = 0; i < n * m; i++) {
-            if (map[i] > targetIndex) {
-                int toBrakeBlocks = map[i] - targetIndex;
+            if (map[i] > map[targetIndex]) {
+                int toBrakeBlocks = map[i] - map[targetIndex];
                 blocks += toBrakeBlocks;
                 spentTime += toBrakeBlocks * 2;
-                map[i] = toBrakeBlocks;
+                map[i] -= toBrakeBlocks;
             }
-            else if (map[i] < targetIndex) {
-                int toFillBlocks = targetIndex - map[i];
+            else if (map[i] < map[targetIndex]) {
+                int toFillBlocks = map[targetIndex] - map[i];
                 needBlocks += toFillBlocks;
             }
         }
 
         int prevTargetValue = map[targetIndex - 1];
-        int crrTarget = map[targetIndex] - 1;
-        int toBrakeBlocks = crrTarget + 1;
-        int toFillBlocks = n * m - crrTarget - 1;
+        int crrTarget = map[targetIndex];
+        int toBrakeBlocks = 0;
+        for (int i = 0; i < n * m; i++) {
+            if (map[i] == map[targetIndex]) {
+                toBrakeBlocks++;
+            }
+        } 
+        int toFillBlocks = n * m - toBrakeBlocks;
         //if don't have enough blocks
-        while (needBlocks > blocks) {
-            if (crrTarget == prevTargetValue) {
-                targetIndex -= 1;
-                prevTargetValue = map[targetIndex - 1];
-                toBrakeBlocks += 1;
-                toFillBlocks -= 1;
+        while (crrTarget >= 0) {
+            long currentInventory = blocks;
+            long currentNeedBlocks = 0;
+            long currentSpentTime = 0;
+
+            for (int i = 0; i < n * m; i++) {
+                if (map[i] > crrTarget) {
+                    int toBrake = map[i] - crrTarget;
+                    currentInventory += toBrake;
+                    currentSpentTime += toBrake * 2L;
+                } else if (map[i] < crrTarget) {
+                    int toFill = crrTarget - map[i];
+                    currentNeedBlocks += toFill;
+                    currentSpentTime += toFill * 1L;
+                }
             }
-            if (toFillBlocks > blocks) {
-                crrTarget--;
-                blocks += toBrakeBlocks;
-                needBlocks -= toFillBlocks;
+
+            if (currentInventory >= currentNeedBlocks) {
+                break;
             }
+
+            crrTarget--;
         }
 
         //fill
@@ -80,11 +105,6 @@ public class Main {
         }
 
         bw.write(Integer.toString(spentTime) + " " + Integer.toString(crrTarget));
-
-
-
-
-         
         bw.flush();
         bw.close();
     }
