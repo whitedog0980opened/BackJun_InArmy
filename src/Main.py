@@ -1,20 +1,24 @@
 import sys
 
-while True:
-    n = sys.stdin.readline().strip();
-    if not n:
-        break;
-    else:
-        n = int(n)
-    
-    arr = [1, 1, 3, 5, 11]
-    if n < 5:
-        sys.stdout.write(str(arr[n]) + "\n")
-        sys.stdout.flush()
-        continue;
-    for i in range(5, n + 1):
-        next_val = (arr[i-2] * 2 + arr[i - 1]);
-        arr.append(next_val)
-    sys.stdout.write(str(arr[n]) + "\n")
-    sys.stdout.flush()
+n = sys.stdin.readline().strip();
+first_dice = list(map(int, sys.stdin.readline().strip().split(" ")));
+second_dice = list(map(int, sys.stdin.readline().strip().split(" ")));
+
+win1 = 0
+win2 = 0
+for fir in first_dice:
+    for sec in second_dice:
+        if (fir > sec): 
+            win1 += 1;
+        elif (fir < sec):
+            win2 += 1;
+
+result = ""
+if (win1 > win2):
+    result = "first";
+elif (win2 > win1):
+    result = "second";
+else:
+    result = "tie";
+print(result);
     
