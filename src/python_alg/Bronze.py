@@ -60,4 +60,23 @@ result = n - len(my_set)
 print(result);
 ###
 
+### n33225
+origin = list(sys.stdin.readline().strip())
+new_list = []
+deleted = False;
+pre_ch = ""
+for ch in origin:
+    if ch == pre_ch:
+        if not deleted:
+            deleted = True;
+            continue;
+        else:
+            new_list.append(ch);
+    else:
+        new_list.append(ch);
+        pre_ch = ch;
+        deleted = False;
 
+for ch in new_list:
+    sys.stdout.write(ch)
+    ###
