@@ -7,6 +7,10 @@ import java.util.stream.IntStream;
 //want to study : hashTable
 //need to review = 5430 ! deque
 
+
+// 순번의 int 배열을 n자릿수의 숫자로 바꾸고 list에 넣기까지 함
+// 이제 이걸 정렬하고, int 배열로 바꿔서 매칭해서 출력하면 됨
+//14534
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
