@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 //https://testcase.ac/problems/1764
 //https://www.acmicpc.net/step/16
-//want to solve list : 15551 1916,1446(다익스트라) 1504 (gold) 25943,(marathon)
+//want to solve list : 15551 1916,1446(다익스트라) 1504 (gold)
 //want to study : hashTable
 //need to review = 5430 ! deque
 
@@ -13,69 +13,68 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int graveNum = Integer.parseInt(br.readLine());
-
-        int[] graves = new int[graveNum];
-        //init by input
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < graveNum; i++) {
-            graves[i] = Integer.parseInt(st.nextToken());
-        }
-        //first step -> put grave each dish
-        int dishL = graves[0];
-        int dishR = graves[1];
+        int nodeNum = Integer.parseInt(st.nextToken());
+        int graphNum = Integer.parseInt(st.nextToken());
 
-        //second step -> put each grave on less weight dish
-
-        for (int i = 2; i < graveNum; i++) {
-            int crrGrave = graves[i];
-            if (dishL > dishR) dishR += crrGrave;
-            else dishL += crrGrave; 
+        ArrayList<int[]>[] graphs = new ArrayList[nodeNum + 1];
+        //init graphs
+        for (int i = 1; i < nodeNum + 1; i++) {
+            graphs[i] = new ArrayList<int[]>();
         }
-
-        int diff = Math.abs(dishL - dishR);
-        int weightNum = 0;
-
-
-        int able100W = diff / 100;
-        if (able100W > 0) {
-            diff -= able100W * 100;
-            weightNum += able100W;
-        }
-        boolean isAble50W = diff / 50 > 0; //50weight can able to use only 1
-        if (isAble50W) {
-            diff -= 50;
-            weightNum++;
-        }
-        int able20W = diff / 20;
-        if (able20W > 0) {
-            diff -= able20W * 20;
-            weightNum += able20W;
-        }
-        int able10W = diff / 10;
-        if (able10W > 0) {
-            diff -= able10W * 10;
-            weightNum += able10W;
-        }
-        boolean isAble5W = diff / 5 > 0; //50weight can able to use only 1
-        if (isAble5W) {
-            diff -= 5;
-            weightNum++;
-        }
-        int able2W = diff / 2;
-        if (able2W > 0) {
-            diff -= able2W * 2;
-            weightNum += able2W;
-        }
-        int able1W = diff;
-        if (able1W > 0) {
-            diff -= able1W;
-            weightNum += able1W;
+        //get inputs from Buffer
+        for (int i = 0; i < graphNum; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int weight = Integer.parseInt(st.nextToken());
+            
+            graphs[from].add(new int[]{to, weight});
+            graphs[to].add(new int[]{from, weight});
         }
 
-        bw.write(Integer.toString(weightNum));
+        st = new StringTokenizer(br.readLine());
+        int target1 = Integer.parseInt(st.nextToken());
+        int target2 = Integer.parseInt(st.nextToken());
+        st = null;
+
 
         bw.flush();
         bw.close();
+    }
+    static int bfs1504(int start, int target, int nodeNum, int graphNum, ArrayList<int[]>[] graphs) {
+        PriorityQueue<int[]> greedyQueue = new PriorityQueue<>((n1, n2) -> Integer.compare(n1[1], n2[1])); 
+        int[] startOj = new int[]{start, 0}; // index 1 : weight for priority
+        greedyQueue.add(startOj);
+
+        int shortestWay = Integer.MAX_VALUE;
+
+        int disk[] = new int[nodeNum + 1];
+        Arrays.fill(disk, Integer.MAX_VALUE);
+        disk[start] = 0;
+ 
+        while (!greedyQueue.isEmpty()) {
+            int[] crr = greedyQueue.poll();
+
+            if (crr[0] == target) {
+                // shortestWay = crr[2];
+            }
+
+            for (int[] nextPoint : graphs[crr[0]]) {
+                // shoter then disk
+                if (disk[nextPoint[0]] > disk[crr[0]] + nextPoint[1]) {
+                    disk[nextPoint[0]] = disk[crr[0]] + nextPoint[1];
+                    int[] next = new int[]{nextPoint[0], crr[1] + nextPoint[1]};
+                    greedyQueue.add(next);
+                }
+            }
+        }
+
+        if (disk[target] == Integer.MAX_VALUE) {
+            return -1;
+        }
+        else {
+            return disk[target];
+        }
     }
 }
