@@ -33,48 +33,9 @@ public class Main {
             graphs[to].add(new int[]{from, weight});
         }
 
-        st = new StringTokenizer(br.readLine());
-        int target1 = Integer.parseInt(st.nextToken());
-        int target2 = Integer.parseInt(st.nextToken());
-        st = null;
-
 
         bw.flush();
         bw.close();
     }
-    static int bfs1504(int start, int target, int nodeNum, int graphNum, ArrayList<int[]>[] graphs) {
-        PriorityQueue<int[]> greedyQueue = new PriorityQueue<>((n1, n2) -> Integer.compare(n1[1], n2[1])); 
-        int[] startOj = new int[]{start, 0}; // index 1 : weight for priority
-        greedyQueue.add(startOj);
 
-        int shortestWay = Integer.MAX_VALUE;
-
-        int disk[] = new int[nodeNum + 1];
-        Arrays.fill(disk, Integer.MAX_VALUE);
-        disk[start] = 0;
- 
-        while (!greedyQueue.isEmpty()) {
-            int[] crr = greedyQueue.poll();
-
-            if (crr[0] == target) {
-                // shortestWay = crr[2];
-            }
-
-            for (int[] nextPoint : graphs[crr[0]]) {
-                // shoter then disk
-                if (disk[nextPoint[0]] > disk[crr[0]] + nextPoint[1]) {
-                    disk[nextPoint[0]] = disk[crr[0]] + nextPoint[1];
-                    int[] next = new int[]{nextPoint[0], crr[1] + nextPoint[1]};
-                    greedyQueue.add(next);
-                }
-            }
-        }
-
-        if (disk[target] == Integer.MAX_VALUE) {
-            return -1;
-        }
-        else {
-            return disk[target];
-        }
-    }
 }
