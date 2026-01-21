@@ -1,16 +1,15 @@
 import sys
+import heapq
 
-colume, row = map(int, sys.stdin.readline().strip().split(" "))
-strs = [sys.stdin.readline().strip() for i in range(row)]
-length = int(sys.stdin.readline().strip())
+node_nums, graph_nums = map(int, sys.stdin.readline().strip().split(" "))
+start_point = int(sys.stdin.readline().strip())
 
-dict = {}
-for s in strs:
-    for i in range(colume - length + 1):
-        crr = s[i:i + length]
-        dict[crr] = dict.get(crr, 0) + 1;
+graphs = [list(map(int, sys.stdin.readline().strip().split(" "))) for i in range(graph_nums)]
 
-max_value = max(dict.values())
+pq = []
+heapq.heappush(pq, (0, start_point))
+
+
 
 sys.stdout.write(str(max_value))
 sys.stdout.flush()
