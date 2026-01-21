@@ -1,17 +1,15 @@
 import sys
 
-tk = int(sys.stdin.readline().strip())
+case = int(sys.stdin.readline().strip())
+fees = []
+result = 0;
 
+for i in range(case):
+    fees.append(int(sys.stdin.readline().strip()))
 
-def dfs(nums, str, lists) :
-    crr_str = ""
-    for i in nums :
-        crr_str += str[i]
-        crr_str += dfs(nums - 1, str[1:nums + 1])
-        list.extend(str)
-    
-    
-    
-print(ab_list[push_times][0], ab_list[push_times][1])
+students_num = int(sys.stdin.readline().strip())
+for i in range(students_num):
+    result += fees[int(sys.stdin.readline().strip()) - 1]
 
-
+sys.stdout.write(str(result))
+sys.stdout.flush()
