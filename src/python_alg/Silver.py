@@ -1,4 +1,5 @@
 import sys
+import heapq
 ### 1793
 while True:
     n = sys.stdin.readline().strip();
