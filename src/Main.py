@@ -2,24 +2,19 @@ import sys
 import heapq
 from collections import deque
 
-###31925
-cases = int(sys.stdin.readline().strip())
-ables = []
-for i in range(cases):
-    name, on_school, is_winner, max_price, crr_price = input().strip().split()
-    if (on_school == "jaehak" and
-        is_winner == "notyet" and
-        (int(max_price) > 3 or int(max_price) == -1)):
-        ables.append([int(crr_price), name])
-
-ables.sort(key=lambda x: (x[0]))
-ables = ables[:10]
-
-able = len(ables)
-sys.stdout.write(str(able) + "\n")
-ables.sort(key=lambda x: (x[1]))
-for able in ables:
-    sys.stdout.write(able[1] + "\n")
+###2526
+base, divieder = map(int, sys.stdin.readline().strip().split())
+recode = []
+crr_base = base
+while True:
+    if (crr_base in recode):
+        last_repeat = recode.index(crr_base)
+        print(len(recode) - last_repeat)
+        break
+        
+    recode.append(crr_base)
+    multed = crr_base * base
+    crr_base = multed % divieder
 
 sys.stdout.flush()
 ###
