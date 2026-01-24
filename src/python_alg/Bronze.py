@@ -98,3 +98,12 @@ for i in range(students_num):
 sys.stdout.write(str(result))
 sys.stdout.flush()
 ###
+
+###24860
+n1, n2 = map(int, sys.stdin.readline().strip().split(" "))
+m1, m2 = map(int, sys.stdin.readline().strip().split(" "))
+o1, o2, o3 = map(int, sys.stdin.readline().strip().split(" "))
+
+result = (n1 * n2 + m1 * m2) * (o1 * o2 * o3)
+print(result)
+###
