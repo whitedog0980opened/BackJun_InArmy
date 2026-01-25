@@ -16,33 +16,16 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int nodeNum = Integer.parseInt(st.nextToken());
+        int strNum = Integer.parseInt(st.nextToken());
 
-        ArrayList<int[]>[] edges = new ArrayList[nodeNum + 1]; // edges num is nodeNum - 1
-        //init
-        for (int i = 1; i < nodeNum + 1; i++) {
-            edges[i] = new ArrayList<int[]>();
-        }
-        //take input
-        for (int i = 0; i < nodeNum - 1; i++) {
-            st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            int weight = Integer.parseInt(st.nextToken());
-            //방향 없는 간선
-            edges[from].add(new int[]{to, weight});
-            edges[to].add(new int[]{from, weight});
-        }
+        String a =  "Aa" + "a".repeat(strNum - 2);;
+        String b =  "BB" + "a".repeat(strNum - 2);;
 
-        int firstPoint = bfs1967(nodeNum, 1, edges)[0];
-        int[] secPoint = bfs1967(nodeNum, firstPoint, edges);
-        
-        bw.write(Integer.toString(secPoint[1]));
+        // bw.write(Integer.toString(a.hashCode()));
+        bw.write(a + "\n");
+        bw.write(b + "\n");
 
         bw.flush();
         bw.close();
     }
-    
-    
-
 }

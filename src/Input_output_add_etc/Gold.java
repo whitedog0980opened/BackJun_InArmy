@@ -1163,5 +1163,22 @@ public class Gold {
         int[] result = {targetNode, longestWay};
         return result;
     } 
+    static void n15551() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int strNum = Integer.parseInt(st.nextToken());
+
+        String a =  "Aa" + "a".repeat(strNum - 2);;
+        String b =  "BB" + "a".repeat(strNum - 2);;
+
+        // bw.write(Integer.toString(a.hashCode()));
+        bw.write(a + "\n");
+        bw.write(b + "\n");
+
+        bw.flush();
+        bw.close();
+    }
 
 }
