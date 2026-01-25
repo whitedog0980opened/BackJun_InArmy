@@ -1,9 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 public class C1 {
     public void n18108() { // 불기 연도를 서기 연도로 변환
@@ -769,5 +765,24 @@ public class C1 {
             for24416fibo1++;
             return (fibo24416(crr - 1) + fibo24416(crr - 2));
         }
+    }
+    static void n9449() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int mapM = Integer.parseInt(st.nextToken());
+        int mapH = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+
+        int numInM = mapM / (2 * m) + ((mapM % (2 * m) >= m) ? 1 : 0);
+        int numInH = mapH / (2 * n) + ((mapH % (2 * n) >= n) ? 1 : 0);
+        int result = numInH * numInM;
+
+        bw.write(Integer.toString(result));
+
+        bw.flush();
+        bw.close();
     }
 }
