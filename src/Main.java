@@ -19,18 +19,39 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int mapM = Integer.parseInt(st.nextToken());
-        int mapH = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        int n = Integer.parseInt(st.nextToken());
+        int mapSize = Integer.parseInt(st.nextToken());
 
-        int numInM = mapM / (2 * m) + ((mapM % (2 * m) >= m) ? 1 : 0);
-        int numInH = mapH / (2 * n) + ((mapH % (2 * n) >= n) ? 1 : 0);
-        int result = numInH * numInM;
+        int[] map = new int[mapSize + 1]; //1 starting
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i < mapSize + 1; i++) {
+            map[i] = Integer.parseInt(st.nextToken());
+        }
 
-        bw.write(Integer.toString(result));
+        int quaryNum = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < quaryNum; i++) {
+            String[] inputs = br.readLine().split(" ");
+            if (inputs.length == 3) {
+                int from = Integer.parseInt(inputs[1]);
+                int to = Integer.parseInt(inputs[2]);
+                for (int j = from; j <= to; j++) {
+                    map[j] = Integer.MAX_VALUE;
+                }
+            }
+            else {
+                int from = Integer.parseInt(inputs[1]);
+                int to = Integer.parseInt(inputs[2]);
+                int findCase = Integer.parseInt(inputs[3]);
+                
+                int counter = 0;
+                for (int j = from; j <= to; j++) {
+                    if (map[j] == findCase) counter++;
+                }
+                bw.write(Integer.toString(counter) + "\n");
+            }
+        }
 
         bw.flush();
-        bw.close();
+        bw.close();;
     }
 }
