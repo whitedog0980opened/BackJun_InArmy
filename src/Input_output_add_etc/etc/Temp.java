@@ -24,6 +24,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 public class Temp {
+
     static void n21736() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));

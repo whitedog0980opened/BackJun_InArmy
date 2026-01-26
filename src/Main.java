@@ -6,50 +6,45 @@ import java.util.regex.Matcher;
 //https://testcase.ac/problems/1764
 //https://www.acmicpc.net/step/16
 //want to solve list :
-//want to study : hashTable
+//want to study : hashTable, 이분매칭 ,비트마스크 + dp, 그리디
 //need to review = 5430 ! deque
 //https://lmarena.ai/ko
 
 public class Main {
-    //instant Stack
-    //30503
-    //not tested
+
+    //1014
     public static void main(String[] args) throws IOException {
+        // 비트마스크를 이용. 규칙을 정하고 모든 경우의 수를 계산한다 (가능하면 비트계산)
+        // 규칙에 부합하는 비트마스크를 dp에 저장한다. 
+        // 그다음, 다음줄은 기본규칙(부서진 책상) + 이전줄에 의해 컨닝방지 규칙 + 규칙을 포함한 규칙 (X))
+        // 그냥 다음줄도 동일하게 진행한다.
+        // 몰?루
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int mapSize = Integer.parseInt(st.nextToken());
+        int testCase = Integer.parseInt(st.nextToken());
+        
+        for (int i = 0; i < testCase; i++) {
+            st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int m = Integer.parseInt(st.nextToken());
 
-        int[] map = new int[mapSize + 1]; //1 starting
-        st = new StringTokenizer(br.readLine());
-        for (int i = 1; i < mapSize + 1; i++) {
-            map[i] = Integer.parseInt(st.nextToken());
-        }
+            boolean[][] map = new boolean[n][m];
 
-        int quaryNum = Integer.parseInt(br.readLine());
-
-        for (int i = 0; i < quaryNum; i++) {
-            String[] inputs = br.readLine().split(" ");
-            if (inputs.length == 3) {
-                int from = Integer.parseInt(inputs[1]);
-                int to = Integer.parseInt(inputs[2]);
-                for (int j = from; j <= to; j++) {
-                    map[j] = Integer.MAX_VALUE;
+            for (int j = 0; j < n; j++) {
+                st = new StringTokenizer(br.readLine());
+                for (int k = 0; i < m; k++) {
+                    String input = st.nextToken();
+                    map[j][k] = input.equals(".");
                 }
             }
-            else {
-                int from = Integer.parseInt(inputs[1]);
-                int to = Integer.parseInt(inputs[2]);
-                int findCase = Integer.parseInt(inputs[3]);
-                
-                int counter = 0;
-                for (int j = from; j <= to; j++) {
-                    if (map[j] == findCase) counter++;
-                }
-                bw.write(Integer.toString(counter) + "\n");
-            }
+
+
+
+
         }
+
 
         bw.flush();
         bw.close();;
