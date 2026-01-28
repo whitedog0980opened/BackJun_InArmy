@@ -78,3 +78,13 @@ for i in range(n - 1):
 sys.stdout.write(">")
 sys.stdout.flush()
 ###1158
+
+###9656
+turn = int(sys.stdin.readline().strip())
+if not ((turn % 2) == 0):
+    sys.stdout.write("CY")
+else:
+    sys.stdout.write("SK")
+
+sys.stdout.flush()
+###
