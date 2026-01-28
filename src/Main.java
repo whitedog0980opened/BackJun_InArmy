@@ -40,6 +40,10 @@ public class Main {
                 }
             }
 
+            //cult first floor
+            for (int i = 0; i < )
+
+
 
 
 
