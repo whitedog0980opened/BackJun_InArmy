@@ -17,8 +17,8 @@ public class Main {
         // 비트마스크를 이용. 규칙을 정하고 모든 경우의 수를 계산한다 (가능하면 비트계산)
         // 규칙에 부합하는 비트마스크를 dp에 저장한다. 
         // 그다음, 다음줄은 기본규칙(부서진 책상) + 이전줄에 의해 컨닝방지 규칙 + 규칙을 포함한 규칙 (X))
-        // 그냥 다음줄도 동일하게 진행한다.
-        // 몰?루
+        // + 오류 케이스. 첫줄이 전부 X일 경우 무조건 0 출력됨
+        // 함수화 필요. 예외 사항에 대응하기 때문에 특정 기능 코드 재사용 필요.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -52,6 +52,9 @@ public class Main {
             int totalWays = (int) Math.pow(2, m);
             int[][] bitDp = new int[n][totalWays]; // [현재 층][학생의 배치2진법의 10진수값] = 앉은 학생 수
             //1floor
+            int successCounter = 0; //만약 전부 X이면, 나중에 자리가 있어도 바로 스킵되므로 이를 방지하기 위한 변수임
+            boolean exceptionCatchar = false; // 위 변수 쓸일 있으면 true
+
             for (int j = 0; j < totalWays; j++) {
                 int crrDecimal = j;
                 boolean isAble = true; // 조건에 충족하는가
@@ -69,11 +72,18 @@ public class Main {
                 if (isAble) {
                     //중복 X
                     bitDp[0][crrDecimal] = Integer.bitCount(crrDecimal);
+                    successCounter++;
                 }
             }
 
             //2~n floors
             for (int i = 1; i < n; i++) { //i == floor
+                //예외사항
+                if (successCounter == 0) {
+                    exceptionCatchar = true;
+                    
+                }
+
                 //pre able cases
                 for (int j = 0; j < totalWays; j++) {
                     int preDecimal = j; 
