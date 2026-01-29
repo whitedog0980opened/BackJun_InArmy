@@ -25,7 +25,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int testCase = Integer.parseInt(st.nextToken());
         
-        for (int i = 0; i < testCase; i++) {
+        while (testCase-- > 0) {
             st = new StringTokenizer(br.readLine());
             int n = Integer.parseInt(st.nextToken());
             int m = Integer.parseInt(st.nextToken());
@@ -34,9 +34,9 @@ public class Main {
 
             for (int j = 0; j < n; j++) {
                 st = new StringTokenizer(br.readLine());
-                for (int k = 0; i < m; k++) {
-                    String input = st.nextToken();
-                    map[j][k] = input.equals(".");
+                String[] input = st.nextToken().split("");
+                for (int k = 0; k < m; k++) {
+                    map[j][k] = input[k].equals(".");
                 }
             }
 
@@ -66,12 +66,48 @@ public class Main {
                         break;
                     }
                 }
-                
                 if (isAble) {
                     //중복 X
                     bitDp[0][crrDecimal] = Integer.bitCount(crrDecimal);
                 }
             }
+
+            //2~n floors
+            for (int i = 1; i < n; i++) { //i == floor
+                //pre able cases
+                for (int j = 0; j < totalWays; j++) {
+                    int preDecimal = j; 
+                    int preSeatedNum = bitDp[i - 1][preDecimal]; //이미 앉은 학생
+                    if (preSeatedNum == 0) continue; //no pre data 
+
+                    //앉아도 되는지 확인용 비트마스크
+                    int bitMask = totalWays - 1; //2진법 : 전부 1로 채움
+                    for (int k = 0; k < m; k++) { //초기 입력값 적용
+                        if (!map[i][k]) bitMask -= (int) Math.pow(2, k);
+                    }
+                    //비트마스크에 앉을 수 없는 자리 추가
+                    int toClear = (preDecimal << 1) | (preDecimal >> 1); 
+                    bitMask &= ~toClear;
+
+                    //crr floor
+                    for (int k = 0; k < totalWays; k++) {
+                        int crrDecimal = k;
+                        if ((crrDecimal & (crrDecimal << 1)) != 0) continue;
+                        if ((crrDecimal & bitMask) != crrDecimal) continue;
+
+                        int crrSeatedNum = preSeatedNum + Integer.bitCount(crrDecimal);
+                        if (bitDp[i][crrDecimal] < crrSeatedNum) bitDp[i][crrDecimal] = crrSeatedNum;
+                    }
+                }
+            }
+
+            //get Max value
+            int result = 0;
+            for (int i = 0; i < totalWays; i++) {
+                result = Math.max(bitDp[n - 1][i], result);
+            }
+
+            bw.write(Integer.toString(result) + "\n");
         }
 
 
