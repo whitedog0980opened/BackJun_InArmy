@@ -2,11 +2,19 @@ import sys
 import heapq
 from collections import deque
 
-###25246
+###21867
+alph_num = int(sys.stdin.readline().strip())
 origin_str = sys.stdin.readline().strip()
-to_find = "aeiou"
+to_find = "JAV"
 
-target_index = max(origin_str.rfind(c) for c in to_find)
-result_str = origin_str[:target_index + 1] + "ntry"
-print(result_str)
+is_found = False
+
+for i in range(alph_num):
+    if (origin_str[i] in to_find):
+        continue;
+    sys.stdout.write(origin_str[i])
+    is_found = True
+
+if (not is_found):
+    print("nojava")
 ###
