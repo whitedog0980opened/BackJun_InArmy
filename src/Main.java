@@ -47,7 +47,8 @@ public class Main {
             next--;
             int crr = 1;
             int childIndex = crr * 2;
-            while (childIndex < next - 1) {
+            while (crr * 2 < next) {
+                childIndex = crr * 2;
                 if (childIndex > next - 1) {
                     break;
                 }
@@ -105,7 +106,8 @@ public class Main {
             next--;
             int crr = 1;
             int childIndex = crr * 2;
-            while (childIndex < next - 1) {
+            while (crr * 2 < next) {
+                childIndex = crr * 2;
                 if (childIndex > next - 1) {
                     break;
                 }
