@@ -51,7 +51,7 @@ public class Main {
                 if (childIndex > next - 1) {
                     break;
                 }
-                if (capacity > childIndex && heap[childIndex] < heap[childIndex + 1]) {
+                if (childIndex + 1 < next && heap[childIndex] < heap[childIndex + 1]) {
                     childIndex++;
                 }
                 if (heap[childIndex] > heap[crr]) {
@@ -109,7 +109,7 @@ public class Main {
                 if (childIndex > next - 1) {
                     break;
                 }
-                if (capacity > childIndex && heap[childIndex] > heap[childIndex + 1]) {
+                if (childIndex + 1 < next && heap[childIndex] > heap[childIndex + 1]) {
                     childIndex++;
                 }
                 if (heap[childIndex] < heap[crr]) {
@@ -138,7 +138,7 @@ public class Main {
         for (int i = 0; i < num; i++) {
             int crr = Integer.parseInt(br.readLine());
 
-            if (maxH.capacity == minH.capacity) {
+            if (maxH.next == minH.next) {
                 maxH.add(crr);
             } else {
                 minH.add(crr);
