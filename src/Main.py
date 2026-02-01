@@ -2,8 +2,8 @@ import sys
 import heapq
 from collections import deque
 
-###21867
-def binary_seek(question, nums):
+###1655
+def binary_seek1655(question, nums):
     high = len(nums) - 1
     low = 0;
     res = -1;
@@ -17,7 +17,6 @@ def binary_seek(question, nums):
         else:
             high = mid - 1;
     return res;
-        
 num, q_num = map(int, sys.stdin.readline().strip().split())
 nums = []
 for i in range(num):
@@ -25,5 +24,5 @@ for i in range(num):
 nums.sort()
 for i in range(q_num):
     question = int(sys.stdin.readline().strip())
-    sys.stdout.write(str(binary_seek(question, nums)) + "\n")
+    sys.stdout.write(str(binary_seek1655(question, nums)) + "\n")
 ###
