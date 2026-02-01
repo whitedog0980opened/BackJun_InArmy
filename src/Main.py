@@ -3,26 +3,24 @@ import heapq
 from collections import deque
 
 ###1655
-def binary_seek1655(question, nums):
-    high = len(nums) - 1
-    low = 0;
-    res = -1;
-    while high >= low:
-        mid = (high + low) //2
-        if (question == nums[mid]):
-            res = mid
-            high = mid - 1
-        elif (question > nums[mid]):
-            low = mid + 1
-        else:
-            high = mid - 1;
-    return res;
-num, q_num = map(int, sys.stdin.readline().strip().split())
-nums = []
-for i in range(num):
-    nums.append(int(sys.stdin.readline().strip()))
-nums.sort()
-for i in range(q_num):
-    question = int(sys.stdin.readline().strip())
-    sys.stdout.write(str(binary_seek1655(question, nums)) + "\n")
+r_need, g_need, b_need = map(int, sys.stdin.readline().strip().split())
+r_have, g_have, b_have = map(int, sys.stdin.readline().strip().split())
+rg_able, gb_able = map(int, sys.stdin.readline().strip().split())
+
+r_need -= r_have
+g_need -= g_have
+b_need -= b_have
+used = 0
+
+# while (r_need <= 0 and g_need <= 0 and b_need <= 0):
+if (r_need > 0):
+    rg_able -= r_need
+    if (rg_able < 0):
+        used = -1
+        sys.exit(0)
+    used += r_need
+if (b_need)
+
+
+
 ###
