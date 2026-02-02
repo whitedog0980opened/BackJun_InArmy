@@ -17,44 +17,46 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] inputs = br.readLine().split(" ");
-        int num = Integer.parseInt(inputs[0]);
-        int quesNum = Integer.parseInt(inputs[1]);
-
-        ArrayList<Integer> arr = new ArrayList<>();
-        for (int i = 1; i < num + 1; i++) {
-            arr.add(i);
+        StringTokenizer st;
+        int nodeNum = Integer.parseInt(br.readLine());
+        int wayNum = Integer.parseInt(br.readLine());
+        // take inputs
+        int[][] nodemap =  new int[nodeNum + 1][nodeNum + 1];
+        for (int i = 1; i < nodeNum + 1; i++) {
+            Arrays.fill(nodemap[i], 99999999);
+            nodemap[i][i] = 0;
         }
-
-        HashSet<Integer> fixedNums = new HashSet<>();
-        HashSet<Integer> calledNums = new HashSet<>();
-        Stack<Integer> st = new Stack<>();
-        for (int i = 0; i < quesNum; i++) {
-            int ques = Integer.parseInt(br.readLine());
-            st.push(ques);
-            fixedNums.add(ques);
+        //init map
+        for (int i = 0; i < wayNum; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken());
+            if (nodemap[from][to] > cost) nodemap[from][to] = cost;
         }
-
-        outputs : for (int i = 0; i < num;) {
-            int result = 0;
-            if (!st.isEmpty()) {
-                result = st.pop();
-                if (calledNums.contains(result)) continue;
-                calledNums.add(result);
-                bw.write(Integer.toString(result) + "\n");
-                continue;
-            }
-            while (fixedNums.contains(arr.get(i))) {
-                i++;
-                if (i >= num) {
-                    break outputs;
+        //floid
+        for (int i = 1; i < nodeNum + 1; i++) { //middle node
+            for (int j = 1; j < nodeNum + 1; j++) { //from node
+                for (int k = 1; k < nodeNum + 1; k++) {//to node
+                    int newWayCost = nodemap[j][i] + nodemap[i][k];
+                    if (nodemap[j][k] > newWayCost) nodemap[j][k] = newWayCost;
                 }
             }
-            bw.write(Integer.toString(arr.get(i)) + "\n");
-            i++;
         }
-        
-
+        //unreachable 99999999 -> 0
+        for (int i = 1; i < nodeNum + 1; i++) {
+            for (int j = 1; j < nodeNum + 1; j++) {
+                if (nodemap[i][j] == 99999999) nodemap[i][j] = 0;
+            }
+        }
+        //output
+        for (int i = 1; i < nodeNum + 1; i++) {
+            bw.write(Integer.toString(nodemap[i][1]));
+            for (int j = 2; j < nodeNum + 1; j++) {
+                bw.write(" " + Integer.toString(nodemap[i][j]));
+            }
+            bw.newLine();
+        }
         bw.flush();
         bw.close();;
     }
