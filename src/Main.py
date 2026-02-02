@@ -2,9 +2,25 @@ import sys
 import heapq
 from collections import deque
 
-###34635
-r_need, g_need, b_need = map(int, sys.stdin.readline().strip().split())
-r_have, g_have, b_have = map(int, sys.stdin.readline().strip().split())
-rg_able, gb_able = map(int, sys.stdin.readline().strip().split())
-
+###28043
+days, h_umb, w_umb = map(int, sys.stdin.readline().strip().split())
+for i in range(days):
+    h_wea, w_wea = sys.stdin.readline().strip().split()
+    to_print = ""
+    #homePattern
+    if ((w_umb == 0) or (h_wea == "Y")) and (h_umb != 0):
+        w_umb += 1
+        h_umb -= 1
+        to_print += "Y "
+    else:
+        to_print += "N "
+    #workPlacePattern
+    if ((h_umb == 0) or (w_wea == 'Y')) and (w_umb != 0):
+        h_umb += 1
+        w_umb -= 1
+        to_print += "Y"
+    else:
+        to_print += "N"
+        
+    sys.stdout.write(to_print + "\n")
 ###
