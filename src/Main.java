@@ -11,17 +11,55 @@ import java.util.regex.Matcher;
 //https://lmarena.ai/ko
 
 public class Main {
-    //16236
-    //문제점 : 물고기가 도중에 성장하면, 중간부터 최단경로가 바뀐다. 
-    //기존 미리 뽑아두는경우, 바뀐내용이 반영되지 않는다
-    //+ 더 큰 물고기는 지나갈 수 없다. 이는 맨해튼 거리가 아닌 BFS사용을 유도한다.
-    
+    // 이런 전용 클래스를 하나 만들면 contains(new IntArrayWrapper(arr))로 안전하게 확인 가능
+    private static class IntArrayWrapper {
+        private final int[] data;
+        public IntArrayWrapper(int[] data) { this.data = data; }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof IntArrayWrapper)) return false;
+            return Arrays.equals(this.data, ((IntArrayWrapper) o).data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(data);
+        }
+    }
+    //디버깅 필요 15650 -> 예제 2. 출력 이상함
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        StringTokenizer st;
-        int boxSize = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int[] arr = new int[m];
+        for (int i = 0; i < m; i++) {
+            arr[i] = i + 1;
+        }
+        HashSet<IntArrayWrapper> hs = new HashSet<>();
+        
+        fLoop : while (true) {
+            int crrIndex = m - 1;
+            while (arr[crrIndex] > n) { // 자릿수 바꾸기
+                if (--crrIndex < 0) break fLoop;
+                ++arr[crrIndex];
+            }
+            //중복 체크
+            IntArrayWrapper tempWapped = new IntArrayWrapper(Arrays.copyOf(arr, m));
+            if (hs.contains(tempWapped)) continue;
+            hs.add(tempWapped);
+            //print
+            bw.write(Integer.toString(arr[0]));
+            for (int i = 1; i < m; i++) {
+                bw.write(" " + Integer.toString(arr[i]));
+            }
+            bw.newLine();
+
+            arr[crrIndex]++;
+        }
 
         bw.flush();
         bw.close();;
