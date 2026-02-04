@@ -2,25 +2,26 @@ import sys
 import heapq
 from collections import deque
 
-###28043
-days, h_umb, w_umb = map(int, sys.stdin.readline().strip().split())
-for i in range(days):
-    h_wea, w_wea = sys.stdin.readline().strip().split()
-    to_print = ""
-    #homePattern
-    if ((w_umb == 0) or (h_wea == "Y")) and (h_umb != 0):
-        w_umb += 1
-        h_umb -= 1
-        to_print += "Y "
-    else:
-        to_print += "N "
-    #workPlacePattern
-    if ((h_umb == 0) or (w_wea == 'Y')) and (w_umb != 0):
-        h_umb += 1
-        w_umb -= 1
-        to_print += "Y"
-    else:
-        to_print += "N"
+###15786
+regex_len, posts = map(int, sys.stdin.readline().strip().split())
+regex = sys.stdin.readline().strip()
+
+for i in range(posts):
+    is_able = True;
+    postit = sys.stdin.readline().strip()
+    sliced_postit = postit
+    for ch in regex:
+        if (ch in sliced_postit):
+            slice_point = sliced_postit.index(ch) + 1
+            sliced_postit = sliced_postit[slice_point:]
+        else:
+            is_able = False;
+            break;
         
-    sys.stdout.write(to_print + "\n")
+    if (is_able):
+        sys.stdout.write("true\n")
+    else:
+        sys.stdout.write("false\n")
+    
+sys.stdout.flush();
 ###
