@@ -1375,4 +1375,114 @@ public class Gold {
         bw.flush();
         bw.close();;
     }
+    static void n16236() throws IOException {
+        //16236 -> BFS와 구현 문제
+        //문제점 : 물고기가 도중에 성장하면, 중간부터 최단경로가 바뀐다. 
+        //기존 미리 뽑아두는경우, 바뀐내용이 반영되지 않는다
+        //+ 더 큰 물고기는 지나갈 수 없다. 이는 맨해튼 거리가 아닌 BFS사용을 유도한다.
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st;
+        int boxSize = Integer.parseInt(br.readLine());
+        int totalFishes = 0; //need for stop program
+        int[][] box = new int[boxSize][boxSize];
+        int[] babySharkInfo = {2, 0, 0, 2}; // size, x, y, growCounter
+        for (int i = 0; i < boxSize; i++) {
+            //initalizing
+            st = new StringTokenizer(br.readLine(), " ");
+            for (int j = 0; j < boxSize; j++) {
+                int crr = Integer.parseInt(st.nextToken());
+                if (crr == 9) {
+                    babySharkInfo[1] = i;
+                    babySharkInfo[2] = j;
+                    crr = 0;
+                }
+                if (crr != 0) totalFishes++;
+
+                box[i][j] = crr;
+            }
+        }
+
+        int totalTime = 0;
+        while (totalFishes-- != 0) {
+            int[] closestFish = findCloseFish16236(boxSize, babySharkInfo, box);
+            int eatingTime = eatFish(babySharkInfo, closestFish, box);
+            if (eatingTime == Integer.MAX_VALUE) { //mom calling!
+                break;
+            }
+
+            totalTime += eatingTime;
+        }
+        
+        bw.write(Integer.toString(totalTime));
+        bw.flush();
+        bw.close();;
+    }
+    private static int[] findCloseFish16236(int boxSize ,int[] babySharkInfo, int[][] box) {
+        int[] firstShark = {babySharkInfo[1], babySharkInfo[2], 0}; //x, y, distance
+        int sharkSize = babySharkInfo[0];
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(firstShark);
+        boolean[][] visited = new boolean[boxSize][boxSize];
+        visited[firstShark[0]][firstShark[1]] = true;
+
+        int[] closhFishInfo = {0, 0, Integer.MAX_VALUE}; 
+
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
+
+        while (!queue.isEmpty()) {
+            int[] crrLocate = queue.poll();
+            int crrLocateFishSize = box[crrLocate[0]][crrLocate[1]];
+            //find close fish sequence
+            if (crrLocateFishSize != 0 && crrLocateFishSize != sharkSize) { //if fish exist (same size pretend 'noFish')
+                if (crrLocateFishSize > sharkSize) continue; // bigger fish unable to through
+                else {
+                    if (closhFishInfo[2] < crrLocate[2]) continue; //isn't closest fish
+                    else if (closhFishInfo[2] > crrLocate[2]) { //closest fish!
+                        closhFishInfo = crrLocate;
+                        continue;
+                    }
+                    else { // same distance 
+                        boolean isPrioritized = false; 
+                        if (closhFishInfo[0] > crrLocate[0]) isPrioritized = true;
+                        else if (closhFishInfo[0] == crrLocate[0]) {
+                            if (closhFishInfo[1] > crrLocate[1]) isPrioritized = true;
+                        }
+
+                        if (isPrioritized) closhFishInfo = crrLocate;
+                        continue;
+                    }
+                }
+            }
+
+            //bfs Logic
+            for (int i = 0; i < 4; i++) {
+                int nextX = crrLocate[0] + dx[i];
+                int nextY = crrLocate[1] + dy[i];
+                //borderCheck && visited?
+                if (nextX < 0 || nextX > boxSize - 1 || nextY < 0 || nextY > boxSize - 1) continue;
+                if (visited[nextX][nextY]) continue; 
+                visited[nextX][nextY] = true;
+                //next object
+                int[] nextLocate = {nextX, nextY, crrLocate[2] + 1};
+                queue.add(nextLocate);
+            }
+        }
+
+        return closhFishInfo;
+    }
+    //return taken time
+    private static int eatFish(int[] babySharkInfo, int[] targetFish, int[][] box) {
+        babySharkInfo[1] = targetFish[0];
+        babySharkInfo[2] = targetFish[1];
+        if (--babySharkInfo[3] == 0) { //shark grow!
+            babySharkInfo[0]++;
+            babySharkInfo[3] = babySharkInfo[0];
+        }
+
+        box[targetFish[0]][targetFish[1]] = 0; //eaten
+        return targetFish[2];
+    }
 }
