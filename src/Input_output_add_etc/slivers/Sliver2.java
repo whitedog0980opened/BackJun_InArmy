@@ -590,4 +590,69 @@ public class Sliver2{
         bw.flush();
         bw.close();;
     }
+    private static class IntArrayWrapper15650 {
+        private final int[] data;
+        public IntArrayWrapper15650(int[] data) { this.data = data; }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof IntArrayWrapper15650)) return false;
+            return Arrays.equals(this.data, ((IntArrayWrapper15650) o).data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(data);
+        }
+    }
+    private static void n15650() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int[] arr = new int[m];
+        for (int i = 0; i < m; i++) {
+            arr[i] = i + 1;
+        }
+        HashSet<IntArrayWrapper15650> hs = new HashSet<>();
+        
+        fLoop : while (true) {
+            int crrIndex = m - 1;
+            boolean wrongCase = true;
+            while (wrongCase) {
+                wrongCase = false;
+                for (int i = 0; i < m; i++) {
+                    if (arr[i] + (m-1 - i) > n) { //이상한거 찾음
+                        // wrongCase = true;
+                        if (i - 1 < 0) break fLoop;
+                        for (int j = (i - 1); j < m; j++) { //정상화
+                            arr[j]++;
+                            if (j + 1 > m - 1) break;
+                            arr[j + 1] = arr[j];
+                        }
+                        if (arr[i - 1] + (m - 1 - i + 1) > n) wrongCase = true;
+                        if (wrongCase && i - 1 == 0) break fLoop;
+                    }
+                }
+            }
+
+            crrIndex = m - 1;
+            //중복 체크
+            IntArrayWrapper15650 tempWapped = new IntArrayWrapper15650(Arrays.copyOf(arr, m));
+            if (hs.contains(tempWapped)) continue;
+            hs.add(tempWapped);
+            //print
+            bw.write(Integer.toString(arr[0]));
+            for (int i = 1; i < m; i++) {
+                bw.write(" " + Integer.toString(arr[i]));
+            }
+            bw.newLine();
+
+            arr[crrIndex]++;
+        }
+        bw.flush();
+        bw.close();;
+    }
 }

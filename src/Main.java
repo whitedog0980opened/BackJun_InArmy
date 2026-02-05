@@ -43,10 +43,25 @@ public class Main {
         
         fLoop : while (true) {
             int crrIndex = m - 1;
-            while (arr[crrIndex] > n) { // 자릿수 바꾸기
-                if (--crrIndex < 0) break fLoop;
-                ++arr[crrIndex];
+            boolean wrongCase = true;
+            while (wrongCase) {
+                wrongCase = false;
+                for (int i = 0; i < m; i++) {
+                    if (arr[i] + (m-1 - i) > n) { //이상한거 찾음
+                        // wrongCase = true;
+                        if (i - 1 < 0) break fLoop;
+                        for (int j = (i - 1); j < m; j++) { //정상화
+                            arr[j]++;
+                            if (j + 1 > m - 1) break;
+                            arr[j + 1] = arr[j];
+                        }
+                        if (arr[i - 1] + (m - 1 - i + 1) > n) wrongCase = true;
+                        if (wrongCase && i - 1 == 0) break fLoop;
+                    }
+                }
             }
+
+            crrIndex = m - 1;
             //중복 체크
             IntArrayWrapper tempWapped = new IntArrayWrapper(Arrays.copyOf(arr, m));
             if (hs.contains(tempWapped)) continue;
@@ -60,7 +75,6 @@ public class Main {
 
             arr[crrIndex]++;
         }
-
         bw.flush();
         bw.close();;
     }
