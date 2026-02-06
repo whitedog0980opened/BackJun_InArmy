@@ -655,4 +655,29 @@ public class Sliver2{
         bw.flush();
         bw.close();;
     }
+    private static void n34851() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int n = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        long prev = Integer.parseInt(st.nextToken());
+        for (int i = 1; i < n + 1; i++) {
+            long crr = Integer.parseInt(st.nextToken());
+            if (prev == 1 || crr == 1) {
+                prev = crr + prev;
+            }
+            else  {
+                prev %= 1000000007;
+                prev *= crr;
+            }
+        }
+        prev %= 1000000007;
+        int result = (int) prev;
+
+        bw.write(Integer.toString(result));
+
+        bw.flush();
+        bw.close();;
+    }
 }
