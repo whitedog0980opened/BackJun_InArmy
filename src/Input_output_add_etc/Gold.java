@@ -1550,4 +1550,61 @@ public class Gold {
         bw.flush();
         bw.close();;
     }
+    private static void n12851() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[] subin = {n, 0}; //locate, moved num
+
+        int[] visited = new int[100001];
+        Arrays.fill(visited, Integer.MAX_VALUE);
+        Queue<int[]> queue = new LinkedList<>();
+        visited[n] = 0;
+        queue.add(subin);
+        int resultCase = 0;
+
+        boolean pin = false;
+        int pinnedShortestMove = 0;
+
+        while (!queue.isEmpty()) {
+            int[] crr = queue.poll();
+
+            if (crr[0] == m) {
+                if (!pin) {
+                    pinnedShortestMove = crr[1];
+                    pin = true;
+                }
+                if (pinnedShortestMove == crr[1]) {
+                    resultCase++;
+                }
+            }
+
+            int[] nextp1 = {crr[0] + 1, crr[1] + 1};
+            if ((nextp1[0] >= 0 && nextp1[0] < 100001 && visited[nextp1[0]] >= nextp1[1])) {
+                visited[nextp1[0]] = nextp1[1]; 
+                queue.add(nextp1);
+            }
+            int[] nextm1 = {crr[0] - 1, crr[1] + 1};
+            if ((nextm1[0] >= 0 && nextm1[0] < 100001 && visited[nextm1[0]] >= nextm1[1])) {
+                visited[nextm1[0]] = nextm1[1];
+                queue.add(nextm1);
+            }
+            int[] nextTp = {crr[0] * 2, crr[1] + 1};
+            if ((nextTp[0] >= 0 && nextTp[0] < 100001 && visited[nextTp[0]] >= nextTp[1])) {
+                visited[nextTp[0]] = nextTp[1];
+                queue.add(nextTp);
+            }
+        }
+        int result = visited[m];
+
+        bw.write(Integer.toString(result) + "\n");
+        bw.write(Integer.toString(resultCase));
+
+        bw.flush();
+        bw.close();;
+    } 
 }

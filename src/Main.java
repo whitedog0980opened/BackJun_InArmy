@@ -18,60 +18,53 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
-        
-        boolean[][] map = new boolean[n][m];
 
-        for (int i = 0; i < n; i++) {
-            String inputLine = br.readLine();
-            for (int j = 0; j < m; j++) {
-                char ch = inputLine.charAt(j);
-                if (ch == '1') map[i][j] = true;
-            }
-        }
+        int[] subin = {n, 0}; //locate, moved num
 
-        int[] startPoint = {0, 0, 1, 1}; //n, m, distance, breakable count
+        int[] visited = new int[100001];
+        Arrays.fill(visited, Integer.MAX_VALUE);
         Queue<int[]> queue = new LinkedList<>();
-        queue.add(startPoint);
-        boolean[][] visited = new boolean[n][m];
-        boolean[][] bVisited = new boolean[n][m];
-        visited[0][0] = true;
+        visited[n] = 0;
+        queue.add(subin);
+        int resultCase = 0;
 
-        int[] dx = {1, -1, 0, 0};
-        int[] dy = {0, 0, 1, -1};
+        boolean pin = false;
+        int pinnedShortestMove = 0;
 
-        int result = 0;
         while (!queue.isEmpty()) {
-            int[] crrPoint = queue.poll();
+            int[] crr = queue.poll();
 
-            if (crrPoint[0] == n - 1 && crrPoint[1] == m - 1) { //found
-                result = crrPoint[2];
-                break;
+            if (crr[0] == m) {
+                if (!pin) {
+                    pinnedShortestMove = crr[1];
+                    pin = true;
+                }
+                if (pinnedShortestMove == crr[1]) {
+                    resultCase++;
+                }
             }
 
-            for (int i = 0; i < 4; i++) {
-                int nextN = crrPoint[0] + dx[i];
-                int nextM = crrPoint[1] + dy[i];
-                int[] nextPoint = {nextN, nextM, crrPoint[2] + 1, crrPoint[3]};
-                if (nextN < 0 || nextN >= n || nextM < 0 || nextM >= m) continue;
-                if (crrPoint[3] == 1) {
-                    if (visited[nextN][nextM]) continue;
-                    if (map[nextN][nextM]) {
-                        nextPoint[3] = 0;
-                    } else {
-                        visited[nextN][nextM] = true;
-                    }
-                    bVisited[nextN][nextM] = true;
-                } else {
-                    if (bVisited[nextN][nextM]) continue;
-                    if (map[nextN][nextM]) continue;
-                    bVisited[nextN][nextM] = true;
-                }
-
-                queue.add(nextPoint);
+            int[] nextp1 = {crr[0] + 1, crr[1] + 1};
+            if ((nextp1[0] >= 0 && nextp1[0] < 100001 && visited[nextp1[0]] >= nextp1[1])) {
+                visited[nextp1[0]] = nextp1[1]; 
+                queue.add(nextp1);
+            }
+            int[] nextm1 = {crr[0] - 1, crr[1] + 1};
+            if ((nextm1[0] >= 0 && nextm1[0] < 100001 && visited[nextm1[0]] >= nextm1[1])) {
+                visited[nextm1[0]] = nextm1[1];
+                queue.add(nextm1);
+            }
+            int[] nextTp = {crr[0] * 2, crr[1] + 1};
+            if ((nextTp[0] >= 0 && nextTp[0] < 100001 && visited[nextTp[0]] >= nextTp[1])) {
+                visited[nextTp[0]] = nextTp[1];
+                queue.add(nextTp);
             }
         }
-        if (result == 0) result = -1;
-        bw.write(Integer.toString(result));
+        int result = visited[m];
+
+
+        bw.write(Integer.toString(result) + "\n");
+        bw.write(Integer.toString(resultCase));
 
         bw.flush();
         bw.close();;
