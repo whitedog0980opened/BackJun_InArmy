@@ -2,8 +2,7 @@ import sys
 import math
 import heapq
 import copy
-from collections import deque
-# regex_len, posts = map(int, sys.stdin.readline().strip().split())
+
 ###30804
 #-1 -> left, 1 -> right
 def progress(dir, fruit_num, arr, index, target, origin):
