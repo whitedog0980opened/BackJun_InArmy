@@ -825,4 +825,23 @@ public class C1 {
         bw.flush();
         bw.close();
     }
+    private static void n17576() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String ori = br.readLine();
+        int repeat = Integer.parseInt(br.readLine());
+        int preStart = 0;
+        int preEnd = ori.length();
+        StringTokenizer st;
+        for (int i = 0; i < repeat; i++) {
+            st = new StringTokenizer(br.readLine());
+            preStart = preStart + Integer.parseInt(st.nextToken());
+            preEnd = preStart + Integer.parseInt(st.nextToken());
+        }
+        bw.write(ori.substring(preStart, preEnd));
+        
+        bw.flush();
+        bw.close();
+    }
 }
