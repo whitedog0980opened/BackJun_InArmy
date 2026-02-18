@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Gold {
     static void n14502() {
@@ -1010,5 +1012,750 @@ public class Gold {
         }
         return disk;
     }
+    static void n1504() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int nodeNum = Integer.parseInt(st.nextToken());
+        int graphNum = Integer.parseInt(st.nextToken());
+
+        ArrayList<int[]>[] graphs = new ArrayList[nodeNum + 1];
+        //init graphs
+        for (int i = 1; i < nodeNum + 1; i++) {
+            graphs[i] = new ArrayList<int[]>();
+        }
+        //get inputs from Buffer
+        for (int i = 0; i < graphNum; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int weight = Integer.parseInt(st.nextToken());
+            
+            graphs[from].add(new int[]{to, weight});
+            graphs[to].add(new int[]{from, weight});
+        }
+
+        st = new StringTokenizer(br.readLine());
+        int target1 = Integer.parseInt(st.nextToken());
+        int target2 = Integer.parseInt(st.nextToken());
+        int targetFinal = nodeNum;
+        st = null;
+
+        int toTarget1 = bfs1504(1, target1, nodeNum, graphNum, graphs);
+        int toTarget2 = bfs1504(1, target2, nodeNum, graphNum, graphs);
+        int betweenTgs = bfs1504(target1, target2, nodeNum, graphNum, graphs);
+        int toFinal1 = bfs1504(target1, targetFinal, nodeNum, graphNum, graphs);
+        int toFinal2 = bfs1504(target2, targetFinal, nodeNum, graphNum, graphs);
+
+        boolean[] wayNot = {true, true};
+        int way[] = {toTarget1 + betweenTgs + toFinal2, toTarget2 + betweenTgs + toFinal1};
+        int result = Integer.MAX_VALUE;
+        if (toTarget1 >= 0 && toFinal2 >= 0 && betweenTgs >= 0) {
+            result = Math.min(result, way[0]);
+        }
+        if (toTarget2 >= 0 && toFinal1 >= 0 && betweenTgs >= 0) {
+            result = Math.min(result, way[1]);
+        }
+
+        if (result == Integer.MAX_VALUE) {
+            result = -1;
+        }
+
+
+        bw.write(Integer.toString(result));
+        bw.flush();
+        bw.close();
+    }
+    static int bfs1504(int start, int target, int nodeNum, int graphNum, ArrayList<int[]>[] graphs) {
+        PriorityQueue<int[]> greedyQueue = new PriorityQueue<>((n1, n2) -> Integer.compare(n1[1], n2[1])); 
+        int[] startOj = new int[]{start, 0}; // index 1 : weight for priority
+        greedyQueue.add(startOj);
+
+        int disk[] = new int[nodeNum + 1];
+        Arrays.fill(disk, Integer.MAX_VALUE);
+        disk[start] = 0;
+ 
+        while (!greedyQueue.isEmpty()) {
+            int[] crr = greedyQueue.poll();
+
+            if (crr[0] == target) {
+                // shortestWay = crr[2];
+            }
+
+            for (int[] nextPoint : graphs[crr[0]]) {
+                // shoter then disk
+                if (disk[nextPoint[0]] > disk[crr[0]] + nextPoint[1]) {
+                    disk[nextPoint[0]] = disk[crr[0]] + nextPoint[1];
+                    int[] next = new int[]{nextPoint[0], crr[1] + nextPoint[1]};
+                    greedyQueue.add(next);
+                }
+            }
+        }
+
+        if (disk[target] == Integer.MAX_VALUE) {
+            return -1;
+        }
+        else {
+            return disk[target];
+        }
+    }
+    static void n1967() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int nodeNum = Integer.parseInt(st.nextToken());
+
+        ArrayList<int[]>[] edges = new ArrayList[nodeNum + 1]; // edges num is nodeNum - 1
+        //init
+        for (int i = 1; i < nodeNum + 1; i++) {
+            edges[i] = new ArrayList<int[]>();
+        }
+        //take input
+        for (int i = 0; i < nodeNum - 1; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int weight = Integer.parseInt(st.nextToken());
+            //방향 없는 간선
+            edges[from].add(new int[]{to, weight});
+            edges[to].add(new int[]{from, weight});
+        }
+
+        int firstPoint = bfs1967(nodeNum, 1, edges)[0];
+        int[] secPoint = bfs1967(nodeNum, firstPoint, edges);
+        
+        bw.write(Integer.toString(secPoint[1]));
+
+        bw.flush();
+        bw.close();
+    }
+    static int[] bfs1967(int nodeNum, int startPoint, ArrayList<int[]>[] edges) {
+        Queue<int[]> queue = new LinkedList<>();
+        int[] startNode = {startPoint, 0}; // {crrNode, total weight}
+        queue.add(startNode);
+
+        boolean visited[] = new boolean[nodeNum + 1];
+        visited[startPoint] = true;
+
+        int longestWay = Integer.MIN_VALUE;
+        int targetNode = 0;
+
+        while (!queue.isEmpty()) {
+            int[] crr = queue.poll();
+            
+            if (longestWay < crr[1]) {
+                longestWay = crr[1];
+                targetNode = crr[0];
+            }
+            for (int[] edge : edges[crr[0]]) {
+                int to = edge[0];
+                int weight = edge[1];
+
+                if (visited[to]) continue;
+                visited[to] = true;
+                int[] next = {to, weight + crr[1]};
+                queue.add(next);
+            }
+
+        }
+        int[] result = {targetNode, longestWay};
+        return result;
+    } 
+    static void n15551() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int strNum = Integer.parseInt(st.nextToken());
+
+        String a =  "Aa" + "a".repeat(strNum - 2);;
+        String b =  "BB" + "a".repeat(strNum - 2);;
+
+        // bw.write(Integer.toString(a.hashCode()));
+        bw.write(a + "\n");
+        bw.write(b + "\n");
+
+        bw.flush();
+        bw.close();
+    }
+    private static class MaxHeap1655 {
+        int[] heap;
+        int capacity;
+        int next = 1;
+        MaxHeap1655(int capacity) {
+            heap = new int[capacity + 1];
+            this.capacity = capacity;
+        }
+
+        private void add(int value) {
+            if (next > capacity + 1) return;
+            int crr = next;
+            next += 1;
+
+            heap[crr] = value;
+            int parentIndex = crr/2;
+            while (parentIndex > 0) {
+                if (heap[parentIndex] < heap[crr]) {
+                    int temp = heap[parentIndex];
+                    heap[parentIndex] = heap[crr];
+                    heap[crr] = temp;
+
+                    crr = parentIndex;
+                    parentIndex /= 2;
+                } else break;
+            }
+        }
+        private int pop() {
+            if (next == 1) return Integer.MIN_VALUE;
+
+            int result = heap[1];
+            heap[1] = heap[next - 1];
+            next--;
+            int crr = 1;
+            int childIndex = crr * 2;
+            while (crr * 2 < next) {
+                childIndex = crr * 2;
+                if (childIndex > next - 1) {
+                    break;
+                }
+                if (childIndex + 1 < next && heap[childIndex] < heap[childIndex + 1]) {
+                    childIndex++;
+                }
+                if (heap[childIndex] > heap[crr]) {
+                    int temp = heap[childIndex];
+                    heap[childIndex] = heap[crr];
+                    heap[crr] = temp;
+
+                    crr = childIndex;
+                    childIndex *= 2;
+                } else break;
+            }
+            return result;
+        }
+        private int peek() {
+            if (next == 1) return -99999; //error code
+            return heap[1];
+        }
+    }
+    private static class MinHeap1655 {
+        int[] heap;
+        int capacity;
+        int next = 1;
+        MinHeap1655(int capacity) {
+            heap = new int[capacity + 1];
+            this.capacity = capacity;
+        }
+
+        private void add(int value) {
+            if (next > capacity + 1) return;
+            int crr = next;
+            next += 1;
+
+            heap[crr] = value;
+            int parentIndex = crr/2;
+            while (parentIndex > 0) {
+                if (heap[parentIndex] > heap[crr]) {
+                    int temp = heap[parentIndex];
+                    heap[parentIndex] = heap[crr];
+                    heap[crr] = temp;
+
+                    crr = parentIndex;
+                    parentIndex /= 2;
+                } else break;
+            }
+        }
+        private int pop() {
+            if (next == 1) return Integer.MIN_VALUE;
+
+            int result = heap[1];
+            heap[1] = heap[next - 1];
+            next--;
+            int crr = 1;
+            int childIndex = crr * 2;
+            while (crr * 2 < next) {
+                childIndex = crr * 2;
+                if (childIndex > next - 1) {
+                    break;
+                }
+                if (childIndex + 1 < next && heap[childIndex] > heap[childIndex + 1]) {
+                    childIndex++;
+                }
+                if (heap[childIndex] < heap[crr]) {
+                    int temp = heap[childIndex];
+                    heap[childIndex] = heap[crr];
+                    heap[crr] = temp;
+
+                    crr = childIndex;
+                    childIndex *= 2;
+                } else break;
+            }
+            return result;
+        }
+        private int peek() {
+            if (next == 1) return -99999; //error code
+            return heap[1];
+        }
+    }
+    static void n1655() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int num = Integer.parseInt(br.readLine());
+        MaxHeap1655 maxH = new MaxHeap1655(num);
+        MinHeap1655 minH = new MinHeap1655(num);
+        for (int i = 0; i < num; i++) {
+            int crr = Integer.parseInt(br.readLine());
+
+            if (maxH.next == minH.next) {
+                maxH.add(crr);
+            } else {
+                minH.add(crr);
+            }
+
+            if (maxH.next > 1 && minH.next > 1 && maxH.peek() > minH.peek()) {
+                int maxVal = maxH.pop();
+                int minVal = minH.pop();
+                maxH.add(minVal);
+                minH.add(maxVal);
+            }
+        
+            bw.write(Integer.toString(maxH.peek()) + "\n");
+        }
+
+        bw.flush();
+        bw.close();;
+    }
+    static void n11404() throws IOException {
+        //플로이드 관련 문제임
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st;
+        int nodeNum = Integer.parseInt(br.readLine());
+        int wayNum = Integer.parseInt(br.readLine());
+        // take inputs
+        int[][] nodemap =  new int[nodeNum + 1][nodeNum + 1];
+        for (int i = 1; i < nodeNum + 1; i++) {
+            Arrays.fill(nodemap[i], 99999999);
+            nodemap[i][i] = 0;
+        }
+        //init map
+        for (int i = 0; i < wayNum; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken());
+            if (nodemap[from][to] > cost) nodemap[from][to] = cost;
+        }
+        //floid
+        for (int i = 1; i < nodeNum + 1; i++) { //middle node
+            for (int j = 1; j < nodeNum + 1; j++) { //from node
+                for (int k = 1; k < nodeNum + 1; k++) {//to node
+                    int newWayCost = nodemap[j][i] + nodemap[i][k];
+                    if (nodemap[j][k] > newWayCost) nodemap[j][k] = newWayCost;
+                }
+            }
+        }
+        //unreachable 99999999 -> 0
+        for (int i = 1; i < nodeNum + 1; i++) {
+            for (int j = 1; j < nodeNum + 1; j++) {
+                if (nodemap[i][j] == 99999999) nodemap[i][j] = 0;
+            }
+        }
+        //output
+        for (int i = 1; i < nodeNum + 1; i++) {
+            bw.write(Integer.toString(nodemap[i][1]));
+            for (int j = 2; j < nodeNum + 1; j++) {
+                bw.write(" " + Integer.toString(nodemap[i][j]));
+            }
+            bw.newLine();
+        }
+        bw.flush();
+        bw.close();;
+    }
+    static void n16236() throws IOException {
+        //16236 -> BFS와 구현 문제
+        //문제점 : 물고기가 도중에 성장하면, 중간부터 최단경로가 바뀐다. 
+        //기존 미리 뽑아두는경우, 바뀐내용이 반영되지 않는다
+        //+ 더 큰 물고기는 지나갈 수 없다. 이는 맨해튼 거리가 아닌 BFS사용을 유도한다.
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st;
+        int boxSize = Integer.parseInt(br.readLine());
+        int totalFishes = 0; //need for stop program
+        int[][] box = new int[boxSize][boxSize];
+        int[] babySharkInfo = {2, 0, 0, 2}; // size, x, y, growCounter
+        for (int i = 0; i < boxSize; i++) {
+            //initalizing
+            st = new StringTokenizer(br.readLine(), " ");
+            for (int j = 0; j < boxSize; j++) {
+                int crr = Integer.parseInt(st.nextToken());
+                if (crr == 9) {
+                    babySharkInfo[1] = i;
+                    babySharkInfo[2] = j;
+                    crr = 0;
+                }
+                if (crr != 0) totalFishes++;
+
+                box[i][j] = crr;
+            }
+        }
+
+        int totalTime = 0;
+        while (totalFishes-- != 0) {
+            int[] closestFish = findCloseFish16236(boxSize, babySharkInfo, box);
+            int eatingTime = eatFish(babySharkInfo, closestFish, box);
+            if (eatingTime == Integer.MAX_VALUE) { //mom calling!
+                break;
+            }
+
+            totalTime += eatingTime;
+        }
+        
+        bw.write(Integer.toString(totalTime));
+        bw.flush();
+        bw.close();;
+    }
+    private static int[] findCloseFish16236(int boxSize ,int[] babySharkInfo, int[][] box) {
+        int[] firstShark = {babySharkInfo[1], babySharkInfo[2], 0}; //x, y, distance
+        int sharkSize = babySharkInfo[0];
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(firstShark);
+        boolean[][] visited = new boolean[boxSize][boxSize];
+        visited[firstShark[0]][firstShark[1]] = true;
+
+        int[] closhFishInfo = {0, 0, Integer.MAX_VALUE}; 
+
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
+
+        while (!queue.isEmpty()) {
+            int[] crrLocate = queue.poll();
+            int crrLocateFishSize = box[crrLocate[0]][crrLocate[1]];
+            //find close fish sequence
+            if (crrLocateFishSize != 0 && crrLocateFishSize != sharkSize) { //if fish exist (same size pretend 'noFish')
+                if (crrLocateFishSize > sharkSize) continue; // bigger fish unable to through
+                else {
+                    if (closhFishInfo[2] < crrLocate[2]) continue; //isn't closest fish
+                    else if (closhFishInfo[2] > crrLocate[2]) { //closest fish!
+                        closhFishInfo = crrLocate;
+                        continue;
+                    }
+                    else { // same distance 
+                        boolean isPrioritized = false; 
+                        if (closhFishInfo[0] > crrLocate[0]) isPrioritized = true;
+                        else if (closhFishInfo[0] == crrLocate[0]) {
+                            if (closhFishInfo[1] > crrLocate[1]) isPrioritized = true;
+                        }
+
+                        if (isPrioritized) closhFishInfo = crrLocate;
+                        continue;
+                    }
+                }
+            }
+
+            //bfs Logic
+            for (int i = 0; i < 4; i++) {
+                int nextX = crrLocate[0] + dx[i];
+                int nextY = crrLocate[1] + dy[i];
+                //borderCheck && visited?
+                if (nextX < 0 || nextX > boxSize - 1 || nextY < 0 || nextY > boxSize - 1) continue;
+                if (visited[nextX][nextY]) continue; 
+                visited[nextX][nextY] = true;
+                //next object
+                int[] nextLocate = {nextX, nextY, crrLocate[2] + 1};
+                queue.add(nextLocate);
+            }
+        }
+
+        return closhFishInfo;
+    }
+    //return taken time
+    private static int eatFish(int[] babySharkInfo, int[] targetFish, int[][] box) {
+        babySharkInfo[1] = targetFish[0];
+        babySharkInfo[2] = targetFish[1];
+        if (--babySharkInfo[3] == 0) { //shark grow!
+            babySharkInfo[0]++;
+            babySharkInfo[3] = babySharkInfo[0];
+        }
+
+        box[targetFish[0]][targetFish[1]] = 0; //eaten
+        return targetFish[2];
+    }
+    private static void n2206() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        
+        boolean[][] map = new boolean[n][m];
+
+        for (int i = 0; i < n; i++) {
+            String inputLine = br.readLine();
+            for (int j = 0; j < m; j++) {
+                char ch = inputLine.charAt(j);
+                if (ch == '1') map[i][j] = true;
+            }
+        }
+
+        int[] startPoint = {0, 0, 1, 1}; //n, m, distance, breakable count
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(startPoint);
+        boolean[][] visited = new boolean[n][m];
+        boolean[][] bVisited = new boolean[n][m];
+        visited[0][0] = true;
+
+        int[] dx = {1, -1, 0, 0};
+        int[] dy = {0, 0, 1, -1};
+
+        int result = 0;
+        while (!queue.isEmpty()) {
+            int[] crrPoint = queue.poll();
+
+            if (crrPoint[0] == n - 1 && crrPoint[1] == m - 1) { //found
+                result = crrPoint[2];
+                break;
+            }
+
+            for (int i = 0; i < 4; i++) {
+                int nextN = crrPoint[0] + dx[i];
+                int nextM = crrPoint[1] + dy[i];
+                int[] nextPoint = {nextN, nextM, crrPoint[2] + 1, crrPoint[3]};
+                if (nextN < 0 || nextN >= n || nextM < 0 || nextM >= m) continue;
+                if (crrPoint[3] == 1) {
+                    if (visited[nextN][nextM]) continue;
+                    if (map[nextN][nextM]) {
+                        nextPoint[3] = 0;
+                    } else {
+                        visited[nextN][nextM] = true;
+                    }
+                    bVisited[nextN][nextM] = true;
+                } else {
+                    if (bVisited[nextN][nextM]) continue;
+                    if (map[nextN][nextM]) continue;
+                    bVisited[nextN][nextM] = true;
+                }
+
+                queue.add(nextPoint);
+            }
+        }
+        if (result == 0) result = -1;
+        bw.write(Integer.toString(result));
+
+        bw.flush();
+        bw.close();;
+    }
+    private static void n12851() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[] subin = {n, 0}; //locate, moved num
+
+        int[] visited = new int[100001];
+        Arrays.fill(visited, Integer.MAX_VALUE);
+        Queue<int[]> queue = new LinkedList<>();
+        visited[n] = 0;
+        queue.add(subin);
+        int resultCase = 0;
+
+        boolean pin = false;
+        int pinnedShortestMove = 0;
+
+        while (!queue.isEmpty()) {
+            int[] crr = queue.poll();
+
+            if (crr[0] == m) {
+                if (!pin) {
+                    pinnedShortestMove = crr[1];
+                    pin = true;
+                }
+                if (pinnedShortestMove == crr[1]) {
+                    resultCase++;
+                }
+            }
+
+            int[] nextp1 = {crr[0] + 1, crr[1] + 1};
+            if ((nextp1[0] >= 0 && nextp1[0] < 100001 && visited[nextp1[0]] >= nextp1[1])) {
+                visited[nextp1[0]] = nextp1[1]; 
+                queue.add(nextp1);
+            }
+            int[] nextm1 = {crr[0] - 1, crr[1] + 1};
+            if ((nextm1[0] >= 0 && nextm1[0] < 100001 && visited[nextm1[0]] >= nextm1[1])) {
+                visited[nextm1[0]] = nextm1[1];
+                queue.add(nextm1);
+            }
+            int[] nextTp = {crr[0] * 2, crr[1] + 1};
+            if ((nextTp[0] >= 0 && nextTp[0] < 100001 && visited[nextTp[0]] >= nextTp[1])) {
+                visited[nextTp[0]] = nextTp[1];
+                queue.add(nextTp);
+            }
+        }
+        int result = visited[m];
+
+        bw.write(Integer.toString(result) + "\n");
+        bw.write(Integer.toString(resultCase));
+
+        bw.flush();
+        bw.close();;
+    } 
+    //1918
+    static void n1918() throws IOException  {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        //분리대상 : 알파벳, +-*/, (). 알파벳과 나머지를 이분법적으로 보고 Lookahead, Lookbehind로 분리
+        String regex = "(?<=[+\\-*/%^()])|(?=[+\\-*/%^()])";
+        String ori = br.readLine();
+        String[] splited = ori.split(regex);
+
+        //배열을 2차원 리스트 * 배열로 바꿈. 배열 = {우선순위, 연산자종류 혹은 숫자}
+        int parenStack = 0;
+        ArrayList<int[]> pSplited = new ArrayList<>();
+        for (int i = 0; i < splited.length; i++) {
+            String crr = splited[i];
+            if (crr.matches("[a-z|A-Z]+")) {
+                int[] temp = {Integer.MIN_VALUE, (int) crr.charAt(0)}; //MinValue means its numberic 
+                pSplited.add(temp);
+            }
+            //우선순위 점수 : 기본점수100 + 괄호 중첩 갯수 * 200 + */추가점수1000 - 인덱스
+            else if (crr.equals("+")) {
+                int[] temp = {100 + parenStack * 200 - i, 1}; // 1 means +
+                pSplited.add(temp);
+            }
+            else if (crr.equals("-")) {
+                int[] temp = {100 + parenStack * 200 - i, 2}; // 2 means -
+                pSplited.add(temp);
+            }
+            else if (crr.equals("*")) {
+                int[] temp = {100 + parenStack * 200 + 100 - i, 3}; // 3 means *
+                pSplited.add(temp);
+            }
+            else if (crr.equals("/")) {
+                int[] temp = {100 + parenStack * 200 + 100 - i, 4}; // 4 means /
+                pSplited.add(temp);
+            }
+            else if (crr.equals("(")) {
+                parenStack++;
+            }
+            else if (crr.equals(")")) {
+                parenStack--;
+            }
+        }
+
+        Stack<int[]> stack = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+        for (int[] crr : pSplited) {
+            //이번것이 숫자면
+            if (crr[0] == Integer.MIN_VALUE) {
+                sb.append(Character.toString((char) crr[1]));
+            }
+            //연산자라면
+            else {
+                //스택이 빌경우, 값 스택에 추가
+                if (stack.isEmpty()) {
+                    stack.add(crr);
+                    continue;
+                }
+                //이번게 스택꺼보다 작으면, 큰게 나올때까지 스택에 있는거 출력
+                int[] prev = stack.pop();
+                while (prev[0] > crr[0]) {
+                    if (prev[1] == 1) sb.append("+");
+                    else if (prev[1] == 2) sb.append("-");
+                    else if (prev[1] == 3) sb.append("*");
+                    else sb.append("/");
+
+                    // 만약 중간에 텅텅 비었다면, 이번꺼를 스택에 넣고 반복 끝
+                    if (stack.isEmpty()) {
+                        stack.add(crr);
+                        break;
+                    }
+                    prev = stack.pop();
+                }
+                //이번게 스택꺼보다 크면 둘다 스택에 넣기
+                if (prev[0] < crr[0]) {
+                    stack.add(prev);
+                    stack.add(crr);
+                    continue;
+                }
+            }
+        }
+        // 스택 털기
+        while (!stack.isEmpty()) {
+            int[] crr = stack.pop();
+            if (crr[1] == 1) sb.append("+");
+            else if (crr[1] == 2) sb.append("-");
+            else if (crr[1] == 3) sb.append("*");
+            else sb.append("/");
+        }
+
+        bw.write(sb.toString());
+        
+        bw.flush();
+        bw.close();
+    }
+    private static void n1916() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int nodeNum = Integer.parseInt(br.readLine());
+        int busNum = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        int[][] map = new int[nodeNum + 1][nodeNum + 1];
+        for (int i = 1; i < nodeNum + 1; i++) {
+            Arrays.fill(map[i], Integer.MAX_VALUE);
+            // map[i][i] = 0;
+        }
+
+        for (int i = 0; i < busNum; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken());
+            if (map[from][to] > cost) map[from][to] = cost;
+        }
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a1, a2) -> {
+            return a1[1] - a2[1];
+        });
+        int[] disk = new int[nodeNum + 1];
+        st = new StringTokenizer(br.readLine());
+        int startNode = Integer.parseInt(st.nextToken());
+        int endNode = Integer.parseInt(st.nextToken());
+        int[] startArr = {startNode, 0}; //cost
+
+        pq.add(startArr);
+        disk[startNode] = 0;
+        Arrays.fill(disk, Integer.MAX_VALUE);
+        int lessCost = 0;
+        while (!pq.isEmpty()) {
+            int[] crrArr = pq.poll();
+
+            if (crrArr[0] == endNode) {
+                lessCost = crrArr[1];
+                break;
+            }
+            for (int i = 1; i < nodeNum + 1; i++) {
+                int nextCost = map[crrArr[0]][i];
+                if (nextCost == Integer.MAX_VALUE) continue;
+                nextCost += crrArr[1];
+                if (disk[i] > nextCost) {
+                    disk[i] = nextCost;
+                    int[] nextNode = {i, nextCost};
+                    pq.add(nextNode);
+                }
+            }
+        }
+        bw.write(Integer.toString(lessCost));
+        bw.flush();
+        bw.close();
+    }
 }

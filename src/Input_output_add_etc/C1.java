@@ -1,9 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 public class C1 {
     public void n18108() { // 불기 연도를 서기 연도로 변환
@@ -769,5 +765,83 @@ public class C1 {
             for24416fibo1++;
             return (fibo24416(crr - 1) + fibo24416(crr - 2));
         }
+    }
+    static void n9449() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int mapM = Integer.parseInt(st.nextToken());
+        int mapH = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+
+        int numInM = mapM / (2 * m) + ((mapM % (2 * m) >= m) ? 1 : 0);
+        int numInH = mapH / (2 * n) + ((mapH % (2 * n) >= n) ? 1 : 0);
+        int result = numInH * numInM;
+
+        bw.write(Integer.toString(result));
+
+        bw.flush();
+        bw.close();
+    }
+    static void n30503() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int mapSize = Integer.parseInt(st.nextToken());
+
+        int[] map = new int[mapSize + 1]; //1 starting
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i < mapSize + 1; i++) {
+            map[i] = Integer.parseInt(st.nextToken());
+        }
+
+        int quaryNum = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < quaryNum; i++) {
+            String[] inputs = br.readLine().split(" ");
+            if (inputs.length == 3) {
+                int from = Integer.parseInt(inputs[1]);
+                int to = Integer.parseInt(inputs[2]);
+                for (int j = from; j <= to; j++) {
+                    map[j] = Integer.MAX_VALUE;
+                }
+            }
+            else {
+                int from = Integer.parseInt(inputs[1]);
+                int to = Integer.parseInt(inputs[2]);
+                int findCase = Integer.parseInt(inputs[3]);
+                
+                int counter = 0;
+                for (int j = from; j <= to; j++) {
+                    if (map[j] == findCase) counter++;
+                }
+                bw.write(Integer.toString(counter) + "\n");
+            }
+        }
+
+        bw.flush();
+        bw.close();
+    }
+    private static void n17576() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String ori = br.readLine();
+        int repeat = Integer.parseInt(br.readLine());
+        int preStart = 0;
+        int preEnd = ori.length();
+        StringTokenizer st;
+        for (int i = 0; i < repeat; i++) {
+            st = new StringTokenizer(br.readLine());
+            preStart = preStart + Integer.parseInt(st.nextToken());
+            preEnd = preStart + Integer.parseInt(st.nextToken());
+        }
+        bw.write(ori.substring(preStart, preEnd));
+        
+        bw.flush();
+        bw.close();
     }
 }
