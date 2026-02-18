@@ -680,4 +680,29 @@ public class Sliver2{
         bw.flush();
         bw.close();;
     }
+    private static void n31802() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int pr = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        long[] prArr = new long[pr + 1];
+        prArr[1] = Integer.parseInt(st.nextToken());
+        for (int i = 2; i < pr + 1; i++) {
+            prArr[i] = prArr[i - 1] + Long.parseLong(st.nextToken());
+        }
+
+        st = new StringTokenizer(br.readLine());
+        int a = Integer.parseInt(st.nextToken());
+        int b = Integer.parseInt(st.nextToken());
+        int quotientA = Math.floorDiv(a, pr);
+        int quotientB = Math.floorDiv(b, pr);
+        int remainderA = Math.floorMod(a, pr);
+        int remainderB = Math.floorMod(b, pr);
+
+        long total = prArr[remainderB] - prArr[remainderA] + (quotientB - quotientA) * prArr[pr];
+        bw.write(Long.toString(total));
+        bw.flush();
+        bw.close();
+    }
 }
