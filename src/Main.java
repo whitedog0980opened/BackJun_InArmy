@@ -1,55 +1,71 @@
 import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+//https://testcase.ac/problems/1764
+//https://www.acmicpc.net/step/16
+//want to solve list : 13399 28043 (marahton)
+//want to study : hashTable, 이분매칭 ,비트마스크 + dp, 그리디
+//need to review = 5430 ! deque
+//https://lmarena.ai/ko
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] inputStrs = br.readLine().split(" ");
-        int nodeNum = Integer.parseInt(inputStrs[0]);
-        int lineNum = Integer.parseInt(inputStrs[1]);
-        int startNode = Integer.parseInt(inputStrs[2]);
+        int nodeNum = Integer.parseInt(br.readLine());
+        int busNum = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        int[][] map = new int[nodeNum + 1][nodeNum + 1];
+        for (int i = 1; i < nodeNum + 1; i++) {
+            Arrays.fill(map[i], Integer.MAX_VALUE);
+            // map[i][i] = 0;
+        }
 
-        //input lines
-        int[][] lines = new int[lineNum][2];
-        for (int i = 0; i < lineNum; i++) {
-            String[] lineInputs = br.readLine().split(" ");
-            int[] line = {Integer.parseInt(lineInputs[0]), Integer.parseInt(lineInputs[1])};
-            lines[i] = line;
-        }
-        // create graph
-        LinkedList<Integer>[] graphs = new LinkedList[nodeNum + 1];
-        for (int i = 0; i < nodeNum + 1; i++) {
-            graphs[i] = new LinkedList<>();
-        }
-        for (int[] line : lines) {
-            graphs[line[0]].add(line[1]);
-            graphs[line[1]].add(line[0]);
-        }
-        for (LinkedList<Integer> graph : graphs) {
-            Collections.sort(graph);
+        for (int i = 0; i < busNum; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken());
+            if (map[from][to] > cost) map[from][to] = cost;
         }
         
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a1, a2) -> {
+            return a1[1] - a2[1];
+        });
+        int[] disk = new int[nodeNum + 1];
+        st = new StringTokenizer(br.readLine());
+        int startNode = Integer.parseInt(st.nextToken());
+        int endNode = Integer.parseInt(st.nextToken());
+        int[] startArr = {startNode, 0}; //cost
 
-        List<Integer> visited = new ArrayList<>();
+        pq.add(startArr);
+        disk[startNode] = 0;
+        Arrays.fill(disk, Integer.MAX_VALUE);
+        int lessCost = 0;
+        while (!pq.isEmpty()) {
+            int[] crrArr = pq.poll();
 
-        dfs(graphs, startNode, visited, bw);
-
+            if (crrArr[0] == endNode) {
+                lessCost = crrArr[1];
+                break;
+            }
+            for (int i = 1; i < nodeNum + 1; i++) {
+                int nextCost = map[crrArr[0]][i];
+                if (nextCost == Integer.MAX_VALUE) continue;
+                nextCost += crrArr[1];
+                if (disk[i] > nextCost) {
+                    disk[i] = nextCost;
+                    int[] nextNode = {i, nextCost};
+                    pq.add(nextNode);
+                }
+            }
+        }
+        bw.write(Integer.toString(lessCost));
         bw.flush();
         bw.close();
     }
 
-    static void dfs(LinkedList<Integer>[] graphs, int crrNode, List<Integer> visited, BufferedWriter bw) throws IOException {
-        if (visited.contains(crrNode)) {
-            return;
-        } else {
-            visited.add(crrNode);
-            bw.write(Integer.toString(crrNode));
-        }
-        for (int i = 0; i < graphs[crrNode].size(); i++) {
-            int nextNode = graphs[crrNode].get(i);
-            dfs(graphs, nextNode, visited, bw);
-        }
-    }
 }

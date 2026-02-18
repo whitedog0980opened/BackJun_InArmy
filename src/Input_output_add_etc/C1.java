@@ -1,9 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 public class C1 {
     public void n18108() { // 불기 연도를 서기 연도로 변환
@@ -643,6 +639,208 @@ public class C1 {
             bw.write(Integer.toString(i));
         }
 
+        bw.flush();
+        bw.close();
+    }
+    static void n14626() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String brokenISBN = br.readLine();
+        int brokenWeight = 0;
+        int sum = 0;
+        for (int i = 0; i < 13; i++) {
+            char crr = brokenISBN.charAt(i);
+            int weight = 3 - ((i + 1)%2) * 2;
+            if (crr == '*') {
+                brokenWeight = weight;
+            }
+            else {
+                sum += Character.getNumericValue(crr) * weight;
+            }
+        }
+
+        int keyRest = sum % 10;
+        for (int i = 0; i < 10; i++) {
+            int total = sum + i * brokenWeight;
+            if (total % 10 == 0) {
+                bw.write(Integer.toString(i));
+                break;
+            }
+        
+        }
+
+        bw.flush();
+        bw.close();
+    }
+
+    static void n15829() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int inpurNum = Integer.parseInt(br.readLine());
+        String str = br.readLine();
+        int mod = 1234567891;
+        int sum = 0;
+
+        for (int i = 0; i < inpurNum; i++) {
+            char crrCH = str.charAt(i);
+            int hashNum = (int)crrCH - 96;
+            long temp = 1;
+            for (int j = 0; j < i; j++) {
+                temp *= 31;
+            }
+            temp %= mod;
+            sum += hashNum * temp;
+        }
+
+        bw.write(Integer.toString(sum));
+        
+
+        bw.flush();
+        bw.close();
+    }
+
+    static void n28702() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String input1 = br.readLine();
+        String input2 = br.readLine();
+        String input3 = br.readLine();
+        int answer = 0;
+
+        if (input1.matches(".*[0-9].*")) {
+            answer = Integer.parseInt(input1) + 3;
+        } else if (input2.matches(".*[0-9].*")) {
+            answer = Integer.parseInt(input2) + 2;
+        } else {
+            answer = Integer.parseInt(input3) + 1;
+        }
+
+        if (answer % 3 == 0) {
+            if (answer % 5 == 0) {
+                bw.write("FizzBuzz");
+            } else {
+                bw.write("Fizz");
+            }
+        } else if (answer % 5 == 0) {
+            bw.write("Buzz");
+        } else {
+            bw.write(Integer.toString(answer));
+        }
+
+        bw.flush();
+        bw.close();
+    }
+    static int for24416fibo1 = 0;
+    static void n24416() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        //get inputs
+        int fiboMax = Integer.parseInt(br.readLine());
+
+        int[] fiboArray = new int[fiboMax];
+        int fibo2 = 0;
+        fiboArray[0] = 1;
+        fiboArray[1] = 1;
+        for (int i = 2; i < fiboMax; i++) {
+            fiboArray[i] = fiboArray[i - 1] + fiboArray[i - 2];
+            fibo2++;
+        }
+
+        fibo24416(fiboMax);
+
+        bw.write(Integer.toString(for24416fibo1 + 1) + " " + Integer.toString(fibo2));
+
+        bw.flush();
+        bw.close();
+    }
+    static int fibo24416(int crr) {
+        if (crr == 1 || crr == 2) {
+            return 1;
+        } 
+        else {
+            for24416fibo1++;
+            return (fibo24416(crr - 1) + fibo24416(crr - 2));
+        }
+    }
+    static void n9449() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int mapM = Integer.parseInt(st.nextToken());
+        int mapH = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+
+        int numInM = mapM / (2 * m) + ((mapM % (2 * m) >= m) ? 1 : 0);
+        int numInH = mapH / (2 * n) + ((mapH % (2 * n) >= n) ? 1 : 0);
+        int result = numInH * numInM;
+
+        bw.write(Integer.toString(result));
+
+        bw.flush();
+        bw.close();
+    }
+    static void n30503() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int mapSize = Integer.parseInt(st.nextToken());
+
+        int[] map = new int[mapSize + 1]; //1 starting
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i < mapSize + 1; i++) {
+            map[i] = Integer.parseInt(st.nextToken());
+        }
+
+        int quaryNum = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < quaryNum; i++) {
+            String[] inputs = br.readLine().split(" ");
+            if (inputs.length == 3) {
+                int from = Integer.parseInt(inputs[1]);
+                int to = Integer.parseInt(inputs[2]);
+                for (int j = from; j <= to; j++) {
+                    map[j] = Integer.MAX_VALUE;
+                }
+            }
+            else {
+                int from = Integer.parseInt(inputs[1]);
+                int to = Integer.parseInt(inputs[2]);
+                int findCase = Integer.parseInt(inputs[3]);
+                
+                int counter = 0;
+                for (int j = from; j <= to; j++) {
+                    if (map[j] == findCase) counter++;
+                }
+                bw.write(Integer.toString(counter) + "\n");
+            }
+        }
+
+        bw.flush();
+        bw.close();
+    }
+    private static void n17576() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String ori = br.readLine();
+        int repeat = Integer.parseInt(br.readLine());
+        int preStart = 0;
+        int preEnd = ori.length();
+        StringTokenizer st;
+        for (int i = 0; i < repeat; i++) {
+            st = new StringTokenizer(br.readLine());
+            preStart = preStart + Integer.parseInt(st.nextToken());
+            preEnd = preStart + Integer.parseInt(st.nextToken());
+        }
+        bw.write(ori.substring(preStart, preEnd));
+        
         bw.flush();
         bw.close();
     }
