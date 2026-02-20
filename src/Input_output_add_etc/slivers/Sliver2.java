@@ -705,4 +705,42 @@ public class Sliver2{
         bw.flush();
         bw.close();
     }
+    private static void n1004() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int tc = Integer.parseInt(br.readLine());
+        while (tc-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int startX = Integer.parseInt(st.nextToken());
+            int startY = Integer.parseInt(st.nextToken());
+            int endX = Integer.parseInt(st.nextToken());
+            int endY = Integer.parseInt(st.nextToken());
+
+            int planetNum = Integer.parseInt(br.readLine());
+
+            int needToPene = 0;
+            for (int i = 0; i < planetNum; i++) {
+                st = new StringTokenizer(br.readLine());
+                int planetX = Integer.parseInt(st.nextToken());
+                int planetY = Integer.parseInt(st.nextToken());
+                int planetR = Integer.parseInt(st.nextToken());
+
+                double startToPlX = Math.abs(planetX - startX);
+                double startToPlY = Math.abs(planetY - startY);
+                double endToPlX = Math.abs(planetX - endX);
+                double endToPlY = Math.abs(planetY - endY);
+
+
+                boolean startInnerPlanet = Math.sqrt(Math.pow(startToPlX, 2) + Math.pow(startToPlY, 2)) < planetR;
+                boolean endInnerPlanet = Math.sqrt(Math.pow(endToPlX, 2) + Math.pow(endToPlY, 2)) < planetR;
+                if (startInnerPlanet != endInnerPlanet) needToPene++;
+            }
+
+            bw.write(Integer.toString(needToPene) + "\n");
+        }
+
+        bw.flush();
+        bw.close();
+    }
 }

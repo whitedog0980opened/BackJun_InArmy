@@ -38,7 +38,7 @@ public class Main {
                 double startToPlX = Math.abs(planetX - startX);
                 double startToPlY = Math.abs(planetY - startY);
                 double endToPlX = Math.abs(planetX - endX);
-                double endToPlY = Math.abs(planetX - endY);
+                double endToPlY = Math.abs(planetY - endY);
 
 
                 boolean startInnerPlanet = Math.sqrt(Math.pow(startToPlX, 2) + Math.pow(startToPlY, 2)) < planetR;
