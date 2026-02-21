@@ -1,9 +1,7 @@
 import java.io.*;
 import java.util.*;
 import java.util.stream.IntStream;
-
 import org.w3c.dom.Node;
-
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 //https://testcase.ac/problems/1764
@@ -18,39 +16,28 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int tc = Integer.parseInt(br.readLine());
-        while (tc-- > 0) {
+        int h = Integer.parseInt(br.readLine());
+        int[] prevLine = {Integer.parseInt(br.readLine())}; //firstLine (root)
+        int maxValue = prevLine[0];
+        for (int i = 1; i < h; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int startX = Integer.parseInt(st.nextToken());
-            int startY = Integer.parseInt(st.nextToken());
-            int endX = Integer.parseInt(st.nextToken());
-            int endY = Integer.parseInt(st.nextToken());
-
-            int planetNum = Integer.parseInt(br.readLine());
-
-            int needToPene = 0;
-            for (int i = 0; i < planetNum; i++) {
-                st = new StringTokenizer(br.readLine());
-                int planetX = Integer.parseInt(st.nextToken());
-                int planetY = Integer.parseInt(st.nextToken());
-                int planetR = Integer.parseInt(st.nextToken());
-
-                double startToPlX = Math.abs(planetX - startX);
-                double startToPlY = Math.abs(planetY - startY);
-                double endToPlX = Math.abs(planetX - endX);
-                double endToPlY = Math.abs(planetY - endY);
-
-
-                boolean startInnerPlanet = Math.sqrt(Math.pow(startToPlX, 2) + Math.pow(startToPlY, 2)) < planetR;
-                boolean endInnerPlanet = Math.sqrt(Math.pow(endToPlX, 2) + Math.pow(endToPlY, 2)) < planetR;
-                if (startInnerPlanet != endInnerPlanet) needToPene++;
+            int[] crrLine = new int[i + 1];
+            for (int j = 0; j < i + 1; j++) {
+                int crrNum = Integer.parseInt(st.nextToken());
+                if (j == 0) {
+                    crrLine[j] = crrNum + prevLine[j];
+                } else if (j == i) {
+                    crrLine[j] = crrNum + prevLine[j - 1];
+                } else {
+                    crrLine[j] = Math.max(crrNum + prevLine[j - 1], crrNum + prevLine[j]);
+                }
+                maxValue = Math.max(crrLine[j], maxValue);
             }
-
-            bw.write(Integer.toString(needToPene) + "\n");
+            prevLine = crrLine;
         }
 
+        bw.write(Integer.toString(maxValue));
         bw.flush();
         bw.close();
     }
-
 }
