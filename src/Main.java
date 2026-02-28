@@ -12,36 +12,30 @@ import java.util.regex.Matcher;
 //https://lmarena.ai/ko
 
 public class Main {
+    //1562
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int h = Integer.parseInt(br.readLine());
+        int numLen = Integer.parseInt(br.readLine());
 
-        int[][] maxMap = new int[3][h + 1];
-        int[][] minMap = new int[3][h + 1];
-        for (int i = 1; i < h + 1; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int[] cells = {Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
-            for (int j = 0; j < 3; j++) {
-                int prevMaxNum = maxMap[1][i - 1];
-                int prevMinNum = minMap[1][i - 1];
-                if (j == 0 || j == 1) {
-                    prevMaxNum = Math.max(maxMap[0][i - 1], prevMaxNum);
-                    prevMinNum = Math.min(minMap[0][i - 1], prevMinNum);
-                }
-                if (j == 2 || j == 1) {
-                    prevMaxNum = Math.max(maxMap[2][i - 1], prevMaxNum);
-                    prevMinNum = Math.min(minMap[2][i - 1], prevMinNum);
-                }
-                maxMap[j][i] = cells[j] + prevMaxNum;
-                minMap[j][i] = cells[j] + prevMinNum;
+        //map[i][j] -> i = depth (숫자의 길이), j = 끝나는 숫자
+        //map[i][j] = 숫자의 길이가 i 인 j로 끝나는 경우의 수   
+        //시간 복잡도 -> O(10n)
+        int[][] map = new int[numLen][10];
+        Arrays.fill(map[0], 1);
+        for (int i = 1; i < numLen; i++) {
+            map[i][0] += map[i - 1][1];
+            map[i][9] += map[i - 1][8];
+            for (int j = 1; j < 9; j++) {
+                map[i][j] += (map[i - 1][j - 1] + map[i - 1][j + 1]) % 1000000000;
             }
         }
-        int maxNum = Math.max(Math.max(maxMap[0][h], maxMap[1][h]), maxMap[2][h]);
-        int minNum = Math.min(Math.min(minMap[0][h], minMap[1][h]), minMap[2][h]);
 
-        bw.write(Integer.toString(maxNum) + " " + Integer.toString(minNum));
+        // 이제 map[i][j][k] = 숫자의 길이가 i인 j로 시작해서 k로 끝나는 경우의 수 알고리즘 짜야함
+        // 시간 복잡도 -> O(30n) (시작과 끝의 크기차이는 최대 3이다.)
+
+
         bw.flush();
         bw.close();
     }
