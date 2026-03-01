@@ -1855,9 +1855,8 @@ public class Gold {
         bw.close();
     }
     private static void n1562() throws IOException {
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
         int numLen = Integer.parseInt(br.readLine());
 
         long[][][] map = new long[numLen][10][1024];
