@@ -19,23 +19,33 @@ public class Main {
 
         int numLen = Integer.parseInt(br.readLine());
 
-        //map[i][j] -> i = depth (숫자의 길이), j = 끝나는 숫자
-        //map[i][j] = 숫자의 길이가 i 인 j로 끝나는 경우의 수   
-        //시간 복잡도 -> O(10n)
-        int[][] map = new int[numLen][10];
-        Arrays.fill(map[0], 1);
+        long[][][] map = new long[numLen][10][1024];
+        for (int i = 1; i < 10; i++) {
+            map[0][i][1 << i] = 1;
+        }
         for (int i = 1; i < numLen; i++) {
-            map[i][0] += map[i - 1][1];
-            map[i][9] += map[i - 1][8];
+            //if last is 0 exception
+            for (int k = 1; k < 1024; k++) {
+                int crrBitMask = k | 1;
+                map[i][0][crrBitMask] += (map[i - 1][1][k]) % 1000000000;
+            }
+            //if last is 9 exception
+            for (int k = 1; k < 1024; k++) {
+                int crrBitMask = k | 512;
+                map[i][9][crrBitMask] += (map[i - 1][8][k]) % 1000000000;
+            }
             for (int j = 1; j < 9; j++) {
-                map[i][j] += (map[i - 1][j - 1] + map[i - 1][j + 1]) % 1000000000;
+                for (int k = 0; k < 1024; k++) {
+                    int crrBitMask = k | (1 << j);
+                    map[i][j][crrBitMask] += (map[i - 1][j - 1][k] % 1000000000 +  map[i - 1][j + 1][k] % 1000000000) % 1000000000;
+                }
             }
         }
-
-        // 이제 map[i][j][k] = 숫자의 길이가 i인 j로 시작해서 k로 끝나는 경우의 수 알고리즘 짜야함
-        // 시간 복잡도 -> O(30n) (시작과 끝의 크기차이는 최대 3이다.)
-
-
+        long result = 0;
+        for (int i = 0; i < 10; i++) {
+            result = (map[numLen - 1][i][1023] + result) % 1000000000;
+        }
+        bw.write(Long.toString(result));
         bw.flush();
         bw.close();
     }
