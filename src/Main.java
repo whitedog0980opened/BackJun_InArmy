@@ -12,40 +12,41 @@ import java.util.regex.Matcher;
 //https://lmarena.ai/ko
 
 public class Main {
-    //1562
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int needQu = Integer.parseInt(st.nextToken());
+        int cityN = Integer.parseInt(st.nextToken());
+        int[] dp = new int[needQu + 101];
+        int[][] cityEffectAd = new int[cityN][2];
 
-        int numLen = Integer.parseInt(br.readLine());
-
-        long[][][] map = new long[numLen][10][1024];
-        for (int i = 1; i < 10; i++) {
-            map[0][i][1 << i] = 1;
+        for (int i = 0; i < cityN; i++) {
+            st = new StringTokenizer(br.readLine());
+            cityEffectAd[i] = new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
+            //init dp
+            if (dp[cityEffectAd[i][1]] == 0 || dp[cityEffectAd[i][1]] > cityEffectAd[i][0]) {
+                dp[cityEffectAd[i][1]] = cityEffectAd[i][0];
+            }
         }
-        for (int i = 1; i < numLen; i++) {
-            //if last is 0 exception
-            for (int k = 1; k < 1024; k++) {
-                int crrBitMask = k | 1;
-                map[i][0][crrBitMask] += (map[i - 1][1][k]) % 1000000000;
-            }
-            //if last is 9 exception
-            for (int k = 1; k < 1024; k++) {
-                int crrBitMask = k | 512;
-                map[i][9][crrBitMask] += (map[i - 1][8][k]) % 1000000000;
-            }
-            for (int j = 1; j < 9; j++) {
-                for (int k = 0; k < 1024; k++) {
-                    int crrBitMask = k | (1 << j);
-                    map[i][j][crrBitMask] += (map[i - 1][j - 1][k] % 1000000000 +  map[i - 1][j + 1][k] % 1000000000) % 1000000000;
+        //dp 진행
+        for (int i = 0; i < needQu; i++) {
+            if (dp[i] == 0) continue;
+            for (int j = 0; j < cityN; j++) {
+                int[] crrCity = cityEffectAd[j];
+                if (dp[i + crrCity[1]] == 0 || dp[i + crrCity[1]] > dp[i] + crrCity[0]) {
+                    dp[i + crrCity[1]] = dp[i] + crrCity[0];
                 }
             }
         }
-        long result = 0;
-        for (int i = 0; i < 10; i++) {
-            result = (map[numLen - 1][i][1023] + result) % 1000000000;
+        //최소값 찾기
+        int minimum = Integer.MAX_VALUE;
+        for (int i = needQu; i < needQu + 100; i++) {
+            if (dp[i] == 0) continue;
+            minimum = Math.min(minimum, dp[i]);
         }
-        bw.write(Long.toString(result));
+        bw.write(Integer.toString(minimum));
         bw.flush();
         bw.close();
     }
