@@ -15,39 +15,39 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int needQu = Integer.parseInt(st.nextToken());
-        int cityN = Integer.parseInt(st.nextToken());
-        int[] dp = new int[needQu + 101];
-        int[][] cityEffectAd = new int[cityN][2];
+        long n = Long.parseLong(br.readLine());
 
-        for (int i = 0; i < cityN; i++) {
-            st = new StringTokenizer(br.readLine());
-            cityEffectAd[i] = new int[]{Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())};
-            //init dp
-            if (dp[cityEffectAd[i][1]] == 0 || dp[cityEffectAd[i][1]] > cityEffectAd[i][0]) {
-                dp[cityEffectAd[i][1]] = cityEffectAd[i][0];
+        if (n == 0) {
+            bw.write("0");
+            bw.flush();
+            bw.close();
+            System.exit(0);
+        }
+        long[] matrix = {1, 1, 1, 0};
+        long[][] dp = new long[65][4];
+        dp[0] = new long[]{1, 1, 1, 0};
+
+        long[] res = {1, 0, 0, 1};
+        while (n > 0) {
+            if ((n & 1) == 1) {
+                res = matrixMult(res, matrix);
             }
+            matrix = matrixMult(matrix, matrix);
+            n >>= 1;
         }
-        //dp 진행
-        for (int i = 0; i < needQu; i++) {
-            if (dp[i] == 0) continue;
-            for (int j = 0; j < cityN; j++) {
-                int[] crrCity = cityEffectAd[j];
-                if (dp[i + crrCity[1]] == 0 || dp[i + crrCity[1]] > dp[i] + crrCity[0]) {
-                    dp[i + crrCity[1]] = dp[i] + crrCity[0];
-                }
-            }
-        }
-        //최소값 찾기
-        int minimum = Integer.MAX_VALUE;
-        for (int i = needQu; i < needQu + 100; i++) {
-            if (dp[i] == 0) continue;
-            minimum = Math.min(minimum, dp[i]);
-        }
-        bw.write(Integer.toString(minimum));
+        
+        bw.write(Long.toString(res[2]));
         bw.flush();
         bw.close();
+    }
+    private static long[] matrixMult(long[] mat1, long[] mat2) {
+        long divideAgent = 1000000007;
+        long[] result = {
+            ((mat1[0] * mat2[0]) % divideAgent + (mat1[1] * mat2[2]) % divideAgent) % divideAgent,
+            ((mat1[0] * mat2[1]) % divideAgent + (mat1[1] * mat2[3]) % divideAgent) % divideAgent,
+            ((mat1[2] * mat2[0]) % divideAgent + (mat1[3] * mat2[2]) % divideAgent) % divideAgent,
+            ((mat1[2] * mat2[1]) % divideAgent + (mat1[3] * mat2[3]) % divideAgent) % divideAgent
+        };
+        return result;
     }
 }
