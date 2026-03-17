@@ -1,29 +1,16 @@
-import java.io.*;
+package golds;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.*;
-import java.util.stream.IntStream;
-import org.w3c.dom.Node;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-//https://testcase.ac/problems/1764
-//https://www.acmicpc.net/step/16
-//want to solve list : 13399 28043 (marahton)
-//want to study : hashTable, 이분매칭 ,비트마스크 + dp, 그리디
-//need to review = 5430 ! deque
-//https://lmarena.ai/ko
 
-public class Main {
-    private static class Node1197 {
-        int node;
-        int sumOfWeight;
-        int uniqueCount; // same to V means visited all node
 
-        Node1197(int node, int weight, int uniqueCount) {
-            this.node = node;
-            this.sumOfWeight = weight;
-            this.uniqueCount = uniqueCount;
-        }
-    }
-    public static void main(String[] args) throws IOException {
+public class Gold2 {
+    private static void n1197() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
