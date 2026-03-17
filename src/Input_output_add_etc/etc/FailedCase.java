@@ -424,6 +424,9 @@ public class FailedCase {
         }
     }
     private static void n1197Failed() throws IOException {
+        //mst문제를 다익스트라와 유사하게 풀었다.
+        //음수 문제에 걸리는 문제가 발생하였고, 한 객체가 크기1만의 배열을 들고있어서 힙 메모리가 터졌다
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
