@@ -59,4 +59,27 @@ public class Gold2 {
         }
         return false;
     }
+    private static void n12865() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+
+        int[] minimumDP = new int[k + 1];
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            int weight = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken());
+            if (weight > k) continue;
+
+            for (int j = k; j >= weight; j--) {
+                minimumDP[j] = Math.max(minimumDP[j - weight] + cost, minimumDP[j]);
+            }
+        }
+
+        bw.write(Integer.toString(minimumDP[k]));
+        bw.flush();
+        bw.close();
+    }
 }
